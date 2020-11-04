@@ -45,6 +45,7 @@ Meta meta;
 String path = '.';
 String baseURL = '/centryl';
 String appTitle = 'Centryl';
+String version = 'Centryl Framework v2.0';
 Map config;
 bool anonymousLogin = false;
 

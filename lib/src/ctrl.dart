@@ -20,7 +20,6 @@ import 'server.dart';
 part 'ctrl/exception.dart';
 part 'ctrl/handler/base.dart';
 part 'ctrl/handler/collection.dart';
-part 'ctrl/handler/hint.dart';
 part 'ctrl/handler/index.dart';
 part 'ctrl/handler/item.dart';
 part 'ctrl/handler/manager.dart';

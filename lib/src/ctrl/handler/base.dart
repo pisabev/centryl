@@ -1,7 +1,5 @@
 part of cl_base.ctrl;
 
-typedef Execute = Function();
-
 class Base {
   dynamic req;
   Manager manager;
@@ -67,7 +65,7 @@ class Base {
     if (req is HttpRequest) {
       req.response.headers.contentType = ContentType.json;
       if (code != null) req.response.statusCode = code;
-      req.response.headers.add('X-Powered-By', 'Centryl Framework v2.0');
+      req.response.headers.add('X-Powered-By', version);
       req.response.write(json.encode(data));
       req.response.close();
     } else {
@@ -80,7 +78,7 @@ class Base {
     if (manager != null) manager.close();
     req.response.headers.contentType = ContentType.html;
     if (code != null) req.response.statusCode = code;
-    req.response.headers.add('X-Powered-By', 'Centryl Framework v2.0');
+    req.response.headers.add('X-Powered-By', version);
     req.response.write(data);
     req.response.close();
   }
@@ -144,12 +142,12 @@ class Base {
   }
 
   /// Helper for executing function with scope/group permission.
-  Future<void> run(String group, String scope, String access, Execute f) async {
+  Future<void> run(
+      String group, String scope, String access, Future Function() f) async {
     if (permissionCheck(req.session, group, scope, access)) {
       try {
         final watch = Stopwatch()..start();
-        final history = new History(
-            req.session.id,
+        final history = new History(req.session.id,
             req is WSRequest ? req.controller : req.requestedUri.path);
         notificator.addHistory(history);
         await f();
@@ -167,7 +165,8 @@ class Base {
   }
 
   /// Helper for executing function with scope/group permission with bouncer.
-  Future<void> runBounced(String group, String scope, String access, Execute f,
+  Future<void> runBounced(
+      String group, String scope, String access, Future Function() f,
       [int bounce = 1]) async {
     if (permissionCheck(req.session, group, scope, access)) {
       final cs = new CacheService();
@@ -189,6 +188,7 @@ class Base {
     }
   }
 
-  Future<void> wrap(Execute f, {String group, String scope, String access}) =>
+  Future<void> wrap(Future Function() f,
+          {String group, String scope, String access}) =>
       f().catchError(error);
 }
