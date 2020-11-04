@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS "base_api_local"
     "limit"        integer,
     "active"       bool         NOT NULL DEFAULT FALSE
 );
-CREATE INDEX "api_local_key" ON "base_api_local" USING btree ("key");
+CREATE INDEX IF NOT EXISTS "api_local_key" ON "base_api_local" USING btree ("key");
 
 CREATE TABLE IF NOT EXISTS "base_api_remote"
 (
@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS "base_api_remote"
     "key"           varchar(100) NOT NULL,
     "host"          varchar(100) NOT NULL UNIQUE
 );
-CREATE INDEX "api_remote_key" ON "base_api_remote" USING btree ("key");
-CREATE INDEX "api_remote_host" ON "base_api_remote" USING btree ("host");
+CREATE INDEX IF NOT EXISTS "api_remote_key" ON "base_api_remote" USING btree ("key");
+CREATE INDEX IF NOT EXISTS "api_remote_host" ON "base_api_remote" USING btree ("host");
 
 CREATE TABLE IF NOT EXISTS "base_package"
 (

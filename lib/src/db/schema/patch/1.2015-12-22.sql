@@ -1,1 +1,0 @@
-ALTER TABLE meta DROP COLUMN IF EXISTS "version";
