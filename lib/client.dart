@@ -5,6 +5,8 @@ import 'package:centryl/app.dart' as cl_app;
 import 'intl/client.dart' as intl;
 import 'src/path.dart';
 
+export 'src/path.dart';
+
 void init(cl_app.Application ap) {
   cl_app.NotificationMessage.registerDecorator(
       Routes.eventServerStop,
