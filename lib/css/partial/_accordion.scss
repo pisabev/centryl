@@ -1,0 +1,38 @@
+.ui-accordion {
+  flex: 1;
+  border-bottom: none;
+  & > .ui-accordion-node {
+    display: flex;
+    flex-direction: column;
+    border-top: $accordion-border;
+    border-left: $accordion-border-left;
+    @include transition(all 0.2s ease-in-out);
+    &:hover {
+      border-left-color: $accordion-border-left-hover-color;
+    }
+    & > span {
+      padding: 1rem;
+      background: $accordion-title-background;
+      cursor: pointer;
+      &:focus {
+        background: $accordion-title-background-active;
+      }
+    }
+    & > div {
+      height: 0;
+      opacity: 0;
+      overflow: hidden;
+      background: $accordion-background;
+      @include transition(opacity 0.2s ease-in-out);
+    }
+    &.active {
+      & > span {
+        background: $accordion-title-background-hover;
+      }
+      & > div {
+        opacity: 1;
+        height: auto;
+      }
+    }
+  }
+}

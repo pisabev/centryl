@@ -1,0 +1,451 @@
+@for $i from 0 to length($colors) {
+  .color#{$i+1} {
+    background: nth($colors, $i+1);
+  }
+}
+
+@mixin event-cont-color($color) {
+  background: $color;
+  border: 1px solid darken($color, 5%);
+  &.day span {
+    color: $color;
+  }
+  .arrow-left1 {
+    border-color: transparent darken($color, 5%);
+  }
+  .arrow-left2 {
+    border-color: transparent $color;
+  }
+  .arrow-right1 {
+    border-color: transparent darken($color, 5%);
+  }
+  .arrow-right2 {
+    border-color: transparent $color;
+  }
+  &.light {
+    background: lighten($color, 5%);
+    border-color: $color;
+    .arrow-left1 {
+      border-color: transparent $color;
+    }
+    .arrow-left2 {
+      border-color: transparent lighten($color, 5%);
+    }
+    .arrow-right1 {
+      border-color: transparent $color;
+    }
+    .arrow-right2 {
+      border-color: transparent lighten($color, 5%);
+    }
+    &.day span {
+      color: lighten($color, 5%);
+    }
+  }
+}
+
+@mixin event-cont-hour-color($color) {
+  background: $color;
+  .inner {
+    border-color: darken($color, 5%);
+  }
+}
+
+.ui-event-calendar, .ui-event-popup {
+  padding: 5px;
+  .cal-navigation {
+    border-bottom: 1px solid $scheduler-border;
+    display: flex;
+    flex: 1 0 auto;
+    padding-bottom: $prem + rem;
+    & > span {
+      margin-left: $prem/2 + rem;
+    }
+    & > *:first-child {
+      margin-left: 0;
+    }
+    p {
+      line-height: $rem + rem;
+      margin: 0 auto;
+      display: inline-flex;
+    }
+  }
+  .cal-body {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .cal-body .closing {
+    border-top: 1px solid $scheduler-border;
+    margin-top: -1px;
+    position: relative;
+  }
+  /********************************* Calendar Row *******************************************/
+  .cal-row {
+    position: relative;
+    margin-top: -1px;
+    .filter-cont {
+      & > div {
+        position: absolute;
+        top: 1px;
+        bottom: 1px;
+        background: $scheduler-background;
+      }
+    }
+  }
+  .cal-row.week {
+    height: auto;
+  }
+  /********************************* Calendar Table *******************************************/
+  .cal-head {
+    width: 100%;
+    table-layout: fixed;
+    border-spacing: 1px;
+  }
+  .cal-head th {
+    padding: 5px;
+    text-align: left;
+    font-weight: normal;
+  }
+  .cal-back {
+    position: absolute;
+    background: $scheduler-border;
+    border-spacing: 1px;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    table-layout: fixed;
+  }
+  .cal-back.week {
+    position: relative;
+    height: auto;
+  }
+  .cal-back td {
+    background: $scheduler-background;
+    vertical-align: top;
+    padding: 5px;
+  }
+  .cal-back td, table.week-scroll td {
+    &.now {
+      background: $scheduler-now-background;
+    }
+    &.filter {
+      background: $scheduler-filter-background;
+      .filter-cont {
+        position:absolute;
+        z-index:1;
+        width: 100%;
+        background: $scheduler-background;
+      }
+      &.now .filter-cont {
+        background: $scheduler-now-background;
+      }
+    }
+  }
+  .cal-grid {
+    position: absolute;
+    border-spacing: 1px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    table-layout: fixed;
+    z-index: 1;
+    td {
+      vertical-align: middle;
+      height: 20px;
+      padding-left: 5px;
+      &.event {
+        padding-left: 0;
+      }
+      &.blur {
+        color: $scheduler-past-color;
+      }
+      a {
+        position: relative;
+        z-index: 1;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+  .week-cont {
+    border-top: 1px solid $scheduler-border;
+    flex: 1 1 0;
+    margin-top: 10px;
+    display: flex;
+  }
+  table.week-head {
+    width: 100%;
+    table-layout: fixed;
+    border-spacing: 0;
+    flex: none;
+    th {
+      padding: 5px;
+      text-align: center;
+      font-weight: normal;
+      &.first {
+        width: 61px;
+        padding: 0;
+        vertical-align: bottom;
+      }
+    }
+  }
+  table.week-scroll {
+    width: 100%;
+    border-spacing: 1px;
+    background: $scheduler-border;
+    margin-top: -2px;
+    table-layout: fixed;
+    td {
+      background: $scheduler-background;
+      vertical-align: top;
+      &.first_scroll {
+        width: 60px;
+        height: 0;
+      }
+      &.first_scroll2 {
+        position: relative;
+        height: 0;
+      }
+      &.first {
+        padding: 0;
+        position: relative;
+      }
+    }
+    .day {
+      position: absolute;
+      width: 100%;
+      z-index: 2;
+    }
+  }
+  /********************************* Event containers *******************************************/
+  .event-cont {
+    position: relative;
+    border: 1px solid transparent;
+    height: 20px;
+    line-height: 18px;
+    padding: 0 1rem;
+    z-index: 1;
+    span {
+      color: $scheduler-event-color;
+      text-overflow: ellipsis;
+      font-size: 0.9rem;
+      display: block;
+      overflow: hidden;
+      height: 100%;
+    }
+    &.drag {
+      position: absolute;
+      width: 100px;
+      z-index: 2;
+      color: #FFFFFF;
+    }
+    &:not(.day) {
+      @include box-shadow($scheduler-event-shadow);
+    }
+    &.day {
+      background: none !important;
+      border: none !important;
+    }
+    &.margin-left {
+      margin-left: 5px;
+    }
+    &.margin-right {
+      margin-right: 5px;
+    }
+    .arrow-left1 {
+      border-style: solid;
+      border-width: 10px 6px 10px 0;
+      position: absolute;
+      top: -1px;
+      left: -17px;
+      width: 16px;
+    }
+    .arrow-left2 {
+      border-style: solid;
+      border-width: 9px 6px 9px 0;
+      position: absolute;
+      top: 0;
+      left: -16px;
+      width: 16px;
+    }
+    .arrow-right1 {
+      border-style: solid;
+      border-width: 10px 0 10px 6px;
+      position: absolute;
+      top: -1px;
+      right: -17px;
+      width: 16px;
+    }
+    .arrow-right2 {
+      border-style: solid;
+      border-width: 9px 0 9px 6px;
+      position: absolute;
+      top: 0;
+      right: -16px;
+      width: 16px;
+    }
+
+    @for $i from 1 to length($colors)+1 {
+      &.color#{$i} {
+        @include event-cont-color(nth($colors, $i));
+      }
+    }
+  }
+  .drag-grid {
+    & > div {
+      position: absolute;
+      background: $scheduler-drag-background;
+      opacity: 0.2;
+    }
+  }
+  .day-container-drag {
+    height: 0;
+    position: relative;
+    z-index:4;
+    .day-event {
+      position: absolute;
+      background: $scheduler-drag-background;
+      border: 1px solid $scheduler-drag-border;
+      opacity: 0.2;
+      z-index: 3;
+    }
+  }
+  .event-cont-hour {
+    width: 100%;
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    @include box-shadow($scheduler-event-shadow);
+    padding: 0.5rem 0.5rem 1rem 0.5rem;
+    &.drag {
+      z-index: 3;
+    }
+    .inner {
+      color: $scheduler-event-color;
+      height: 100%;
+      font-size: 0.9rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .resize {
+      position: absolute;
+      height: 10px;
+      width: 10px;
+      left: 50%;
+      margin-left: -5px;
+      bottom: 0;
+      font-size: 10px;
+      color: $scheduler-event-resize-handler;
+      text-align: center;
+      cursor: ns-resize;
+    }
+
+    @for $i from 0 to length($colors) {
+      &.color#{$i+1} {
+        @include event-cont-hour-color(nth($colors, $i+1));
+      }
+    }
+  }
+  .hour {
+    border-bottom: 1px solid $scheduler-border;
+    text-align: right;
+    padding: 3px;
+    height: 44px;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+  .hour-grid {
+    border-top: 1px solid $scheduler-border;
+    &.inner {
+      border-top: 1px dotted $scheduler-border;
+    }
+  }
+  .day-container {
+    position: relative;
+    .hour-mark {
+      background: $scheduler-hour-mark;
+      border: none;
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      z-index: 2;
+      left: 0;
+    }
+  }
+  .day-inner {
+    position: relative;
+    margin-right: 10px;
+  }
+  .hour-mark {
+    border-style: solid;
+    border-color: transparent $scheduler-hour-mark;
+    border-width: 4px 0 4px 4px;
+    position: absolute;
+    left: 0;
+  }
+}
+
+.ui-calendar-helper {
+  flex: 1 1 auto;
+  background: $scheduler-calendar-helper-background;
+  padding: 1rem;
+  min-width: 300px;
+  .cal-nav {
+    display: flex;
+    border-bottom: 1px solid $scheduler-border;
+    align-items: center;
+    padding: 5px;
+    p {
+      margin-left: auto;
+    }
+  }
+  table {
+    width: 100%;
+    border-spacing: 0;
+    margin-top: 3px;
+    td {
+      font-size: 0.9rem;
+      text-align: center;
+      &.events > * {
+        font-weight: bold;
+      }
+      &:hover {
+        background: $scheduler-helper-hover-background;
+      }
+    }
+    span.other {
+      color: $scheduler-helper-other;
+    }
+    tbody span {
+      font-size: 0.9rem;
+      line-height: 18px;
+      padding: 2px;
+      display: block;
+      text-align: center;
+      cursor: pointer;
+      border: 1px solid transparent;
+      &.today {
+        border-color: $scheduler-helper-today-border !important;
+      }
+      &.selected {
+        background: $scheduler-helper-selected-background;
+        border-color: $scheduler-helper-selected-border;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: $phone) {
+  .ui-event-calendar, .ui-event-popup {
+    .cal-navigation p {
+      line-height: initial;
+      align-items: center;
+      text-align: center;
+      padding: 0 $prem + rem;
+      margin: 0 auto;
+    }
+  }
+}

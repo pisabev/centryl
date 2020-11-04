@@ -1,0 +1,23 @@
+.ui-slider, .ui-slider-shadow {
+  width: 5px;
+  background: $container-slider-background;
+  border: 1px solid $container-separator;
+  cursor: ew-resize;
+  position: relative;
+  max-height: 100%;
+  &:after {
+    content: '...';
+    @include transform(rotate(-90deg));
+    top: 50%;
+    position: absolute;
+    left: -7px;
+    width: 10px;
+  }
+}
+
+.ui-slider-shadow {
+  background: $container-slider-shadow;
+  position: absolute;
+  z-index: 999999;
+  opacity: 0.5;
+}

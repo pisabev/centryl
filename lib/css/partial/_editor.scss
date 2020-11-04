@@ -1,0 +1,126 @@
+.ui-editor-error {
+  border-color: #FF3E3E;
+}
+
+.ui-editor {
+  display: flex;
+  flex-direction: column;
+  &.fullscreen {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    background: $editor-body-background;
+  }
+  .editor {
+    overflow:hidden;
+  }
+  .ui-editor-header {
+    background: $editor-header-background;
+    &.ui-menu {
+      padding: 0;
+      flex-direction: row;
+      flex-wrap: wrap;
+      .ui-button {
+        margin: 0;
+      }
+    }
+    .ui-button-inner {
+      @include border-radius(0);
+    }
+  }
+  .ui-editor-body {
+    flex: 1 1 0;
+    max-height: 100%;
+    background: $editor-body-background;
+    line-height: normal;
+    display: flex;
+    min-height: 4*$rem + rem;
+    border-top: 1px solid $editor-body-border-top;
+    border-right: 1px solid $editor-body-border-right;
+    border-bottom: 1px solid $editor-body-border-bottom;
+    border-left: 1px solid $editor-body-border-left;
+    @include border-radius($editor-body-border-radius);
+    position: relative;
+    .CodeMirror-overlayscroll-horizontal, .CodeMirror-overlayscroll-vertical {
+      div {
+        @include border-radius(0);
+      }
+    }
+  }
+  .ui-editor-footer {
+    color: $editor-footer-color;
+    background: $editor-footer-background;
+    text-transform: lowercase;
+    display: flex;
+    .ui-button {
+      margin-left: auto;
+    }
+  }
+  .ui-editor-path {
+    white-space: nowrap;
+    line-height: 2rem;
+    padding-left: 0.5rem;
+  }
+  .wrap {
+    width: 0;
+    min-width: 100%;
+    display: flex;
+  }
+  .iframe {
+    white-space: normal;
+    margin: initial;
+    padding: $prem + rem;
+    min-width: 100%;
+    color: initial;
+    -webkit-touch-callout: default;
+    -webkit-user-select: auto;
+    -moz-user-select: all;
+    -ms-user-select: all;
+    user-select: all;
+    * {
+      margin: initial;
+      padding: initial;
+      color: initial;
+      line-height: initial;
+    }
+    li {
+      margin-left: 1.2rem !important;
+    }
+  }
+  &.disabled {
+    .ui-editor-body {
+      opacity: 0.8;
+    }
+    .iframe {
+      background: $field-input-disabled-background;
+    }
+  }
+}
+
+.editor-tab {
+  display: inline-flex;
+  line-height: $rem + rem; //Firefox Bug - calc on line-height does not work (v48 should fix this)
+  line-height: calc(#{$rem + rem} - 2px);
+  background-color: $editor-tab-background;
+  border: $editor-tab-border;
+  padding: 0 $prem + rem;
+  cursor: default;
+  align-items: center;
+  &.active {
+    background: $editor-tab-active-background;
+    border: 1px solid transparent;
+  }
+  em {
+    display: inline-flex;
+    color: #FF0000;
+  }
+  a {
+    display: inline-flex;
+    .icon {
+      width: 1.5 + rem;
+      height: 1.5 + rem;
+    }
+  }
+}

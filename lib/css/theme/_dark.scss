@@ -1,0 +1,429 @@
+$build-browser-prefix: false;
+$phone: 600px;
+$tablet: 800px;
+$desktop: 1000px;
+$large: 1500px;
+$panel-color: #535353;
+$app-disabled-background: #000000;
+$loader-background: #000000;
+$loader-border: 5px solid #A5AFBE;
+$loader-border2: 5px solid #727983;
+$scrollbar-track-background: darken($panel-color, 15%);
+$scrollbar-thumb-border: darken($panel-color, 15%);
+$scrollbar-thumb-background: $panel-color;
+$loading-spinner-color: #3f466c;
+$icons-padding-default: 2px;
+$icons-padding-internal: 8px;
+$icon-color: #EAEAEA;
+
+/* Layout variables
+-----------------------------------------------------------------------------------------------------*/
+$nav-top-height: 50;
+$base-color: #C4C4C4;
+$secondary-color: #e6e6e6;
+$body-background: #3f3f3f;
+$page-background: #3f3f3f;
+$section-background: #2B2B2B;
+$footer-background: #191919;
+$footer-addons-icon-color: #CDCDCD;
+$footer-addons-hover-background: darken(#191919, 10%);
+$footer-addons-profile-background: $panel-color;
+$footer-bottom-border: #313131;
+$options-background: $panel-color;
+$container-separator: none;
+$container-slider-background: $panel-color;
+$container-slider-shadow: darken($panel-color, 20%);
+$win-tab-background: none;
+$win-tab-background-active: #222222;
+$win-tab-color: #FFFFFF;
+$aside-background: $panel-color;
+$aside-shadow: 0 0 30px 0 #222222;
+$aside-width: 350;
+
+/* Menu variables
+-----------------------------------------------------------------------------------------------------*/
+$menu-background: #191919;
+$menu-element-background: none;
+$menu-element-hover-background: lighten(#191919, 5%);
+$menu-width: 65;
+$menu-width-type2: 250;
+$menu-color: #C1C1C1;
+$menu-border: transparent;
+$menu-brand-background: #000000;
+$menu-submenu-background: lighten(#191919, 5%);
+$menu-submenu-hover-background: darken(#191919, 10%);
+$menu-submenu-shadow: 0 0 8px #191919;
+$menu-submenu-color: $base-color;
+
+/* Win variables
+-----------------------------------------------------------------------------------------------------*/
+$win-background: $panel-color;
+$win-border: 1px solid darken($win-background, 10%);
+$win-border-radius: 5px;
+$win-content-background: darken($panel-color,8%);
+$win-icon-color: #CDCDCD;
+$win-title-color: $base-color;
+$win-title-background: $page-background;
+$win-action-color: auto;
+$win-action-border-radius: 5px;
+$win-action-hover-border: darken($panel-color,13%);
+$win-action-hover-background: darken($panel-color,13%);
+$win-action-hover-color: auto;
+$win-shadow: 0 0 10px darken($win-background, 20%);
+$win-popup-background: $panel-color;
+$win-popup-shadow: 0 0 4px #2E2E2E;
+
+/* Message/Notify variables
+-----------------------------------------------------------------------------------------------------*/
+$message-background: $panel-color;
+$message-background-new: $panel-color;
+$message-background-hover: lighten($panel-color, 10%);
+$message-border: 1px solid darken($panel-color, 5%);
+$message-border-color: darken($panel-color, 5%);
+$message-shadow: 0 0 20px 0px #292929;
+
+/* Button variables
+-----------------------------------------------------------------------------------------------------*/
+$button-menu-background: none;
+$button-menu-shadow: none;
+$button-border-radius: 3px;
+$button-focus-color: #ac93ff;
+
+// Normal
+$button-warning-icon: #FF6328;
+$button-background: #7a7a7a;
+$button-color: #FFFFFF;
+$button-color-light: #FFFFFF;
+$button-icon-color: #EAEAEA;
+$button-border: transparent;
+$button-box-shadow: 0px 1px 2px 0px darken($button-background, 5%);
+$button-gradient-from: null;
+$button-gradient-to: null;
+$button-hover-border: darken($button-border, 15%);
+$button-hover-gradient-from: null;
+$button-hover-gradient-to: null;
+$button-hover-background: darken($button-background, 4%);
+
+// Warning
+$button-warning-icon-warning: #FFFFFF;
+$button-background-warning: #FF6328;
+$button-color-warning: #FFFFFF;
+$button-border-warning: transparent;
+$button-box-shadow-warning: 0px 1px 2px 0px darken($button-background-warning, 10%);
+$button-gradient-from-warning: $button-background-warning;
+$button-gradient-to-warning: null;
+$button-hover-border-warning: null;
+$button-hover-gradient-from-warning: null;
+$button-hover-gradient-to-warning: null;
+$button-hover-background-warning: darken($button-background-warning,8%);
+
+// Important
+$button-warning-icon-important: #FFFFFF;
+$button-background-important: #1b9053;
+$button-color-important: #FFFFFF;
+$button-border-important: transparent;
+$button-box-shadow-important: 0px 1px 2px 0px darken($button-background-important, 10%);
+$button-gradient-from-important: null;
+$button-gradient-to-important: null;
+$button-hover-border-important: darken($button-border-important, 15%);
+$button-hover-gradient-from-important: null;
+$button-hover-gradient-to-important: null;
+$button-hover-background-important: darken($button-background-important, 8%);
+
+// Attention
+$button-warning-icon-attention: #FFFFFF;
+$button-background-attention: #3a7bb9;
+$button-color-attention: #FFFFFF;
+$button-border-attention: transparent;
+$button-box-shadow-attention: 0px 1px 2px 0px darken($button-background-attention, 10%);
+$button-gradient-from-attention: null;
+$button-gradient-to-attention: null;
+$button-hover-border-attention: darken($button-border-attention, 15%);
+$button-hover-gradient-from-attention: null;
+$button-hover-gradient-to-attention: null;
+$button-hover-background-attention: darken($button-background-attention, 8%);
+
+/* Calendar variables
+-----------------------------------------------------------------------------------------------------*/
+$calendar-outer-background-color: #3F3F4A;
+$calendar-day-color: #626277;
+$calendar-border-color: $panel-color;
+$calendar-border-width: 0;
+$calendar-head-background: #313139;
+$calendar-head-color: #FFFFFF;
+$calendar-head-weekend-color: #FF3232;
+$calendar-current-background: $panel-color;
+$calendar-current-color: #FFFFFF;
+$calendar-hover-background: #B8BBD8;
+$calendar-hover-color: #FFFFFF;
+
+/* Chart variables
+-----------------------------------------------------------------------------------------------------*/
+$chart-stroke: #393939;
+$chart-border-color: #393939;
+$chart-text-color: #C4C4C4;
+$chart-label-color: #FFFFFF;
+
+$circle-font-size: 70px;
+$circle-stroke-background: #F2F2F2;
+$circle-stroke-color: #EEEEEE;
+$circle-stroke-color-high: #222222;
+$circle-stroke-width: 20px;
+$circle-animation: dash 0.5s ease-in-out forwards;
+
+$bar-small-background: #969696;
+$bar-small-color: #FFFFFF;
+$bar-small-percent: #ec44ff;
+$bar-small-percent-shadow: none;
+
+/* Editor variables
+-----------------------------------------------------------------------------------------------------*/
+$editor-header-background: transparent;
+$editor-body-background: #BBBBBB;
+$editor-body-border-top: #444444;
+$editor-body-border-right: #444444;
+$editor-body-border-bottom: #444444;
+$editor-body-border-left: #444444;
+$editor-body-border-radius: 0;
+$editor-header-color: $base-color;
+$editor-footer-background: auto;
+$editor-footer-color: #666666;
+
+/* Form variables
+-----------------------------------------------------------------------------------------------------*/
+$section-color: #C4C4C4;
+$section-separator: #9922ee;
+$form-label-color: #C9C9C9;
+$form-label-weight: normal;
+
+/* Field variables
+-----------------------------------------------------------------------------------------------------*/
+$field-checkbox-border: #666666;
+$field-checkbox-background: darken($panel-color, 12%);
+$field-checkbox-checked: #C4C4C4;
+$field-checkbox-disabled-border: #bbb;
+$field-checkbox-disabled-background: #FFFFFF;
+
+$field-normal: #CDCDCD;
+$field-normal-color: #666666;
+$field-error: #FF3E3E;
+$field-error-color: #FFFFFF;
+$field-message: #fff990;
+$field-message-color: #222222;
+
+$field-input-background: darken($panel-color, 12%);
+$field-input-border-radius: 3px;
+$field-input-border-top-color: darken($panel-color, 12%);
+$field-input-border-right-color: darken($panel-color, 12%);
+$field-input-border-bottom-color: darken($panel-color, 12%);
+$field-input-border-left-color: darken($panel-color, 12%);
+
+$field-input-focus-border-top-color: darken($panel-color, 12%);
+$field-input-focus-border-right-color: darken($panel-color, 12%);
+$field-input-focus-border-bottom-color: darken($panel-color, 12%);
+$field-input-focus-border-left-color: darken($panel-color, 12%);
+$field-input-focus-separator-color: #3f3f89;
+$field-input-focus-background: darken($panel-color, 12%);
+$field-input-focus-shadow: 0 0 5px 1px #485E88;
+$field-input-focus-shadow-warning: 0 0 5px 1px #ff876e;
+
+$field-input-disabled-background: darken($panel-color, 3%);
+
+$field-input-icon-border: darken($panel-color, 10%);
+$field-input-icon-background: $panel-color;
+
+$field-select-background: $panel-color;
+$field-select-shadow: inset 0 1px 0 0 lighten($panel-color,10%), 0 1px 0 0 lighten($panel-color,10%);
+$field-select-border-top-color: darken($panel-color,10%);
+$field-select-border-right-color: darken($panel-color,10%);
+$field-select-border-bottom-color: darken($panel-color,10%);
+$field-select-border-left-color: darken($panel-color,10%);
+$field-select-disabled-background: darken($panel-color, 3%);
+
+$field-range-track-background: darken($panel-color, 12%);
+$field-range-track-radius: 3px;
+$field-range-height: 6;
+$field-range-progress-background: $panel-color;
+$field-range-thumb-background: #808080;
+$field-range-thumb-height: 20;
+$field-range-thumb-shadow: 0 0 20px 1px #222222;
+
+$field-dropdown-background: #616161;
+$field-dropdown-color: inherit;
+$field-icon-color: auto;
+$field-dropdown-shadow: 0 0 20px 0 #222222;
+$field-dropdown-current-background: #3B4D66;
+$field-dropdown-current-color: #CDCDCD;
+$field-dropdown-hover-background: darken(#3B4D66, 10%);
+
+$field-tag-border: #EEEEEE;
+$field-tag-background: #F9F9F9;
+$field-tag-color: #666666;
+
+$field-color-border: #F2F2F2;
+$field-color-selected-border: darken($field-color-border, 8%);
+
+$color_picker_hue_pointer_color: #FFFFFF;
+
+/* Gadget variables
+-----------------------------------------------------------------------------------------------------*/
+$gadget-background1: #8a89cb;
+$gadget-background2: darken($gadget-background1, 8%);
+$gadget-background3: darken($gadget-background1, 16%);
+$gadget-background4: darken($gadget-background1, 24%);
+$gadget-background5: darken($gadget-background1, 32%);
+$gadget-background6: darken($gadget-background1, 40%);
+$gadget-background7: darken($gadget-background1, 48%);
+$gadget-border-bottom: 1px solid #222222;
+$icon-border: 1px solid #EEEEEE;
+$icon-text-color: #FFFFFF;
+$icon-icon-color: #FFFFFF;
+$icon-background: #FFFFFF;
+$icon-hover-background: #EEEEEE;
+$stats-background: #222222;
+
+/* Grid variables
+-----------------------------------------------------------------------------------------------------*/
+$grid-label-em-color: lighten(#666666, 15%);
+$grid-subtitle-border: #3F3F3F;
+
+$grid-list-filter-active-background: #757590;
+$grid-list-filter-shadow: 0 15px 30px -15px #222222;
+$grid-list-filter-background: $panel-color;
+$grid-list-shadow: 0 0 8px 2px darken($panel-color, 10%);
+$grid-list-color: $base-color;
+$grid-list-thead-background: lighten($panel-color, 3%);
+$grid-list-tbody-background: lighten($panel-color, 3%);
+$grid-list-border-color: darken($panel-color, 7%);
+$grid-list-border-width: 1px;
+$grid-list-row-active: #FFFFCC;
+$grid-list-row-hover: darken($panel-color, 8%);
+$grid-list-row-selected: darken($panel-color, 12%);
+$grid-list-highlighted: #485E88;
+$grid-nth-child-background: lighten($panel-color, 0%);
+$grid-total-color: #222222;
+
+$grid-border-color: darken($panel-color, 7%);
+$grid-border-width: 1px;
+$grid-background-thead: darken($panel-color, 7%);
+$grid-background: $panel-color;
+$grid-row-hover: darken($panel-color, 3%);
+
+$grid-warning: #b14a4a;
+$grid-important: #408219;
+$grid-attention: #61618a;
+
+$sum-label-background: #384A6B;
+$sum-label-color: #FFFFFF;
+
+/* Scheduler variables
+-----------------------------------------------------------------------------------------------------*/
+$scheduler-border: $panel-color;
+$scheduler-background: darken($panel-color, 10%);
+$scheduler-now-background: darken($panel-color, 20%);
+$scheduler-past-color: #CDCDCD;
+$scheduler-drag-background: #425774;
+$scheduler-drag-border: darken($scheduler-drag-background, 10%);
+$scheduler-event-color: #222222;
+$scheduler-event-shadow: 0 0 5px 1px #505050;
+$scheduler-event-resize-handler: #222222;
+$scheduler-hour-mark: #FF4040;
+$scheduler-helper-other: #CDCDCD;
+$scheduler-helper-today-border: darken($panel-color, 10%);
+$scheduler-helper-hover-background: darken($panel-color, 5%);
+$scheduler-helper-selected-background: darken($panel-color, 20%);
+$scheduler-helper-selected-border: darken($panel-color, 20%);
+$scheduler-filter-background: #535353;
+$scheduler-calendar-helper-background: $panel-color;
+
+$color1:#4C6388;
+$color2:#BAB725;
+$color3:#DD3C49;
+$color4:#2EB139;
+$color5:#B14696;
+$color6:#CC790D;
+$color7: #3372ff;
+$color8: #53abff;
+$color9: #af0036;
+$color0: #19a0a3;
+$colors: $color1 $color2 $color3 $color4 $color5 $color6 $color7 $color8 $color9 $color0;
+
+/* Chat variables
+-----------------------------------------------------------------------------------------------------*/
+$chat-background: #545454;
+$chat-border-color: darken($panel-color, 5%);
+$chat-member-background: $panel-color;
+$chat-member-hover-background: darken($panel-color, 5%);
+$chat-member-status-border: darken($panel-color, 5%);
+$chat-bottom-background: $panel-color;
+$chat-room-context-background: #545454;
+$chat-room-context-top-background: darken($chat-room-context-background, 5%);
+$chat-room-message-reverse-background: #4d4e4f;
+$chat-room-message-background: #373d3d;
+$chat-room-message-reverse-border: 1px solid darken($chat-room-message-reverse-background, 5%);
+$chat-room-message-border: 1px solid darken($chat-room-message-background, 5%);
+$chat-room-note-color: #777777;
+
+/* Tab variables
+-----------------------------------------------------------------------------------------------------*/
+$tab-border: transparent;
+$tab-color: inherit;
+$tab-font-size: inherit;
+$tab-text-transform: inherit;
+$tab-options-background: darken($panel-color, 10%);
+$tab-active-background: $panel-color;
+$tab-active-border: $panel-color;
+$tab-active-border-bottom: transparent;
+$tab-text-shadow: darken($panel-color, 20%);
+$tab-current-top-border: lighten($panel-color,15%);
+$tab-current-inner-background: $panel-color;
+
+/* Wizard variables
+-----------------------------------------------------------------------------------------------------*/
+$wizard-list-height: 60;
+$wizard-circle-height: 30;
+$wizard-circle-color: rgba(0, 0, 0, 0.3);
+$wizard-circle-color_current: #2196f3;
+$wizard-step-title-color-hover: rgba(0, 0, 0, 0.06);
+
+/* Editor variables
+-----------------------------------------------------------------------------------------------------*/
+$editor-tab-background: #585858;
+$editor-tab-border: 1px solid darken($editor-tab-background, 10%);
+$editor-tab-active-background: lighten($editor-tab-background, 10%);
+
+/* Accordion variables
+-----------------------------------------------------------------------------------------------------*/
+$accordion-border: 1px solid #403D3D;
+$accordion-border-left: 3px solid #636363;
+$accordion-border-left-hover-color: #6040b8;
+$accordion-title-background: #4b4b4b;
+$accordion-title-background-hover: #5e5c5c;
+$accordion-title-background-active: #3C3B3B;
+$accordion-background: #5e5c5c;
+
+/* Misc variables
+-----------------------------------------------------------------------------------------------------*/
+$triangle-background: #393939;
+$triangle-border-top: #FFFFFF;
+$triangle-current-color: #000000;
+$triangle-current-box-shadow: 1px 0 1px 0 #222222;
+$triangle-before-box-shadow: 1px -1px 0 0 #999999;
+$triangle-current-background: #999999;
+$triangle-current-before-background: #999999;
+$triangle-current-text-shadow: 1px 1px 1px #C8C8C8;
+$triangle-clickable-color: #FFFFFF;
+$triangle-hover: #222222;
+// Tree
+$tree-node-active: #222222;
+$tree-node-disabled: #6e6e6e;
+$tree-node-warning: #FF0000;
+// Image
+$image-container-background: #222222;
+$image-container-border: 1px solid #222222;
+// Tag
+$tag-normal-background: #F2F2F2;
+
+$font-size: 14;
+$rem: 2.5;
+$prem: 0.5;

@@ -1,0 +1,53 @@
+.ui-scroll {
+  position: relative;
+  overflow: hidden !important;
+  max-height: 100%;
+  -webkit-overflow-scrolling: touch; /* Trigger native scrolling for mobile, if not supported, plugin is used. */
+  .container {
+    position: relative;
+  }
+  .track {
+    z-index: 10;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 7px;
+    & > div {
+      position: absolute;
+      right: 0;
+      min-height: 10px;
+      width: 7px;
+      opacity: 0;
+      background: #bebebe;
+      background-clip: padding-box;
+      @include transition(opacity 0.2s linear, width 0.2s linear, height 0.2s linear);
+      &.over {
+        width: 12px;
+      }
+      &:hover {
+        opacity: 0.7;
+      }
+      &.visible {
+        opacity: 0.7;
+      }
+    }
+    &.horizontal {
+      top: auto;
+      left: 0;
+      width: auto;
+      height: 7px;
+      & > div {
+        right: auto;
+        bottom: 0;
+        height: 7px;
+        min-height: 0;
+        min-width: 10px;
+        width: auto;
+        &.over {
+          height: 12px;
+        }
+      }
+    }
+  }
+}

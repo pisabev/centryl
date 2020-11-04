@@ -1,0 +1,96 @@
+.ui-tab {
+  flex-direction: column;
+  max-width: 100%;
+  & > .ui-tab-options {
+    overflow: hidden;
+    margin-bottom: -1px;
+    max-height: initial;
+    display: none;
+    ul {
+      display: flex;
+      flex-direction: row;
+      list-style: none;
+      flex: 0 0 auto;
+      min-width: 100%;
+      min-height: calc(#{$rem + rem} + 2px);
+      li {
+        cursor: pointer;
+        flex: 0 0 auto;
+        text-decoration: none;
+        border: 1px solid transparent;
+        color: $tab-color;
+        font-size: $tab-font-size;
+        text-transform: $tab-text-transform;
+        margin-left: -1px;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        @include transition(all 0.2s ease-in-out);
+        &:hover {
+          background: darken($win-background, 5%);
+        }
+        span {
+          color: inherit;
+          font-size: inherit;
+          padding: $prem + rem $prem*2 + rem;
+        }
+        .icon {
+          width: $rem + rem;
+          min-width: $rem + rem;
+          height: $rem + rem;
+          min-height: $rem + rem;
+          & ~ span {
+            padding-left: 0;
+          }
+        }
+        &.active {
+          background: $tab-active-background;
+          border-color: $tab-border;
+          border-bottom-color: $tab-active-border-bottom;
+          border-top-color: $tab-current-top-border;
+        }
+      }
+    }
+  }
+  & > .ui-tab-content {
+    overflow: hidden;
+    background: $tab-current-inner-background;
+    & > div {
+      flex: none;
+      width: 100%;
+      display: none;
+      visibility: hidden;
+      opacity: 0;
+      &.active {
+        display: flex;
+        visibility: visible;
+        opacity: 1;
+        animation: fade 0.5s;
+      }
+      //TODO transition
+      //&.left {
+      //  @include transform(translateX(-100%));
+      //}
+      //&.right {
+      //  @include transform(translateX(100%));
+      //}
+    }
+  }
+  &:not(.single) {
+    & > .ui-tab-content {
+      border-top: 1px solid $tab-border;
+    }
+    & > .ui-tab-options {
+      display: flex;
+    }
+  }
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

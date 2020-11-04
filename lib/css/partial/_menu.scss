@@ -1,0 +1,191 @@
+.ui-menu-button {
+  display: inline-flex;
+  vertical-align: center;
+  width: 30px;
+  padding: 0 5px;
+  .icon {
+    svg {
+      height: $nav-top-height + px;
+      padding: 0;
+      use {
+        fill: $footer-addons-icon-color;
+      }
+    }
+  }
+  @include transition(all 0.2s ease-in-out);
+}
+
+.ui-page {
+  &:not(.menu-hide) {
+    .ui-menu-button {
+      display: none;
+    }
+  }
+}
+
+.ui-menu-control {
+  height: $nav_top_height + px;
+  background: $menu-brand-background;
+  display: flex;
+  align-items: center;
+  .icon {
+    height: 30px;
+    width: 30px;
+    margin-left: auto;
+  }
+}
+
+.ui-main-menu {
+  height: calc(100% - #{$nav-top-height + px});
+  background: $menu-background;
+  display: flex;
+  ul {
+    width: $menu-width + px;
+  }
+  li.ui-menu-element {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    text-decoration: none;
+    position: relative;
+    a {
+      display: flex;
+      flex-direction: column;
+      background: $menu-element-background;
+      flex: 1 1 auto;
+      align-items: center;
+      overflow: hidden;
+      span {
+        color: $menu-color;
+        font-size: 9px;
+        padding: $prem + rem;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .icon {
+        height: 4rem;
+        width: 4rem;
+        use {
+          fill: #EEEEEE;
+        }
+      }
+    }
+    &:hover, &.selected {
+      a {
+        background: $menu-element-hover-background;
+      }
+    }
+    &, & a, & a span, & a .icon {
+      @include transition(all 0.3s ease-in-out);
+    }
+  }
+  ul.ui-sub-inner {
+    overflow: hidden;
+    @include transition(height 0.3s ease-in-out);
+    height: 0;
+    li {
+      & > a {
+        padding: $prem + rem 0;
+        span {
+          color: $menu-submenu-color;
+        }
+        & > .icon {
+          height: 2.5rem;
+          width: 2.5rem;
+        }
+      }
+    }
+    li.lvl1 {
+      & > a {
+        padding-left: 1rem;
+      }
+      &:hover, &.selected {
+        a {
+          background: darken($menu-element-hover-background, 6%);
+        }
+      }
+    }
+    li.lvl2 {
+      & > a {
+        padding-left: 2rem;
+      }
+      &:hover, &.selected {
+        a {
+          background: darken($menu-element-hover-background, 12%);
+        }
+      }
+    }
+    li.lvl3 {
+      & > a {
+        padding-left: 2rem;
+      }
+      &:hover, &.selected {
+        a {
+          background: darken($menu-element-hover-background, 18%);
+        }
+      }
+    }
+  }
+}
+
+.ui-page.type2 {
+  .ui-main-menu ul {
+    width: $menu-width-type2 + px;
+    li a {
+      flex-direction: row;
+      span {
+        font-size: 1rem;
+        text-align: left;
+      }
+    }
+  }
+}
+
+.ui-sub-menu {
+  background: $menu-submenu-background;
+  @include box-shadow($menu-submenu-shadow);
+  clear: both;
+  float: left;
+  display: block;
+  z-index: 997;
+  position: absolute;
+  @include transition(transform 0.3s);
+  &:not(.show) {
+    @include transform(translate(-100px, 0));
+  }
+  li.ui-menu-element {
+    position: relative;
+    display: block;
+    a {
+      display: block;
+      position: relative;
+      span {
+        color: $menu-submenu-color;
+        font-size: 0.9rem;
+      }
+      padding: 1rem 6rem 1rem 3rem;
+      width: 100%;
+      .icon {
+        position: absolute;
+        top: 0;
+        left: $prem + rem;
+        display: flex;
+        width: 2.2rem;
+        height: 100%;
+        use {
+          fill: #FFFFFF;
+        }
+      }
+      .sub {
+        position: absolute;
+        right: 1.5rem;
+        font-size: 0.7rem;
+        line-height: 1.3rem;
+      }
+    }
+    &:hover, &.selected {
+      background-color: $menu-submenu-hover-background;
+    }
+  }
+}

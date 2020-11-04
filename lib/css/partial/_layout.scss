@@ -1,0 +1,346 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: $body-background;
+}
+
+body {
+}
+
+// APP loading
+.spinner {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -20px;
+  margin-left: -20px;
+  .double-bounce1, .double-bounce2 {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: $loading-spinner-color;
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    left: 0;
+    -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+    animation: sk-bounce 2.0s infinite ease-in-out;
+  }
+  .double-bounce2 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+  }
+  @-webkit-keyframes sk-bounce {
+    0%, 100% {
+      -webkit-transform: scale(0.0)
+    }
+    50% {
+      -webkit-transform: scale(1.0)
+    }
+  }
+  @keyframes sk-bounce {
+    0%, 100% {
+      transform: scale(0.0);
+      -webkit-transform: scale(0.0);
+    }
+    50% {
+      transform: scale(1.0);
+      -webkit-transform: scale(1.0);
+    }
+  }
+}
+
+main {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+nav.ui-top {
+  height: $nav_top_height + px;
+  background: $footer-background;
+  position: fixed;
+  z-index: 999;
+  right: 0;
+  left: 0;
+  padding-left: $menu-width + px;
+  display: flex;
+  align-items: center;
+  @include transition(all 0.2s ease-in-out);
+}
+
+nav.ui-left {
+  width: $menu-width + px;
+  position: fixed;
+  height: auto;
+  z-index: 999;
+  top: 0;
+  bottom: 0;
+  background: $menu-brand-background;
+  @include transition(all 0.2s ease-in-out);
+}
+
+section {
+  padding: $nav_top_height + px 0 0 $menu-width + px;
+  height: 100%;
+}
+
+aside.ui-right {
+  width: $aside-width + px;
+  position: fixed;
+  height: auto;
+  z-index: 998;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: $aside-background;
+  overflow: hidden;
+  padding-top: $nav-top-height + px;
+  @include transition(all 0.2s ease-in-out);
+  @include transform(translateX($aside-width + px));
+}
+
+.ui-page {
+  @include transition(opacity 0.5s);
+  opacity: 0;
+  background: $page-background;
+  &.blurred {
+    filter: blur(1px);
+  }
+  &.type2 {
+    .ui-top {
+      padding-left: $menu-width-type2 + px;
+    }
+    .ui-left {
+      width: $menu-width-type2 + px;
+    }
+    section {
+      padding: $nav_top_height + px 0 0 $menu-width-type2 + px;
+    }
+    &.menu-hide nav.ui-left {
+      @include transform(translateX(-$menu-width-type2 + px));
+    }
+  }
+  &.menu-hide {
+    nav.ui-top {
+      padding-left: 0;
+    }
+    nav.ui-left {
+      @include transform(translateX(-$menu-width + px));
+    }
+    section {
+      padding-left: 0;
+    }
+  }
+  &.aside-show {
+    aside.ui-right {
+      @include transform(translateX(0));
+      @include box-shadow($aside-shadow);
+    }
+    section {
+      //padding-right: 0;
+    }
+  }
+}
+
+.ui-desktop {
+  width: 100%;
+  height: 100%;
+}
+
+.ui-container {
+  flex: 1 1 0;
+  display: flex;
+  &.center {
+    align-items: center;
+    & > * {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+  &.ui-row {
+    flex-direction: column;
+  }
+  &.ui-column {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  &.ui-row, &.ui-column {
+    & > div {
+      &:not(.ui-auto) {
+        flex: 0 0 auto;
+      }
+      &.ui-auto {
+        flex: 1 1 0;
+        min-height: 0; //Firefox, IE Edge fix for not taking child height
+      }
+    }
+  }
+  .container {
+    display: flex;
+    flex: 1 1 0;
+    width: 0;
+  }
+  & > p, & > h1, & > h2, & > h3, & > h4, & > h5, & > h6 {
+    padding: $prem*2 + rem;
+    flex-shrink: 0;
+    white-space: pre-line;
+    word-wrap: break-word;
+    max-width: 100%;
+  }
+  &.section {
+    background: $section-background;
+  }
+}
+
+.ui-addons {
+  display: flex;
+  flex: 0 0 auto;
+  margin-left: auto;
+  align-items: center;
+  .ui-addon {
+    float: right;
+  }
+  .ui-timer {
+    color: $footer-addons-icon-color;
+    padding: 3px 10px;
+    line-height: $nav_top_height - 6 + px;
+    @include respond-max(phone) {
+      display: none;
+    }
+  }
+  .ui-button {
+    height: $nav-top-height + px;
+    &, &:focus {
+      border: none;
+    }
+    background: none;
+    @include box-shadow(none);
+    .icon {
+      display: flex;
+      svg {
+        height: $rem + rem;
+        align-self: center;
+        use {
+          fill: $footer-addons-icon-color;
+        }
+      }
+    }
+    &:hover {
+      background: $footer-addons-hover-background;
+    }
+  }
+  .profile {
+    .ui-button {
+      border-radius: 100%;
+      background: $footer-addons-profile-background;
+      height: $nav_top_height - 10 + px;
+      width: $nav_top_height - 10 + px;
+      background-position: center center;
+      background-size: contain;
+      background-repeat: no-repeat;
+      &:hover {
+        background-color: $footer-addons-hover-background;
+      }
+      .icon {
+        margin: 0 auto;
+      }
+    }
+  }
+  span.note {
+    font-size: 10px;
+    display: none;
+    min-width: 14px;
+    height: 14px;
+    background: #B50000;
+    color: #FFFFFF;
+    text-align: center;
+    line-height: 14px;
+    position: absolute;
+    padding: 0 2px;
+    top: 2px;
+    right: 0;
+    @include border-radius(2px);
+  }
+}
+
+.ui-tabs {
+  display: flex;
+  & > div {
+    display: flex;
+    .ui-win-tab {
+      display: inline-flex;
+      opacity: 0.5;
+      line-height: $nav_top_height + px;
+      height: $nav_top_height + px;
+      background: $win-tab-background;
+      span {
+        color: $win-tab-color;
+        font-size: 11px;
+        padding: 0 5px 0 0;
+        flex: 1 0 auto;
+        white-space: nowrap;
+        overflow: hidden;
+        max-width: 100px;
+        text-overflow: ellipsis;
+      }
+      .icon {
+        display: flex;
+        width: 2rem;
+        height: 100%;
+        use {
+          fill: $footer-addons-icon-color;
+        }
+      }
+      &.active {
+        opacity: 1;
+        background: $win-tab-background-active;
+      }
+    }
+  }
+  .ui-tabs-more {
+    width: 30px;
+    height: $nav_top_height + px;
+    margin-left: auto;
+    display: none;
+    &:hover {
+      background: $win-tab-background-active;
+    }
+    svg {
+      padding: 5px;
+      height: $nav_top_height + px;
+    }
+  }
+  &.dropdown {
+    width: 150px;
+    & > div {
+      flex-direction: column;
+      position: absolute;
+      height: auto;
+      background: $win-tab-background-active;
+      .ui-win-tab {
+        flex: 0 0 auto;
+        display: inline-flex;
+        height: 0;
+        @include transition(all 0.2s);
+        span {
+          width: 100px;
+        }
+        &.active {
+          height: $nav_top_height + px;
+        }
+      }
+    }
+    .ui-tabs-more {
+      display: inline-flex;
+    }
+    &.show {
+      .ui-win-tab {
+        height: $nav_top_height + px;
+      }
+    }
+  }
+}

@@ -1,0 +1,80 @@
+.ui-tree {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  $size: 2;
+  & > span {
+    flex: 0 0 auto;
+    display: flex;
+    & > span {
+      width: $size + rem;
+      height: $size + rem;
+    }
+  }
+  .ui-field-check {
+    margin-right: $prem + rem;
+  }
+  a {
+    flex: 0 0 auto;
+    line-height: $size + rem;
+    display: flex;
+    span.text {
+      white-space: nowrap;
+      padding: 0 $prem + rem 0 0;
+    }
+    .icon {
+      display: inline-flex;
+      svg {
+        width: $size + rem;
+        height: $size + rem;
+      }
+    }
+  }
+  a.node {
+    width: $size + rem;
+    height: $size + rem;
+    @include transition(transform 0.2s);
+    svg {
+      padding: 0;
+    }
+  }
+  a.disabled {
+    color: $tree-node-disabled;
+  }
+  a.warning {
+    color: $tree-node-warning;
+  }
+  a.active {
+    background: $tree-node-active;
+  }
+  .vertline {
+  }
+  .lastnode {
+  }
+  .nnode {
+  }
+  .mnode {
+  }
+  .mfirstnode {
+  }
+  .mlastnode {
+  }
+  .pfirstnode {
+    @include transform(rotate(-90deg));
+  }
+  .plastnode {
+    @include transform(rotate(-90deg));
+  }
+  .pnode {
+    @include transform(rotate(-90deg));
+  }
+  .loading {
+    border: 4px solid #A5AFBE;
+    border-left: 4px solid #727983;
+    @include transform(translateZ(0));
+    @include animation(rotator 0.8s infinite linear);
+    &, &:after {
+      border-radius: 50%;
+    }
+  }
+}

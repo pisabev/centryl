@@ -1,0 +1,498 @@
+.ui-grid-list-container {
+  overflow: hidden;
+}
+
+table.ui-table-list {
+  border-collapse: collapse;
+  color: $grid-list-color;
+  width: 100%;
+
+  &.fixed-layout {
+    table-layout: fixed;
+  }
+
+  &.shadow {
+    box-shadow: $grid-list-shadow;
+    position: relative;
+    z-index: 1;
+  }
+
+  & > thead > tr {
+    & > td {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      position: relative;
+      background: $grid-list-thead-background;
+      vertical-align: top;
+      border: $grid-list-border-width solid $grid-list-border-color;
+
+      & > div {
+        padding: $prem + rem;
+        min-height: 2rem;
+
+        &.group {
+          text-align: center;
+        }
+
+        &.head {
+          display: flex;
+          @include transition(background-color 0.5s);
+
+          & > span {
+            padding-top: 0.4rem;
+            line-height: 1rem;
+            white-space: pre-wrap;
+          }
+
+          & > a.sort {
+            display: inline-flex;
+            flex-direction: column;
+            width: 2rem;
+            height: 2rem;
+            min-width: 2rem;
+            overflow: hidden;
+
+            i.icon {
+              display: flex;
+
+              svg {
+                padding: 0;
+              }
+            }
+
+            i.icon:first-child {
+              @include transform(scale(1.5) translateY(0.2rem));
+            }
+
+            i.icon:last-child {
+              @include transform(scale(1.5) translateY(-0.2rem));
+            }
+          }
+
+          & > a.filter {
+            margin-left: auto;
+            display: inline-flex;
+            width: 2rem;
+            height: 2rem;
+            min-width: 2rem;
+
+            &:hover {
+              background: $grid-list-filter-active-background;
+            }
+
+            svg {
+              width: 2rem;
+              height: 2rem;
+            }
+          }
+
+          &.filtered {
+            background: $grid-list-filter-active-background;
+          }
+        }
+      }
+
+      & > em {
+        padding: 0 1rem 0 0;
+        font-size: 0.8rem;
+        display: flex;
+        margin: 0 2px 2px 2px;
+        white-space: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        position: relative;
+        word-break: break-word;
+        color: $secondary-color;
+        align-items: center;
+
+        i.icon {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 1 + rem;
+          height: 1 + rem;
+
+          svg {
+            padding: 0;
+
+            use {
+              fill: #ff6a7a;
+            }
+          }
+
+          &:hover {
+            cursor: pointer;
+            background: $grid-list-filter-active-background;
+          }
+        }
+      }
+
+      &.highlighted {
+        background-color: $grid-list-highlighted !important;
+      }
+    }
+  }
+
+  & > thead > tr.ui-table-filter {
+    border-spacing: 1px;
+    color: $grid-list-color;
+    width: 100%;
+
+    & > td {
+      background: $grid-list-filter-background;
+      overflow: initial;
+      padding: 0.3 + rem;
+      border: $grid-list-border-width solid $grid-list-border-color;
+
+      & > div {
+        overflow: hidden;
+        padding: 0;
+        display: flex;
+      }
+    }
+  }
+
+  & > tbody > tr {
+    & > td {
+      color: $grid-list-color;
+      padding: $prem + rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      vertical-align: middle;
+      background: $grid-list-tbody-background;
+      height: ($rem + $prem*2) + rem;
+      border: $grid-list-border-width solid $grid-list-border-color;
+
+      & > a {
+        padding: 6px;
+        font-weight: bold;
+        display: inline-block;
+        @include transition(all 0.2s);
+
+        &:hover {
+          background: lighten($grid-list-highlighted, 5%);
+        }
+      }
+
+      &.highlighted {
+        background-color: $grid-list-highlighted !important;
+      }
+
+      &.hightlightable {
+        cursor: crosshair;
+        text-align: right;
+      }
+    }
+
+    &:nth-child(2n) > td {
+      background: $grid-nth-child-background;
+    }
+
+    &.active > td {
+      background: $grid-list-row-active;
+    }
+
+    &:hover > td {
+      background: $grid-list-row-hover;
+    }
+
+    &.selected > td {
+      background: $grid-list-row-selected;
+    }
+
+    &.warning > td {
+      background: $grid-warning;
+    }
+
+    &.attention > td {
+      background: $grid-attention;
+    }
+
+    &.important > td {
+      background: $grid-important;
+    }
+  }
+
+  & > tbody.tbody-fix > tr > td {
+    border: $grid-list-border-width solid transparent;
+  }
+
+  & > tfoot > tr > td {
+    white-space: nowrap;
+    vertical-align: top;
+    border: $grid-list-border-width solid transparent;
+
+    & > span {
+      margin: 0.5rem 0;
+      display: inline-block;
+      border-top: 1px solid #CDCDCD;
+      padding: 0.5rem 0;
+      font-weight: bold;
+      width: 100%;
+      text-align: right;
+    }
+  }
+}
+
+.ui-table-grid {
+  border-collapse: collapse;
+  color: $grid-list-color;
+  width: 100%;
+
+  &.light, &.no-border {
+    background: none;
+    border-spacing: 0;
+
+    & > tbody > tr > td, & > tfoot > tr > td {
+      border: none;
+    }
+
+    &.light > tbody > tr > td, &.ligth > tfoot > tr > td {
+      border-top: $grid-border-width solid $grid-border-color;
+    }
+
+    & > thead > tr > td {
+      background: none;
+      border: none;
+    }
+  }
+
+  & > tbody > tr {
+    & > td {
+      padding: $prem + rem;
+      background: $grid-background;
+      vertical-align: middle;
+      border: $grid-border-width solid $grid-border-color;
+
+      &.highlighted {
+        background-color: $grid-list-highlighted !important;
+      }
+
+      &.hightlightable {
+        cursor: crosshair;
+        text-align: right;
+      }
+
+      &.text {
+        position: relative;
+        @include respond-min(phone) {
+          &:before {
+            content: '&nbsp;';
+            visibility: hidden;
+          }
+          & > span {
+            position: absolute;
+            left: 0;
+            right: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 $prem + rem;
+          }
+        }
+      }
+
+      & > * {
+        vertical-align: middle;
+      }
+
+      & > a {
+        text-decoration: underline;
+        white-space: initial;
+      }
+
+      &.editable {
+        &.edit {
+          position: relative;
+
+          &:hover::after {
+            content: '\21B5';
+            position: absolute;
+            color: $secondary-color;
+            bottom: 0;
+            letter-spacing: -2px;
+            font-size: 1.4rem;
+            right: 10px;
+          }
+
+          &.error {
+            border-bottom: 1px solid $field-error;
+          }
+        }
+
+        .ui-field-input {
+          .inner {
+            height: 100%;
+
+            .input {
+              border: none;
+              height: 100%;
+            }
+
+            .separator {
+              bottom: 0;
+            }
+          }
+
+          .suffix, .prefix {
+            border: none !important;
+          }
+
+          .icon {
+            display: none !important;
+          }
+        }
+
+        .ui-field-select {
+          width: 100% !important;
+
+          .inner {
+            border: none;
+            height: 100%;
+            width: 100%;
+          }
+
+          &:focus:not(.disabled) > .inner {
+            border-style: none;
+          }
+        }
+      }
+    }
+
+    &:hover > td {
+      background: $grid-row-hover;
+    }
+
+    &.warning > td {
+      background: $grid-warning;
+    }
+
+    &.attention > td {
+      background: $grid-attention;
+    }
+
+    &.important > td {
+      background: $grid-important;
+    }
+  }
+
+  & > thead > tr > td {
+    padding: 0 $prem + rem;
+    line-height: $rem + rem;
+    font-weight: bold;
+    white-space: nowrap;
+    text-align: left;
+    background: $grid-background-thead;
+    border: $grid-border-width solid $grid-border-color;
+
+    & > div.group {
+      text-align: center;
+    }
+  }
+
+  & > tfoot {
+  }
+}
+
+table.ui-table-form {
+  & > thead > tr > td {
+    padding: $prem + rem;
+  }
+}
+
+.grid-filter-slide {
+  padding: $prem + rem;
+  background: $grid-list-filter-active-background;
+  display: flex;
+
+  &.show {
+    @include box-shadow($grid-list-filter-shadow !important);
+  }
+}
+
+table.total {
+  border-spacing: 0;
+  width: 100%;
+
+  td {
+    padding: $prem + rem;
+    font-weight: bold;
+    vertical-align: top;
+    white-space: nowrap;
+  }
+}
+
+.sum-label {
+  position: absolute;
+  display: block;
+  border: 1px solid $sum-label-background;
+  background: $sum-label-background;
+  font-weight: bold;
+  &, & * {
+    color: $sum-label-color;
+  }
+  z-index: 999999;
+  padding: 5px;
+}
+
+.ui-paginator {
+  display: flex;
+
+  & > * {
+    margin-right: $prem + rem;
+  }
+
+  .text {
+    line-height: $rem + rem;
+    @include respond-max(phone) {
+      display: none;
+    }
+  }
+}
+
+@include respond-max(phone) {
+  /* Force table to not be like tables anymore */
+  table.ui-table-grid {
+    &,
+    thead,
+    tbody,
+    th,
+    tbody td, thead td,
+    tbody tr, thead tr {
+      display: block;
+    }
+
+    /* Hide table headers (but not display: none;, for accessibility) */
+    thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+
+    tbody {
+      tr {
+        border-bottom: 20px solid transparent;
+      }
+
+      td {
+        /* Behave  like a "row" */
+        position: relative;
+        padding-top: $rem + rem;
+        //text-align: left !important;
+        &:before {
+          /* Now like a table header */
+          position: absolute;
+          /* Top/left values mimic padding */
+          top: 0;
+          left: 0;
+          width: 100%;
+          padding: $prem + rem;
+          white-space: nowrap;
+          content: attr(data-title);
+          background: $grid-list-thead-background;
+        }
+      }
+    }
+  }
+}

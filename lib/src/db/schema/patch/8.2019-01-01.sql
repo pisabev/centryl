@@ -1,0 +1,1 @@
+ALTER TABLE "base_meta" ADD COLUMN "build" varchar(100);

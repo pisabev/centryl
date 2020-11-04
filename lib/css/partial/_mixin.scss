@@ -1,0 +1,272 @@
+@mixin respond-max($media) {
+  @if $media == phone {
+    @media only screen and (max-width: $phone) {
+      @content;
+    }
+  } @else if $media == tablet {
+    @media only screen and (max-width: $tablet) {
+      @content;
+    }
+  } @else if $media == desktop {
+    @media only screen and (max-width: $desktop) {
+      @content;
+    }
+  } @else if $media == large {
+    @media only screen and (max-width: $large) {
+      @content;
+    }
+  }
+}
+
+@mixin respond-min($media) {
+  @if $media == phone {
+    @media only screen and (min-width: $phone) {
+      @content;
+    }
+  } @else if $media == tablet {
+    @media only screen and (min-width: $tablet) {
+      @content;
+    }
+  } @else if $media == desktop {
+    @media only screen and (min-width: $desktop) {
+      @content;
+    }
+  } @else if $media == large {
+    @media only screen and (min-width: $large) {
+      @content;
+    }
+  }
+}
+
+@mixin box-shadow($shadows...) {
+  @if $shadows != null {
+    box-shadow: $shadows;
+    @if $build-browser-prefix {
+      -moz-box-shadow: $shadows;
+      -webkit-box-shadow: $shadows;
+    }
+  }
+}
+
+@mixin box-sizing($sizing) {
+  box-sizing: $sizing;
+  @if $build-browser-prefix {
+    -moz-box-sizing: $sizing;
+    -webkit-box-sizing: $sizing;
+  }
+}
+
+@mixin transition($transitions...) {
+  transition: $transitions;
+  @if $build-browser-prefix {
+    -moz-transition: $transitions;
+    -webkit-transition: $transitions;
+    -o-transition: $transitions;
+  }
+}
+
+@mixin transform($transform) {
+  transform: $transform;
+  @if $build-browser-prefix {
+    -moz-transform: $transform;
+    -ms-transform: $transform;
+    -o-transform: $transform;
+    -webkit-transform: $transform;
+  }
+}
+
+@mixin noselect() {
+  user-select: none;
+  @if $build-browser-prefix {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+}
+
+@mixin border-radius($radius) {
+  border-radius: $radius;
+  @if $build-browser-prefix {
+    -moz-border-radius: $radius;
+    -webkit-border-radius: $radius;
+  }
+}
+
+@mixin border-bottom-right-radius($radius) {
+  border-bottom-right-radius: $radius;
+  @if $build-browser-prefix {
+    -moz-border-radius-bottomright: $radius;
+    -webkit-border-bottom-right-radius: $radius;
+  }
+}
+
+@mixin border-top-right-radius($radius) {
+  border-top-right-radius: $radius;
+  @if $build-browser-prefix {
+    -moz-border-radius-topright: $radius;
+    -webkit-border-top-right-radius: $radius;
+  }
+}
+
+@mixin border-bottom-left-radius($radius) {
+  border-bottom-left-radius: $radius;
+  @if $build-browser-prefix {
+    -moz-border-radius-bottomleft: $radius;
+    -webkit-border-bottom-left-radius: $radius;
+  }
+}
+
+@mixin border-top-left-radius($radius) {
+  border-top-left-radius: $radius;
+  @if $build-browser-prefix {
+    -moz-border-radius-topleft: $radius;
+    -webkit-border-top-left-radius: $radius;
+  }
+}
+
+@mixin gradient($from, $to) {
+  @if $from != null and $to != null {
+    background: linear-gradient(to bottom, $from 5%, $to 100%);
+    @if $build-browser-prefix {
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, $from), color-stop(1, $to));
+      background: -moz-linear-gradient(top, $from 5%, $to 100%);
+      background: -webkit-linear-gradient(top, $from 5%, $to 100%);
+      background: -o-linear-gradient(top, $from 5%, $to 100%);
+      background: -ms-linear-gradient(top, $from 5%, $to 100%);
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$from', endColorstr='$to', GradientType=0);
+    }
+  }
+}
+
+@mixin animation($name) {
+  animation: $name;
+  @if $build-browser-prefix {
+    -webkit-animation: $name;
+    -moz-animation: $name;
+  }
+}
+
+@mixin animation-name($name) {
+  animation-name: $name;
+  @if $build-browser-prefix {
+    -webkit-animation-name: $name;
+    -moz-animation-name: $name;
+  }
+}
+
+@mixin animation-duration($name) {
+  animation-duration: $name;
+  @if $build-browser-prefix {
+    -webkit-animation-duration: $name;
+    -moz-animation-duration: $name;
+  }
+}
+
+@mixin animation-timing-function($name) {
+  animation-timing-function: $name;
+  @if $build-browser-prefix {
+    -webkit-animation-timing-function: $name;
+    -moz-animation-timing-function: $name;
+  }
+}
+
+@mixin animation-iteration-count($name) {
+  animation-iteration-count: $name;
+  @if $build-browser-prefix {
+    -webkit-animation-iteration-count: $name;
+    -moz-animation-iteration-count: $name;
+  }
+}
+
+@mixin animation-direction($name) {
+  animation-direction: $name;
+  @if $build-browser-prefix {
+    -webkit-animation-direction: $name;
+    -moz-animation-direction: $name;
+  }
+}
+
+@mixin animation-delay($name) {
+  animation-delay: $name;
+  @if $build-browser-prefix {
+    -webkit-animation-delay: $name;
+    -moz-animation-delay: $name;
+  }
+}
+
+@mixin animation-play-state($name) {
+  animation-play-state: $name;
+  @if $build-browser-prefix {
+    -webkit-animation-play-state: $name;
+    -moz-animation-play-state: $name;
+  }
+}
+
+@mixin animation-fill-mode($name) {
+  animation-fill-mode: $name;
+  @if $build-browser-prefix {
+    -webkit-animation-fill-mode: $name;
+    -moz-animation-fill-mode: $name;
+  }
+}
+
+@mixin keyframes($name) {
+  @keyframes #{$name} {
+    @content;
+  }
+  @if $build-browser-prefix {
+    @-webkit-keyframes #{$name} {
+      @content;
+    }
+    @-moz-keyframes #{$name} {
+      @content;
+    }
+    @-ms-keyframes #{$name} {
+      @content;
+    }
+  }
+}
+
+@include keyframes(rotator) {
+  0% {
+    @include transform(rotate(0deg));
+  }
+  100% {
+    @include transform(rotate(360deg));
+  }
+}
+
+@include keyframes(scaler) {
+  0% {
+    @include transform(scale(0.8));
+    opacity: 0;
+  }
+  100% {
+    @include transform(scale(1));
+    opacity: 1;
+  }
+}
+
+@mixin shake($time) {
+  animation: shake $time infinite cubic-bezier(.36,.07,.19,.97) both;
+  transform: translate3d(0, 0, 0);
+}
+
+@keyframes shake {
+  1%, 9% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  2%, 8% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  3%, 5%, 7% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  4%, 6% {
+    transform: translate3d(4px, 0, 0);
+  }
+}

@@ -1,0 +1,429 @@
+$build-browser-prefix: false;
+$phone: 600px;
+$tablet: 800px;
+$desktop: 1000px;
+$large: 1500px;
+$panel-color: #FFFFFF;
+$app-disabled-background: #CDCDCD;
+$loader-background: #FFFFFF;
+$loader-border: 5px solid #A5AFBE;
+$loader-border2: 5px solid #727983;
+$scrollbar-track-background: #D7D7D7;
+$scrollbar-thumb-border: #CDCDCD;
+$scrollbar-thumb-background: #EEEEEE;
+$loading-spinner-color: #3f466c;
+$icons-padding-default: 2px;
+$icons-padding-internal: 8px;
+$icon-color: #616161;
+
+/* Layout variables
+-----------------------------------------------------------------------------------------------------*/
+$nav-top-height: 50;
+$base-color: #333333;
+$secondary-color: #666666;
+$body-background: #FFFFFF;
+$page-background: #F9F9F9;
+$section-background: #F2F2F2;
+$footer-background: #3B4D66;
+$footer-addons-icon-color: #CDCDCD;
+$footer-addons-hover-background: darken(#3B4D66, 10%);
+$footer-addons-profile-background: #FFFFFF;
+$footer-bottom-border: #2F3F57;
+$options-background: #EEEEEE;
+$container-separator: #EEEEEE;
+$container-slider-background: #F9F9F9;
+$container-slider-shadow: #191919;
+$win-tab-background: none;
+$win-tab-background-active: #222222;
+$win-tab-color: #FFFFFF;
+$aside-background: #FFFFFF;
+$aside-shadow: 0 0 30px 0 #CDCDCD;
+$aside-width: 350;
+
+/* Menu variables
+-----------------------------------------------------------------------------------------------------*/
+$menu-background: #2D3B4E;
+$menu-element-background: none;
+$menu-element-hover-background: lighten(#2D3B4E, 5%);
+$menu-width: 65;
+$menu-width-type2: 250;
+$menu-color: #C1C1C1;
+$menu-border: transparent;
+$menu-brand-background: darken(#3B4D66, 20%);
+$menu-submenu-background: lighten(#2D3B4E, 5%);
+$menu-submenu-hover-background: darken(#3E424E, 10%);
+$menu-submenu-shadow: 0 4px 8px #3E424E;
+$menu-submenu-color: #FFFFFF;
+
+/* Win variables
+-----------------------------------------------------------------------------------------------------*/
+$win-background: #FFFFFF;
+$win-border: none;
+$win-border-radius: 0px;
+$win-content-background: #FFFFFF;
+$win-icon-color: #505050;
+$win-title-color: #000000;
+$win-title-background: #FFFFFF;
+$win-action-color: #000000;
+$win-action-border-radius: 0px;
+$win-action-hover-border: darken($win-title-background, 10%);
+$win-action-hover-background: darken($win-title-background, 5%);
+$win-action-hover-color: #222222;
+$win-shadow: 0 0 10px darken($win-background, 20%);
+$win-popup-background: #FFFFFF;
+$win-popup-shadow: 0 0 4px #777777;
+
+/* Message/Notify variables
+-----------------------------------------------------------------------------------------------------*/
+$message-background: #FFFFFF;
+$message-background-new: #fffdbe;
+$message-background-hover: #F8F8F8;
+$message-border: 1px solid #F8F8F8;
+$message-border-color: #FFFFFF;
+$message-shadow: 0 0 20px 0px #C5C5C5;
+
+/* Button variables
+-----------------------------------------------------------------------------------------------------*/
+$button-menu-background: none;
+$button-menu-shadow: 0 0 10px 1px #e8e8e8;
+$button-border-radius: 0px;
+$button-focus-color: #ac93ff;
+
+// Normal
+$button-warning-icon: #FF6328;
+$button-background: #F9F9F9;
+$button-color: #000000;
+$button-color-light: #000000;
+$button-icon-color: #363636;
+$button-border: transparent;
+$button-box-shadow: 0px 1px 2px 0px darken($button-background, 10%);
+$button-gradient-from: null;
+$button-gradient-to: null;
+$button-hover-border: darken($button-border, 15%);
+$button-hover-gradient-from: null;
+$button-hover-gradient-to: null;
+$button-hover-background: darken($button-background, 4%);
+
+// Warning
+$button-warning-icon-warning: #FFFFFF;
+$button-background-warning: #FF6328;
+$button-color-warning: #FFFFFF;
+$button-border-warning: transparent;
+$button-box-shadow-warning: 0px 1px 2px 0px darken($button-background-warning, 10%);
+$button-gradient-from-warning: $button-background-warning;
+$button-gradient-to-warning: null;
+$button-hover-border-warning: null;
+$button-hover-gradient-from-warning: null;
+$button-hover-gradient-to-warning: null;
+$button-hover-background-warning: darken($button-background-warning,8%);
+
+// Important
+$button-warning-icon-important: #FFFFFF;
+$button-background-important: #1b9053;
+$button-color-important: #FFFFFF;
+$button-border-important: transparent;
+$button-box-shadow-important: 0px 1px 2px 0px darken($button-background-important, 10%);
+$button-gradient-from-important: null;
+$button-gradient-to-important: null;
+$button-hover-border-important: darken($button-border-important, 15%);
+$button-hover-gradient-from-important: null;
+$button-hover-gradient-to-important: null;
+$button-hover-background-important: darken($button-background-important, 8%);
+
+// Attention
+$button-warning-icon-attention: #FFFFFF;
+$button-background-attention: #3a7bb9;
+$button-color-attention: #FFFFFF;
+$button-border-attention: transparent;
+$button-box-shadow-attention: 0px 1px 2px 0px darken($button-background-attention, 10%);
+$button-gradient-from-attention: null;
+$button-gradient-to-attention: null;
+$button-hover-border-attention: darken($button-border-attention, 15%);
+$button-hover-gradient-from-attention: null;
+$button-hover-gradient-to-attention: null;
+$button-hover-background-attention: darken($button-background-attention, 8%);
+
+/* Calendar variables
+-----------------------------------------------------------------------------------------------------*/
+$calendar-outer-background-color: #FFFFFF;
+$calendar-day-color: #CDCDCD;
+$calendar-border-color: #F9F9F9;
+$calendar-border-width: 0;
+$calendar-head-background: #CDD0F0;
+$calendar-head-color: #FFFFFF;
+$calendar-head-weekend-color: #FF3232;
+$calendar-current-background: #B8BBD8;
+$calendar-current-color: #FFFFFF;
+$calendar-hover-background: #B8BBD8;
+$calendar-hover-color: #FFFFFF;
+
+/* Chart variables
+-----------------------------------------------------------------------------------------------------*/
+$chart-stroke: #FFFFFF;
+$chart-border-color: #DFDFDF;
+$chart-text-color: #666666;
+$chart-label-color: #FFFFFF;
+
+$circle-font-size: 70px;
+$circle-stroke-background: #F2F2F2;
+$circle-stroke-color: #EEEEEE;
+$circle-stroke-color-high: #222222;
+$circle-stroke-width: 20px;
+$circle-animation: dash 0.5s ease-in-out forwards;
+
+$bar-small-background: #969696;
+$bar-small-color: #FFFFFF;
+$bar-small-percent: #ec44ff;
+$bar-small-percent-shadow: none;
+
+/* Editor variables
+-----------------------------------------------------------------------------------------------------*/
+$editor-header-background: $body-background;
+$editor-body-background: #FFFFFF;
+$editor-body-border-top: #CDCDCD;
+$editor-body-border-right: #CDCDCD;
+$editor-body-border-bottom: #CDCDCD;
+$editor-body-border-left: #CDCDCD;
+$editor-body-border-radius: 0;
+$editor-header-color: #ACACAC;
+$editor-footer-background: #FFFFFF;
+$editor-footer-color: #666666;
+
+/* Form variables
+-----------------------------------------------------------------------------------------------------*/
+$section-color: #C4C4C4;
+$section-separator: #9922ee;
+$form-label-color: #000000;
+$form-label-weight: normal;
+
+/* Field variables
+-----------------------------------------------------------------------------------------------------*/
+$field-checkbox-border: #aaa;
+$field-checkbox-background: #f8f8f8;
+$field-checkbox-checked: #5652ad;
+$field-checkbox-disabled-border: #bbb;
+$field-checkbox-disabled-background: #ddd;
+
+$field-normal: #CDCDCD;
+$field-normal-color: #666666;
+$field-error: #FF3E3E;
+$field-error-color: #FFFFFF;
+$field-message: #fff990;
+$field-message-color: #222222;
+
+$field-input-background: #FFFFFF;
+$field-input-border-radius: 0px;
+$field-input-border-top-color: #CDCDCD;
+$field-input-border-right-color: #CDCDCD;
+$field-input-border-bottom-color: #CDCDCD;
+$field-input-border-left-color: #CDCDCD;
+
+$field-input-focus-border-top-color: #CDCDCD;
+$field-input-focus-border-right-color: #CDCDCD;
+$field-input-focus-border-bottom-color: #CDCDCD;
+$field-input-focus-border-left-color: #CDCDCD;
+$field-input-focus-separator-color: #3f3f89;
+$field-input-focus-background: #FFFFFF;
+$field-input-focus-shadow: 0 0 3px 1px #bac5ff;
+$field-input-focus-shadow-warning: 0 0 5px 1px #ff8e87;
+
+$field-input-disabled-background: #FCFCFC;
+
+$field-input-icon-border: #CDCDCD;
+$field-input-icon-background: #F8F8F8;
+
+$field-select-background: #F2F2F2;
+$field-select-shadow: inset 0 1px 0 0 lighten(#F2F2F2,10%);
+$field-select-border-top-color: transparent;
+$field-select-border-right-color: transparent;
+$field-select-border-bottom-color: transparent;
+$field-select-border-left-color: transparent;
+$field-select-disabled-background: #F2F2F2;
+
+$field-range-track-background: #EEEEEE;
+$field-range-track-radius: 3px;
+$field-range-height: 6;
+$field-range-progress-background: #acacac;
+$field-range-thumb-background: #FFFFFF;
+$field-range-thumb-height: 20;
+$field-range-thumb-shadow: 0 0 20px 1px #CDCDCD;
+
+$field-dropdown-background: #FFFFFF;
+$field-dropdown-color: #222222;
+$field-icon-color: auto;
+$field-dropdown-shadow: 0 0 20px 0 #C5C5C5;
+$field-dropdown-current-background: #3B4D66;
+$field-dropdown-current-color: #FFFFFF;
+$field-dropdown-hover-background: #E1E1E1;
+
+$field-tag-border: #EEEEEE;
+$field-tag-background: #F9F9F9;
+$field-tag-color: #666666;
+
+$field-color-border: #F2F2F2;
+$field-color-selected-border: darken($field-color-border, 30%);
+
+$color_picker_hue_pointer_color: #000000;
+
+/* Gadget variables
+-----------------------------------------------------------------------------------------------------*/
+$gadget-background1: #8a89cb;
+$gadget-background2: darken($gadget-background1, 8%);
+$gadget-background3: darken($gadget-background1, 16%);
+$gadget-background4: darken($gadget-background1, 24%);
+$gadget-background5: darken($gadget-background1, 32%);
+$gadget-background6: darken($gadget-background1, 40%);
+$gadget-background7: darken($gadget-background1, 48%);
+$gadget-border-bottom: 1px solid #EEEEEE;
+$icon-border: 1px solid #EEEEEE;
+$icon-text-color: #FFFFFF;
+$icon-icon-color: #FFFFFF;
+$icon-background: #FFFFFF;
+$icon-hover-background: #EEEEEE;
+$stats-background: #F2F2F2;
+
+/* Grid variables
+-----------------------------------------------------------------------------------------------------*/
+$grid-label-em-color: lighten(#666666, 15%);
+$grid-subtitle-border: #CDCDCD;
+
+$grid-list-filter-active-background: #E6E6FB;
+$grid-list-filter-shadow: 0 15px 30px -15px #C5C5C5;
+$grid-list-filter-background: #D9DDFF;
+$grid-list-shadow: 0 4px 9px -3px #CCCCCC;
+$grid-list-color: $base-color;
+$grid-list-thead-background: #efefef;
+$grid-list-tbody-background: #FFFFFF;
+$grid-list-border-color: darken($grid-list-thead-background, 5%);
+$grid-list-border-width: 1px;
+$grid-list-row-active: #FFFFCC;
+$grid-list-row-hover: #FFFFCC;
+$grid-list-row-selected: #EEEEEE;
+$grid-list-highlighted: #C4C8FF;
+$grid-nth-child-background: #F9F9F9;
+$grid-total-color: #222222;
+
+$grid-border-color: #F2F2F2;
+$grid-border-width: 1px;
+$grid-background-thead: #F9F9F9;
+$grid-background: #FFFFFF;
+$grid-row-hover: #FFFFCC;
+
+$grid-warning: #fddcdc;
+$grid-important: #c6f1ac;
+$grid-attention: #c4c4e2;
+
+$sum-label-background: #384A6B;
+$sum-label-color: #FFFFFF;
+
+/* Scheduler variables
+-----------------------------------------------------------------------------------------------------*/
+$scheduler-border: #EBEBEB;
+$scheduler-background: #FFFFFF;
+$scheduler-now-background: #F9F9F9;
+$scheduler-past-color: #CDCDCD;
+$scheduler-drag-background: #425774;
+$scheduler-drag-border: darken($scheduler-drag-background, 10%);
+$scheduler-event-color: #FFFFFF;
+$scheduler-event-shadow: 0 0 5px 1px #505050;
+$scheduler-event-resize-handler: #FFFFFF;
+$scheduler-hour-mark: #FF4040;
+$scheduler-helper-other: #CDCDCD;
+$scheduler-helper-today-border: #FF4040;
+$scheduler-helper-hover-background: #F9F9F9;
+$scheduler-helper-selected-background: #EEEEEE;
+$scheduler-helper-selected-border: #EEEEEE;
+$scheduler-filter-background: #EBEBEB;
+$scheduler-calendar-helper-background: #FFFFFF;
+
+$color1:#4C6388;
+$color2:#BAB725;
+$color3:#DD3C49;
+$color4:#2EB139;
+$color5:#B14696;
+$color6:#CC790D;
+$color7: #3372ff;
+$color8: #53abff;
+$color9: #af0036;
+$color0: #19a0a3;
+$colors: $color1 $color2 $color3 $color4 $color5 $color6 $color7 $color8 $color9 $color0;
+
+/* Chat variables
+-----------------------------------------------------------------------------------------------------*/
+$chat-background: #FFFFFF;
+$chat-border-color: #EEEEEE;
+$chat-member-background: #FFFFFF;
+$chat-member-hover-background: #F9F9F9;
+$chat-member-status-border: #CDCDCD;
+$chat-bottom-background: #FFFFFF;
+$chat-room-context-background: #F1F1F1;
+$chat-room-context-top-background: #FFFFFF;
+$chat-room-message-reverse-background: #F6F7FB;
+$chat-room-message-background: #E4F6F6;
+$chat-room-message-reverse-border: 1px solid darken($chat-room-message-reverse-background, 5%);
+$chat-room-message-border: 1px solid darken($chat-room-message-background, 5%);
+$chat-room-note-color: #656565;
+
+/* Tab variables
+-----------------------------------------------------------------------------------------------------*/
+$tab-border: #EEEEEE;
+$tab-color: #000000;
+$tab-font-size: 0.8rem;
+$tab-text-transform: uppercase;
+$tab-options-background: transparent;
+$tab-active-background: #FFFFFF;
+$tab-active-border: #D5D5D5;
+$tab-active-border-bottom: #FFFFFF;
+$tab-text-shadow: 1px 1px 1px #FFFFFF;
+$tab-current-top-border: #ff544d;
+$tab-current-inner-background: #FFFFFF;
+
+/* Wizard variables
+-----------------------------------------------------------------------------------------------------*/
+$wizard-list-height: 60;
+$wizard-circle-height: 30;
+$wizard-circle-color: rgba(0, 0, 0, 0.3);
+$wizard-circle-color_current: #2196f3;
+$wizard-step-title-color-hover: rgba(0, 0, 0, 0.06);
+
+/* Editor variables
+-----------------------------------------------------------------------------------------------------*/
+$editor-tab-background: #808080;
+$editor-tab-border: 1px solid #DDDDDD;
+$editor-tab-active-background: #F8F8F8;
+
+/* Accordion variables
+-----------------------------------------------------------------------------------------------------*/
+$accordion-border: 1px solid #EEEEEE;
+$accordion-border-left: 3px solid #CDCDCD;
+$accordion-border-left-hover-color: #2C7FB8;
+$accordion-title-background: #F8F8F8;
+$accordion-title-background-hover: #FFFFFF;
+$accordion-title-background-active: #F2F2F2;
+$accordion-background: #FFFFFF;
+
+/* Misc variables
+-----------------------------------------------------------------------------------------------------*/
+$triangle-background: #FFFFFF;
+$triangle-border-top: #FFFFFF;
+$triangle-current-color: #FFFFFF;
+$triangle-current-box-shadow: 0 0 1px 1px #000000;
+$triangle-before-box-shadow: 1px -1px 1px 0 #EEEEEE;
+$triangle-current-background: #485E88;
+$triangle-current-before-background: #485E88;
+$triangle-current-text-shadow: 1px 1px 1px #485E88;
+$triangle-clickable-color: #222222;
+$triangle-hover: #EEEEEE;
+// Tree
+$tree-node-active: #EEEEEE;
+$tree-node-disabled: #8C8C8C;
+$tree-node-warning: #FF0000;
+// Image
+$image-container-background: #F2F2F2;
+$image-container-border: 1px solid #EEEEEE;
+// Tag
+$tag-normal-background: #F2F2F2;
+
+$font-size: 14;
+$rem: 2.5;
+$prem: 0.5;

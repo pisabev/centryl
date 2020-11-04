@@ -1,0 +1,46 @@
+part of forms;
+
+abstract class TextAreaField<T> extends FieldBase<T, html.SpanElement> {
+  covariant CLElement<html.TextAreaElement> field;
+
+  TextAreaField() {
+    dom = new html.SpanElement();
+    addClass('ui-field-input textarea');
+    inner = new html.SpanElement()..classes.add('inner');
+    input = new html.SpanElement()..classes.add('input');
+    field = new CLElement(new html.TextAreaElement());
+    input.append(field.dom);
+    inner.append(input);
+    input.append(new html.SpanElement()..classes.add('separator'));
+    append(inner);
+
+    field
+      ..addAction(_onFocus, 'focus')
+      ..addAction(_onBlur, 'blur')
+      ..addAction(_onKeyDown, 'keydown')
+      ..addAction((e) {
+        if (!validateInput(e)) e.preventDefault();
+      }, 'keypress');
+  }
+
+  void _onBlur(html.Event e) {
+    removeClass('focus');
+    final value = getValue();
+    final string_value = value == null ? '' : value.toString();
+    if (string_value != field.dom.value)
+      setValueDynamic(field.dom.value.isEmpty ? null : field.dom.value);
+  }
+
+  void _onKeyDown(html.KeyboardEvent e) {
+    if (e.keyCode == 13)
+      setValueDynamic(field.dom.value.isEmpty ? null : field.dom.value);
+  }
+
+  void setPlaceHolder(String value) {
+    field.dom.placeholder = value;
+  }
+
+  void select() {
+    field.dom.select();
+  }
+}

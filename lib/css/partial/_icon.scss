@@ -1,0 +1,91 @@
+.icon {
+  display: inline-block;
+  text-align: center;
+  overflow: hidden;
+  svg {
+    max-width: 100%;
+    max-height: 100%;
+    padding: $icons-padding-default;
+    &.error,
+    &.warning,
+    &.today,
+    &.search,
+    &.assignment,
+    &.send,
+    &.attach_file,
+    &.barcode,
+    &.block,
+    &.call,
+    &.call_end,
+    &.priority_high,
+    &.receipt,
+    &.date_range,
+    &.keyboard_arrow_down,
+    &.first_page,
+    &.last_page,
+    &.lock,
+    &.folder,
+    &.chevron_right,
+    &.chevron_left,
+    &.arrow_drop_down,
+    &.exit_to_app,
+    &.file_download,
+    &.file_upload,
+    &.schedule,
+    &.settings,
+    &.person,
+    &.notifications,
+    &.fullscreen,
+    &.group,
+    &.undo,
+    &.redo,
+    &.format_bold,
+    &.format_italic,
+    &.format_underlined,
+    &.format_strikethrough,
+    &.format_list_numbered,
+    &.format_list_bulleted,
+    &.format_indent_decrease,
+    &.format_indent_increase,
+    &.format_align_left,
+    &.format_align_center,
+    &.format_align_right,
+    &.format_align_justify,
+    &.image,
+    &.info_outline,
+    &.insert_link,
+    &.menu,
+    &.format_clear,
+    &.print,
+    &.code,
+    &.content_copy,
+    &.save,
+    &.delete,
+    &.developer_board,
+    &.device_hub,
+    &.edit,
+    &.emoticon,
+    &.filter_list,
+    &.clear,
+    &.sync,
+    &.add,
+    &.message,
+    &.mail,
+    &.videocam,
+    &.visibility,
+    &.mode_comment,
+    &.more_horiz,
+    &.more_vert,
+    &.lock_open,
+    &.lock_outline,
+    &.zoom_in,
+    &.zoom_out {
+      padding: $icons-padding-internal;
+    }
+  }
+  use {
+    /*all: inherit;*/
+    fill: $icon-color;
+    pointer-events: none
+  }
+}

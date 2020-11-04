@@ -1,0 +1,117 @@
+ul.ui-wizard {
+  counter-reset: section;
+  flex: 1 1 auto;
+  display: block;
+  list-style: none;
+  & > .step {
+    position: relative;
+    &:not(:last-of-type) {
+      &:after {
+        content: '';
+        position: absolute;
+        top: $wizard-list-height - ($wizard-list-height - $wizard-circle-height)/4 + px;
+        left: $wizard-list-height/2 + px;
+        width: 1px;
+        height: calc(100% - #{$wizard-list-height - ($wizard-list-height - $wizard-circle-height)/2 + px});
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+    &.current {
+      &:before, .step-title:before {
+        background-color: $wizard-circle-color-current;
+      }
+      .step-content {
+        display: block;
+      }
+    }
+    &:before, .step-title:before {
+      position: absolute;
+      top: ($wizard-list-height - $wizard-circle-height)/2 + px;
+      left: ($wizard-list-height - $wizard-circle-height)/2 + px;
+      counter-increment: section;
+      content: counter(section);
+      height: $wizard-circle-height + px;
+      width: $wizard-circle-height + px;
+      color: white;
+      background-color: $wizard-circle-color;
+      border-radius: 50%;
+      text-align: center;
+      line-height: $wizard-circle-height + px;
+      font-weight: 400;
+    }
+    .step-title {
+      cursor: pointer;
+      line-height: $wizard-list-height + px;
+      height: $wizard-list-height + px;
+      padding: 0 ($wizard-list-height - $wizard-circle-height)/2 + px 0 $wizard-list-height + px;
+      display: block;
+      font-weight: bold;
+      position: relative;
+      @include transition(all 0.25s);
+      &:hover {
+        background-color: $wizard-step-title-color-hover;
+      }
+      &:before {
+        display: none;
+      }
+    }
+    .step-content {
+      position: relative;
+      display: none;
+      width: 100%;
+      overflow: visible;
+      padding-top: 0;
+      padding-left: $wizard-list-height*3/4 + px;
+    }
+  }
+}
+
+@media only screen and (min-width: $tablet) {
+  ul.ui-wizard.horizontal {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    & > .step {
+      position: static;
+      margin: 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      height: $wizard-list-height + px !important;
+      &:before {
+        content: none;
+      }
+      &:last-of-type {
+        width: auto !important;
+      }
+      &:not(:last-of-type) {
+        &:after {
+          content: '';
+          position: static;
+          display: inline-block;
+          width: 100%;
+          height: 1px;
+        }
+      }
+      .step-title {
+        display: inline-block;
+        max-width: 220px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-shrink: 0;
+        &:before {
+          display: block;
+        }
+      }
+      .step-content {
+        position: absolute;
+        height: calc(100% - #{$wizard-list-height + px});
+        top: $wizard-list-height + px;
+        padding-top: 0;
+        padding-left: 0;
+        left: 0;
+      }
+    }
+  }
+}

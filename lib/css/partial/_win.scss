@@ -1,0 +1,242 @@
+.ui-win-resize {
+  border: 1px dashed silver;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 996;
+}
+
+.ui-win-corner-top-left,
+.ui-win-corner-top-right,
+.ui-win-corner-bottom-left,
+.ui-win-corner-bottom-right {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+}
+
+.ui-win-top,
+.ui-win-bottom {
+  position: absolute;
+  height: 4px;
+}
+
+.ui-win-left,
+.ui-win-right {
+  position: absolute;
+  width: 4px;
+}
+
+.ui-win-top {
+  top: -4px;
+  left: 0;
+  cursor: n-resize;
+}
+
+.ui-win-right {
+  top: 0;
+  right: -4px;
+  cursor: e-resize;
+}
+
+.ui-win-bottom {
+  bottom: -4px;
+  left: 0;
+  cursor: s-resize;
+}
+
+.ui-win-left {
+  top: 0;
+  left: -4px;
+  cursor: w-resize;
+}
+
+.ui-win-corner-top-left {
+  top: -4px;
+  left: -4px;
+  cursor: nw-resize;
+}
+
+.ui-win-corner-top-right {
+  top: -4px;
+  right: -4px;
+  cursor: ne-resize;
+}
+
+.ui-win-corner-bottom-left {
+  bottom: -4px;
+  left: -4px;
+  cursor: sw-resize;
+}
+
+.ui-win-corner-bottom-right {
+  bottom: -4px;
+  right: -4px;
+  cursor: se-resize;
+}
+
+.ui-win {
+  &.scale {
+    @include animation(scaler 0.2s ease-out);
+  }
+  &.ui-win-shadowed {
+    border: $win-border;
+    @include box-shadow($win-shadow);
+    @include transition(opacity 0.2s ease-out);
+    @include border-radius($win-border-radius);
+    .title {
+      cursor: move;
+    }
+    &.transform {
+      opacity: 0.5;
+    }
+  }
+  position: absolute;
+  z-index: 995;
+  top: 0;
+  left: 0;
+  background: $win-background;
+  & > .content {
+    overflow: hidden;
+    display: flex;
+    flex: 1 1 auto !important;
+    background: $win-content-background;
+    @include border-radius(inherit);
+    @include border-top-right-radius(0);
+    @include border-top-left-radius(0);
+  }
+  div.title {
+    padding: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    background: $win-title-background;
+    display: flex;
+    @include border-radius(inherit);
+    @include border-bottom-right-radius(0);
+    @include border-bottom-left-radius(0);
+    h3 {
+      color: $win-title-color;
+      line-height: $rem + rem;
+      margin: 0 auto;
+      padding: 0;
+      font-size: 1.2rem;
+      flex: 1 1 0;
+      text-align: center;
+    }
+    .icon {
+      width: $rem + rem;
+      height: $rem + rem;
+      svg {
+        width: $rem + rem;
+        height: $rem + rem;
+        use {
+          fill: $win-icon-color;
+        }
+      }
+    }
+  }
+  .ui-win-close, .ui-win-max, .ui-win-min {
+    //float:right;
+    width: $rem + rem;
+    height: $rem + rem;
+    border: 1px solid transparent;
+    @include border-radius($win-action-border-radius);
+    //display:block;
+    &:hover {
+      background: $win-action-hover-background;
+      &:before {
+        color: $win-action-hover-color;
+      }
+      border: 1px solid $win-action-hover-border;
+    }
+    &:before {
+      color: $win-action-color;
+      line-height: $rem + rem;
+      line-height: calc(#{$rem + rem} - 2px);
+      text-align: center;
+      display: block;
+    }
+  }
+  .ui-win-close:before {
+    content: 'x';
+  }
+  .ui-win-max:before {
+    content: '\025A1';
+  }
+  .ui-win-min:before {
+    content: "_";
+  }
+  &.drag {
+    opacity: 0.5;
+  }
+}
+
+/* UI Popup
+-----------------------------------------------------------------------------------------------------*/
+.ui-popUp {
+  position: absolute;
+  z-index: 995;
+  background: $win-popup-background;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  @include box-shadow($win-popup-shadow);
+  @include transition(opacity 0.5s ease-in-out);
+  a.ui-option {
+    display: block;
+    height: 23px;
+    line-height: 23px;
+    margin: 3px;
+    padding-left: 22px;
+    padding-right: 3px;
+    background-position: 0 0;
+    &:hover {
+      background-color: #D5CECC;
+    }
+  }
+}
+
+.ui-popUp-active {
+  opacity: 1;
+}
+
+/* UI Message
+-----------------------------------------------------------------------------------------------------*/
+.ui-message {
+  padding: 10px;
+  white-space: pre-wrap;
+  span.details {
+    display: block;
+    opacity: 0.5;
+    margin-top: 20px;
+    text-align: left;
+    white-space: pre-wrap;
+  }
+}
+
+.ui-message-options {
+  margin-bottom: 10px;
+  p {
+    margin-bottom: 3px;
+  }
+}
+
+.ui-confirm {
+  display: block;
+  padding: 5px 20px 5px 20px;
+  border: 1px solid silver;
+  font-weight: bold;
+  float: right;
+  margin: 5px;
+  &:hover {
+    background: silver;
+  }
+}
+
+@media only screen and (max-width: $phone) {
+  .ui-win {
+    .ui-win-max, .ui-win-min {
+      display: none;
+    }
+  }
+}

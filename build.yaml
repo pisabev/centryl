@@ -1,0 +1,46 @@
+targets:
+  $default:
+    builders:
+      build_web_compilers|entrypoint:
+        generate_for:
+          - test/**.dart
+          - example/**.dart
+        options:
+          compiler: dartdevc
+builders:
+  sass_builder:
+    import: "package:sass_builder/sass_builder.dart"
+    builder_factories: [ "sassBuilder" ]
+    auto_apply: dependents
+    build_extensions:
+      .scss: [ ".css" ]
+      .sass: [ ".css" ]
+    applies_builders:
+      - sass_builder|sass_source_cleanup
+    defaults:
+      release_options:
+        outputStyle: compressed
+  centryl:
+    import: 'package:centryl/db_clean.dart'
+    builder_factories: [ 'dbEmptyBuilder' ]
+    auto_apply: all_packages
+    build_extensions:
+      .sql: [ '.sql_' ]
+    applies_builders:
+      - cl_base|db_source_cleanup
+  generator:
+    import: "package:cl_gen/build.dart"
+    builder_factories: [ "generator" ]
+    auto_apply: dependents
+    build_extensions: { ".dart": [ "g.dart" ] }
+    build_to: source
+post_process_builders:
+  sass_source_cleanup:
+    import: "package:sass_builder/sass_builder.dart"
+    builder_factory: "sassSourceCleanup"
+    defaults:
+      release_options:
+        enabled: true
+  db_source_cleanup:
+    import: 'package:centryl/db_clean.dart'
+    builder_factory: dbCleanup

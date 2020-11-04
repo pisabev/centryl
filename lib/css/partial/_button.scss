@@ -1,0 +1,217 @@
+.ui-menu {
+  padding: $prem/2 + rem;
+  display: flex;
+  flex-wrap: wrap;
+  z-index: 1;
+  &.shadowed {
+    background-color: $button-menu-background;
+    @include box-shadow($button-menu-shadow);
+  }
+  &.right {
+    justify-content: flex-end;
+  }
+  & > * {
+    margin: $prem/2 + rem;
+  }
+  &.dialog > * {
+    padding: 0 2rem;
+  }
+}
+
+.ui-button {
+  display: inline-flex;
+  position: relative;
+  border: 1px solid $button-border;
+  @include border-radius($button-border-radius);
+  text-decoration: none;
+  cursor: pointer;
+  height: $rem + rem;
+  line-height: $rem + rem;
+  color: $button-color;
+  background: $button-background;
+  @include transition(background 0.2s);
+  @include gradient($button-gradient-from, $button-gradient-to);
+  .icon {
+    display: flex;
+    width: $rem + rem;
+    use {
+      fill: $button-icon-color;
+    }
+    &.warning {
+      &:not(:hover) {
+        @include shake(5s);
+      }
+      use {
+        fill: $button-warning-icon;
+      }
+    }
+  }
+  .inner.button-title {
+    padding: 0 $prem + rem;
+    color: inherit;
+    white-space: nowrap;
+  }
+  .ui-loader {
+    opacity: 0.9;
+    background: $button-background;
+    .loader, .loader:after {
+      border-width: 2px;
+      width: 16px;
+      height: 16px;
+      margin: -8px -8px 0 0;
+    }
+  }
+  &.disabled {
+    opacity: 0.3;
+  }
+  &:not(.disabled) {
+    @include box-shadow($button-box-shadow);
+    &:hover {
+      background-color: $button-hover-background;
+      border-color: $button-hover-border;
+      @include gradient($button-hover-gradient-from, $button-hover-gradient-to);
+    }
+  }
+  &.warning {
+    color: $button-color-warning;
+    border: 1px solid $button-border-warning;
+    background: $button-background-warning;
+    @include gradient($button-gradient-from-warning, $button-gradient-to-warning);
+    &:not(.disabled) {
+      @include box-shadow($button-box-shadow-warning);
+      &:hover {
+        background-color: $button-hover-background-warning;
+        border-color: $button-hover-border-warning;
+        @include gradient($button-hover-gradient-from-warning, $button-hover-gradient-to-warning);
+      }
+    }
+    .icon use {
+      fill: $button-warning-icon-warning;
+    }
+  }
+  &.attention {
+    color: $button-color-attention;
+    border: 1px solid $button-border-attention;
+    background: $button-background-attention;
+    @include gradient($button-gradient-from-attention, $button-gradient-to-attention);
+    &:not(.disabled) {
+      @include box-shadow($button-box-shadow-attention);
+      &:hover {
+        background-color: $button-hover-background-attention;
+        border-color: $button-hover-border-attention;
+        @include gradient($button-hover-gradient-from-attention, $button-hover-gradient-to-attention);
+      }
+    }
+    .icon use {
+      fill: $button-warning-icon-attention;
+    }
+  }
+  &.important {
+    color: $button-color-important;
+    border: 1px solid $button-border-important;
+    background: $button-background-important;
+    @include gradient($button-gradient-from-important, $button-gradient-to-important);
+    &:not(.disabled) {
+      @include box-shadow($button-box-shadow-important);
+      &:hover {
+        background-color: $button-hover-background-important;
+        border-color: $button-hover-border-important;
+        @include gradient($button-hover-gradient-from-important, $button-hover-gradient-to-important);
+      }
+    }
+    .icon use {
+      fill: $button-warning-icon-important;
+    }
+  }
+  &.light {
+    border-color: transparent;
+    background-color: transparent;
+    box-shadow: none !important;
+    color: $button-color-light;
+    &:hover {
+      color: $button-color;
+    }
+  }
+  &:focus:not(.disabled) {
+    border: 1px dotted $button-focus-color;
+  }
+}
+
+.ui-button-group {
+  display: inline-flex;
+  .ui-button-ul {
+    display: flex;
+    list-style: none;
+    li {
+      flex: 1 0 auto;
+      &:not(:first-child) {
+        margin-left: -1px;
+      }
+      & .ui-button {
+        @include border-radius(0);
+        &.current {
+          position: relative;
+          z-index: 1;
+          background: $button-hover-background;
+          border-color: $button-hover-border;
+          &.important {
+            background: $button-hover-background-important;
+            border-color: $button-hover-border-important;
+          }
+          &.warning {
+            background: $button-hover-background-warning;
+            border-color: $button-hover-border-warning;
+          }
+          &.attention {
+            background: $button-hover-background-attention;
+            border-color: $button-hover-border-attention;
+          }
+        }
+      }
+      &:last-child .ui-button {
+        @include border-top-right-radius($button-border-radius);
+        @include border-bottom-right-radius($button-border-radius);
+      }
+      &:first-child .ui-button {
+        @include border-top-left-radius($button-border-radius);
+        @include border-bottom-left-radius($button-border-radius);
+      }
+    }
+  }
+}
+
+.ui-button-option {
+  display: inline-flex;
+  position: relative;
+  & > .inner {
+    position: relative;
+    display: flex;
+    flex: 1;
+  }
+  .ui-main, .ui-option {
+    flex: 1 0 auto;
+  }
+  .ui-main {
+    @include border-top-right-radius(0);
+    @include border-bottom-right-radius(0);
+  }
+  .ui-option:not(:first-child) {
+    @include border-top-left-radius(0);
+    @include border-bottom-left-radius(0);
+  }
+}
+
+@media only screen and (max-width: $phone) {
+  .ui-menu > .ui-button > .inner.button-title {
+    flex-direction: column;
+    & > label {
+      padding-bottom: 0;
+      text-align: left;
+    }
+    & > * {
+      &.ui-button > .inner.button-title, .ui-button > .inner.button-title {
+        display: none;
+      }
+    }
+  }
+}

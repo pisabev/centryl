@@ -1,0 +1,106 @@
+.ui-calendar {
+  background: $calendar-outer-background-color;
+  .ui-cal-navigation {
+    display: flex;
+    .ui-button {
+      border: none;
+      background: none;
+      box-shadow: none;
+      &:hover {
+        background: $button-hover-background;
+      }
+    }
+    .ui-cal-nav-left {
+      display: flex;
+      flex: 1 0 auto;
+      p {
+        flex: 1 0 auto;
+        min-width: 6rem;
+      }
+    }
+    .ui-cal-nav-right {
+      display: flex;
+    }
+    p {
+      text-align: center;
+      line-height: $rem + rem;
+      padding: 0 3px;
+    }
+  }
+  table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+    td {
+      border: $calendar-border-width solid $calendar-border-color;
+      text-align: center;
+      background: $calendar-outer-background-color;
+    }
+    thead td {
+      background: $calendar-head-background;
+      color: $calendar-head-color;
+      height: $rem + rem;
+      width: $rem + rem;
+    }
+    td.weekend {
+      color: $calendar-head-weekend-color;
+    }
+    tbody span {
+      height: $rem + rem;
+      line-height: $rem + rem;
+      display: block;
+    }
+    tbody span {
+      color: $calendar-day-color;
+    }
+    tbody span.active {
+      cursor: pointer;
+      color: inherit;
+    }
+    tbody span.active:hover, tbody td span.selected {
+      background: $calendar-current-background;
+      color: $calendar-current-color;
+    }
+    td.weekend span.active:hover {
+      color: $calendar-head-weekend-color;
+    }
+    tbody span.today {
+      font-weight: bold;
+      background: $calendar-current-background
+    }
+  }
+  .ui-calendar-option {
+    display: flex;
+    flex-direction: row;
+    padding: $prem + rem;
+    span.sep {
+      line-height: $rem + rem;
+      width: $prem + rem;
+      text-align: center;
+    }
+    .ui-button:first-child {
+      margin-right: auto;
+    }
+    .ui-button:last-child {
+      margin-left: auto;
+    }
+  }
+}
+
+.ui-calendar-picker-range {
+  background: $calendar-outer-background-color;
+  .ui-calendar-picker-range-top {
+    display: flex;
+    & > * {
+      padding: $prem + rem;
+      flex: 1;
+    }
+  }
+  .ui-calendar-picker-range-option {
+    display: flex;
+    & > * {
+      flex: 1 1 auto;
+      margin: $prem + rem;
+    }
+  }
+}

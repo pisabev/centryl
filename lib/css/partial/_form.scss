@@ -1,0 +1,156 @@
+.label-field {
+  display: flex;
+  flex-wrap: wrap;
+  &:not(.top) {
+    align-items: center;
+  }
+  &.top {
+    flex-direction: column;
+    & > label {
+      padding: 0 0 $prem + rem 0;
+    }
+    & > .form-data > * {
+      margin-top: $prem/2 + rem;
+    }
+  }
+  & > label {
+    flex: 0 1 auto;
+    padding: 0 $prem + rem 0 0;
+    & > span {
+      color: $form-label-color;
+      font-weight: $form-label-weight;
+    }
+  }
+  & > * {
+    flex: 1 0 auto;
+  }
+  & > .form-data {
+    display: flex;
+    & > *.max {
+      flex: 1 1 auto;
+    }
+  }
+}
+
+.form-element {
+  padding: 0.5rem 1rem;
+  flex: 1 1 auto;
+  &.top > .label-field {
+    flex-direction: column;
+    padding: 0;
+    & > label {
+      padding: $prem + rem $prem + rem 0 $prem + rem;
+      & > span {
+        margin-left: initial;
+        text-align: left;
+      }
+    }
+    & > .form-data > * {
+      margin-top: $prem/2 + rem;
+    }
+  }
+  &.flex .label-field {
+    & > label {
+      flex: 0 1 auto;
+    }
+  }
+  & > .label-field {
+    display: flex;
+    flex-flow: row wrap;
+    padding: 0 $prem + rem;
+    align-items: inherit;
+    white-space: normal;
+    &:last-child {
+      border-bottom: none;
+    }
+    & > label {
+      flex: 0.7;
+      display: flex;
+      padding: $rem/2 + rem $rem/2 + rem $rem/2 + rem $prem + rem;
+      & > span {
+        display: flex;
+        text-align: right;
+        margin-left: auto;
+      }
+    }
+    & > .form-data {
+      flex: 3;
+      display: flex;
+      flex-wrap: wrap;
+      &:not(.column) {
+        align-items: center;
+      }
+      &.column {
+        flex-direction: column;
+      }
+      & > * {
+        margin: $prem + rem;
+      }
+      & > *.max {
+        flex: 1 1 auto;
+      }
+      & > .form-element {
+        margin: 0;
+        padding: 0;
+        & > .label-field {
+          padding: 0;
+        }
+      }
+    }
+    &.col1, &.col2, &.col3, &.col4, &.col5, &.col6 {
+      display: inline-flex;
+      flex-direction: column;
+      vertical-align: bottom;
+      padding: 0;
+      & > label {
+        padding-bottom: 0;
+        & > span {
+          margin-left: initial;
+        }
+      }
+    }
+    &.col1 {
+      width: percentage(1/(6/1));
+    }
+    &.col2 {
+      width: percentage(1/(6/2));
+    }
+    &.col3 {
+      width: percentage(1/(6/3));
+    }
+    &.col4 {
+      width: percentage(1/(6/4));
+    }
+    &.col5 {
+      width: percentage(1/(6/5));
+    }
+    &.col6 {
+      width: percentage(1/(6/6));
+    }
+  }
+  & > h3 {
+    padding: 1rem;
+    margin: 1rem;
+    color: $section-color;
+    border-bottom: 1px solid $section-separator;
+  }
+}
+
+.ui-form-list {
+  width: 100%;
+  & > * {
+    &:hover {
+      background: $grid-row-hover;
+    }
+  }
+}
+@media only screen and (max-width: $phone) {
+  .form-element > .label-field {
+    flex-direction: column;
+    padding: 0;
+    & > label {
+      padding-bottom: 0;
+      text-align: left;
+    }
+  }
+}

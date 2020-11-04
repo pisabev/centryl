@@ -1,0 +1,180 @@
+.ui-message-box {
+  display: flex;
+  flex-direction: column;
+  & > div {
+    flex: 1 0 auto;
+  }
+  &.current {
+    height: 0;
+    max-height: 300px;
+  }
+}
+
+.ui-message-box-current {
+  flex: 0 0 0;
+  max-height: 360px !important;
+}
+
+.ui-notify-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  & > h2 {
+    padding: 10px;
+    border-bottom: $gadget-border-bottom;
+    display: flex;
+    align-items: center;
+    background: $page-background;
+    flex: 0;
+
+    & > .title {
+      margin-right: $prem + rem;
+    }
+
+    & > .icon {
+      width: $rem + rem;
+      height: $rem + rem;
+    }
+
+    & > .ui-field-input {
+    }
+  }
+}
+
+.ui-message-box, .ui-notify > div {
+  background: darken($page-background, 3%);
+  & > div.message {
+    padding: $prem + rem;
+    border-left: 3px solid $message-border-color;
+    background: $message-background;
+    min-height: 80px;
+    max-height: 100px;
+    position: relative;
+    @include transform(translateX(-$aside-width + px));
+    padding-left: 1.5rem;
+    &.has-icon {
+      & > .icon {
+        width: 3rem;
+        height: 3rem;
+        margin: 1rem;
+        position: absolute;
+        left: 0;
+        border-radius: 100%;
+        border: 2px solid #CDCDCD;
+        use {
+          fill: #CDCDCD;
+        }
+      }
+      padding-left: 5rem;
+    }
+    &.show {
+      @include transition(transform 0.5s ease-in-out);
+      opacity: 1;
+      @include transform(translateX(0));
+    }
+    .ui-button {
+      margin-left: $prem + rem;
+    }
+
+    &.new {
+      background: $message-background-new;
+    }
+
+    &.info {
+      border-left-color: greenyellow;
+    }
+
+    &.error {
+      border-left-color: red;
+    }
+
+    &.warning {
+      border-left-color: yellow;
+    }
+
+    &.read {
+      span:not(.ui-button) {
+        opacity: 0.5;
+      }
+      background: darken($page-background, 2%);
+    }
+    .date {
+      display: flex;
+      color: lighten($base-color, 10%);
+      margin-bottom: 5px;
+      align-items: center;
+      margin-left: -0.6rem;
+      .icon {
+        height: 30px;
+        width: 30px;
+      }
+      span {
+        font-size: 0.8rem;
+      }
+    }
+    span {
+      font-size: 0.9rem;
+      word-wrap: break-word;
+    }
+    &.action {
+      cursor: pointer;
+    }
+    &:hover {
+      background: $message-background-hover;
+    }
+  }
+}
+
+.ui-notify {
+  position: absolute;
+  width: 370px;
+  right: 22px;
+  @include respond-max(phone) {
+    right: 0;
+  }
+  top: $nav-top-height + px;
+  padding: 10px;
+  z-index: 998;
+  @include transition(all 0.3s);
+
+  &:not(.show) {
+    opacity: 0;
+    @include transform(translate(0, -50px));
+  }
+
+  & > div {
+    max-height: 600px;
+    min-height: 75px;
+    overflow: auto;
+    background-color: $message-background;
+    @include box-shadow($message-shadow);
+    border: 1px solid $message-border-color;
+    border-bottom: none;
+
+    & > div.top {
+      padding: 5px;
+      border-bottom: $message-border;
+      text-align: right;
+
+      a {
+        color: #2C7FB8;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  & > span {
+    width: 0;
+    height: 0;
+    margin-top: -6px;
+    transform: rotate(180deg);
+    position: absolute;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 7px solid $message-border-color;
+  }
+}

@@ -1,0 +1,153 @@
+.ui-gadgets {
+  flex: 1 1 auto;
+  .ui-container.deskicon {
+    padding: 1rem;
+    justify-content: center;
+    & > div {
+      border: $icon-border;
+      background: $icon-background;
+      margin: 1rem;
+      width: 200px;
+      height: 200px;
+      flex-direction: column;
+      cursor: pointer;
+      &:hover {
+        background: $icon-hover-background;
+      }
+      .icon {
+      }
+      span.title {
+        text-align: center;
+      }
+    }
+  }
+  & > .ui-container.gadget-outer {
+    display:flex;
+    padding: 1rem;
+    flex-wrap: wrap;
+    & > div {
+      flex: 1 1 100%;
+      min-width: 300px;
+      &.size1 {
+        flex-basis: 25%;
+      }
+      &.size2 {
+        flex-basis: 50%;
+      }
+      &.size3 {
+        flex-basis: 75%;
+        @include respond-max(desktop) {
+          flex-basis: 100% !important;
+        }
+      }
+      &.size1, &.size2 {
+        @include respond-max(desktop) {
+          flex-basis: 50% !important;
+        }
+      }
+      @include respond-max(phone) {
+        flex-basis: 100% !important;
+      }
+      &.size4 {
+        flex-basis: 100%;
+      }
+      .card {
+        flex: 1 1 auto;
+        display: flex;
+        margin: 1.5rem;
+        max-width: 350px;
+        height: 100px;
+        align-items: center;
+        &.type1 {
+          background: $gadget-background1;
+        }
+        &.type2 {
+          background: $gadget-background2;
+        }
+        &.type3 {
+          background: $gadget-background3;
+        }
+        &.type4 {
+          background: $gadget-background4;
+        }
+        &.type5 {
+          background: $gadget-background5;
+        }
+        &.type6 {
+          background: $gadget-background6;
+        }
+        &.type6 {
+          background: $gadget-background7;
+        }
+        span.left {
+          padding: 1rem;
+          display: flex;
+          flex-direction: column;
+          text-align: center;
+          margin-left: auto;
+          span.value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: $icon-text-color;
+          }
+          span.title {
+            text-transform: uppercase;
+            font-size:1.1rem;
+            color: $icon-text-color;
+          }
+        }
+        .icon {
+          height: 100%;
+          width: 50%;
+          margin-left: auto;
+          use {
+            fill: $icon-icon-color;
+          }
+        }
+      }
+      .chart, .statistics {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        min-height: 280px;
+        margin: 0.5rem;
+        & > h2 {
+          padding: 10px;
+          border-bottom: $gadget-border-bottom;
+        }
+        & > div {
+          flex: 1 1 auto;
+          margin: 10px;
+        }
+      }
+      .statistics {
+        & > div {
+          display: flex;
+          flex-wrap: wrap;
+          padding: 2px;
+          .stats {
+            flex: 1 1 50%;
+            display: flex;
+            .inner {
+              flex: 1 1 auto;
+              background: $stats-background;
+              margin: 2px;
+              padding: 10px;
+              overflow: hidden;
+              .key {
+                display: block;
+                font-size: 0.9rem;
+              }
+              .value {
+                display: block;
+                margin-top: 3px;
+                white-space: nowrap;
+                font-size: 1.5rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

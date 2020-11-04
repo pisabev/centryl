@@ -1,0 +1,160 @@
+span.tag, a.tag {
+  color: #FFFFFF;
+  padding: $prem + rem;
+  white-space: nowrap;
+  @include border-radius(3px);
+  .icon {
+    width: $rem + rem;
+    height: $rem + rem;
+    vertical-align: middle;
+  }
+}
+
+@for $i from 0 to length($colors) {
+  span.tag#{$i+1}, a.tag#{$i+1} {
+    background: nth($colors, $i+1);
+  }
+}
+
+@for $i from 0 to length($colors) {
+  i.icon#{$i+1} {
+    use {
+      fill: nth($colors, $i+1);
+    }
+  }
+}
+
+span.tag-blue, a.tag-blue {
+  background: $color1;
+}
+
+span.tag-lblue, a.tag-lblue {
+  background: $color7;
+}
+
+span.tag-brown, a.tag-brown {
+  background: $color6;
+}
+
+span.tag-high, a.tag-high {
+  background: $color3;
+}
+
+span.tag-medium, a.tag-medium {
+  background: $color2;
+}
+
+span.tag-low, a.tag-low {
+  background: $color4;
+}
+
+span.tag-blank, a.tag-blank {
+  color: $base-color;
+}
+
+span.tag-normal, a.tag-normal {
+  background: $tag-normal-background;
+  color: $base-color;
+}
+
+span.ui-badge {
+  padding: 0 $rem + rem;
+  height: $rem + rem;
+  line-height: $rem + rem;
+  color: #FFFFFF;
+  font-weight: bold;
+  text-align: center;
+  @include transition(all 1s);
+  @include border-radius(3px);
+  .ui-loader {
+    .loader {
+      border-width: 2px;
+      width: 16px;
+      height: 16px;
+      margin: -8px -8px 0 0;
+    }
+  }
+}
+
+@function sqrt($r) {
+  $x0: 1;
+  $x1: $x0;
+  @for $i from 1 through 10 {
+    $x1: $x0 - ($x0 * $x0 - abs($r)) / (2 * $x0);
+    $x0: $x1;
+  }
+  @return $x1;
+}
+
+@mixin state-color($color) {
+  background: $color;
+  text-shadow: $triangle-current-box-shadow;
+  &::before {
+    background: $color;
+  }
+  span {
+    color: $triangle-current-color;
+    text-shadow: $triangle-current-text-shadow;
+  }
+}
+
+.ui-state {
+  $height: 2.5;
+  padding-right: $height/2 + rem;
+  display: flex;
+  flex-direction: row-reverse;
+  & > div {
+    background-color: $triangle-background;
+    position: relative;
+    vertical-align: top;
+    height: $height + rem;
+    line-height: $height + rem;
+    padding: 0 0.5rem 0 2rem;
+    border-top-color: $triangle-border-top;
+    span {
+      position: relative;
+      display: block;
+      width: auto;
+      height: 100%;
+      color: #858585;
+    }
+    &::before {
+      background-color: $triangle-background;
+      content: "\00a0";
+      display: block;
+      height: $height/sqrt(2) + rem;
+      width: $height/sqrt(2) + rem;
+      position: absolute;
+      @include transform(rotate(45deg));
+      top: ($height - $height/sqrt(2))/2 + rem;
+      right: -$height/sqrt(2)/2 + rem;
+    }
+    &.current {
+      @for $i from 0 to length($colors) {
+        &.state#{$i+1} {
+          @include state-color(nth($colors, $i+1));
+        }
+      }
+    }
+    &.clickable {
+      cursor: pointer;
+      span {
+        color: $triangle-clickable-color;
+      }
+      &:hover:not(.current) {
+        background: $triangle-hover;
+        &::before {
+          background: $triangle-hover;
+        }
+      }
+    }
+    &:last-child {
+      padding-left: 0.5rem;
+    }
+  }
+  &.action-click {
+    &:not(.clickable) {
+      cursor:not-allowed;
+    }
+  }
+}
