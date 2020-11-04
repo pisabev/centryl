@@ -38,10 +38,6 @@ dependencies:
   cl_gen:
     git: git@repo.centryl.org:centryl/cl_gen.git
 
-dependency_overrides:
-  mapper:
-    path: ../centryl_deps/mapper
-
 dev_dependencies:
   test: ^1.15.4
   build_runner: ^1.10.3
