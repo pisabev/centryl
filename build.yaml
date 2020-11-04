@@ -27,7 +27,7 @@ builders:
     build_extensions:
       .sql: [ '.sql_' ]
     applies_builders:
-      - cl_base|db_source_cleanup
+      - centryl|db_source_cleanup
   generator:
     import: "package:cl_gen/build.dart"
     builder_factories: [ "generator" ]
