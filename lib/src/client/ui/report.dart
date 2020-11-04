@@ -1,26 +1,66 @@
 part of ui;
 
-abstract class Report<C extends cl_app.Client> implements cl_app.Item<C> {
+class _LayoutContainerReport extends cl.Container {
+  cl.Container contLeft,
+      contLeftInner,
+      contLeftBottom,
+      contRight,
+      contRightTop,
+      contRightInner,
+      contRightBottom;
+
+  _LayoutContainerReport() : super() {
+    contLeft = new cl.Container()
+      ..setWidth(new cl.Dimension.px(300))
+      ..addClass('section');
+    contRight = new cl.Container()..auto = true;
+
+    contLeftInner = new cl.Container()..auto = true;
+    contLeftBottom = new cl.Container();
+
+    contRightTop = new cl.Container();
+    contRightInner = new cl.Container()..auto = true;
+    contRightBottom = new cl.Container();
+
+    contLeft..addRow(contLeftInner)..addRow(contLeftBottom);
+
+    contRight
+      ..addRow(contRightTop)
+      ..addRow(contRightInner)
+      ..addRow(contRightBottom);
+
+    addCol(contLeft);
+    addCol(contRight);
+  }
+}
+
+abstract class Report2<C extends cl_app.Client> implements cl_app.Item<C> {
+  dynamic lang_select;
   UrlPattern contr_get, contr_print, contr_csv;
 
   cl_app.Application<C> ap;
+  @Deprecated('Use WinMeta instead')
+  Map w;
   cl_app.WinMeta meta;
   cl_app.WinApp<C> wapi;
   _LayoutContainerReport layout;
   cl_action.Menu menuLeftBottom, menuRightTop, menuRightBottom;
 
-  GridList gridReport;
+  cl_form.GridListContainer gridCont;
+  cl_form.GridList grid;
   cl_form.Form form = new cl_form.Form();
   cl_util.Observer observer = new cl_util.Observer();
   Map params;
   Map data_response;
 
-  Report(this.ap) {
+  Report2(this.ap) {
     try {
       initLayout();
+      initGrid();
       setActions();
       setHooks();
       setFilter();
+      initFooter();
     } catch (e, s) {
       cl.logging.severe(runtimeType.toString(), e, s);
     }
@@ -32,7 +72,18 @@ abstract class Report<C extends cl_app.Client> implements cl_app.Item<C> {
 
   void initLayout() {
     createLayout();
-    wapi = new cl_app.WinApp(ap)..load(meta, this);
+    wapi = new cl_app.WinApp(ap);
+    if (w != null) {
+      wapi.load(
+          new cl_app.WinMeta()
+            ..title = w['title']
+            ..width = w['width']
+            ..height = w['height']
+            ..icon = w['icon'],
+          this);
+    } else {
+      wapi.load(meta, this);
+    }
     menuLeftBottom = new cl_action.Menu(layout.contLeftBottom);
     wapi.win.getContent().append(layout, scrollable: true);
     wapi.render();
@@ -51,7 +102,7 @@ abstract class Report<C extends cl_app.Client> implements cl_app.Item<C> {
         ..setTip(intl.Print(), 'top')
         ..setName($BaseConsts.print)
         ..setIcon(cl.Icon.print)
-        ..addAction((_) => printData()));
+        ..addAction(printData));
     }
     if (contr_csv != null) {
       menuLeftBottom.add(new cl_action.Button()
@@ -59,7 +110,7 @@ abstract class Report<C extends cl_app.Client> implements cl_app.Item<C> {
         ..setTip(intl.Export(), 'top')
         ..setName($BaseConsts.export)
         ..setIcon(cl.Icon.file_excel)
-        ..addAction((_) => csvData()));
+        ..addAction(csvData));
     }
   }
 
@@ -84,20 +135,59 @@ abstract class Report<C extends cl_app.Client> implements cl_app.Item<C> {
     return true;
   }
 
-  void printData() => cl_util.printUrl(
-      ap.baseurl + contr_print.reverse([window.btoa(json.encode(params))]),
-      layout);
+  void printer(dynamic contr) => cl_util
+      .printUrl(ap.baseurl + contr.reverse([window.btoa(json.encode(params))]));
 
-  void csvData() => ap.download(contr_csv.reverse([]), params, layout);
+  void printData([_]) => printer(contr_print);
+
+  void csvData([_]) => ap.loadExecute(
+      ap.desktop, () => ap.download(contr_csv.reverse([]), params));
+
+  void initGrid() {
+    grid = new cl_form.GridList(new cl_form.RenderBuffered());
+    gridCont =
+        new cl_form.GridListContainer(grid, auto: true, fixedFooter: true);
+
+    final order = initOrder();
+    if (order != null && order.length == 2)
+      grid.setOrder(new cl_form.GridOrder(order[0], order[1]));
+
+    grid
+      ..initGridHeader(initHeader())
+      ..addHookRow(initRow)
+      ..addHookOrder((_) {
+        getData();
+        return true;
+      });
+
+    layout.contRightInner.addRow(gridCont..auto = true);
+    gridCont.initLayout();
+  }
+
+  bool initRow(TableRowElement row, Map obj) {
+    customRow(row, obj);
+    return true;
+  }
+
+  List<cl_form.GridColumn> initHeader();
+
+  void initFooter() {}
+
+  void setFooter(Map data) {}
 
   void setFilter();
 
+  void customRow(TableRowElement row, Map data) {}
+
   void setParamsGet() {
     params = {
-      $BaseConsts.order: gridReport.grid.order?.toMap(),
+      $BaseConsts.language_id: lang_select?.getValue(),
+      $BaseConsts.order: grid.order?.toMap(),
       $BaseConsts.filter: form.getValue()
     };
   }
+
+  List initOrder() => [];
 
   Future getData([cl.CLElementBase loading]) async {
     await ap.loadExecute(loading, () async {
@@ -109,29 +199,19 @@ abstract class Report<C extends cl_app.Client> implements cl_app.Item<C> {
     });
   }
 
-  void setGrid(GridList grid) {
-    gridReport?.gridCont?.remove();
-    gridReport = grid;
-    layout.contRightInner.addRow(gridReport.gridCont..auto = true);
-    gridReport.gridCont.initLayout();
-    gridReport.grid.addHookOrder((_) {
-      getData();
-      return true;
-    });
-  }
-
   void setData() {
-    gridReport.grid.empty();
+    grid.empty();
     if (data_response == null ||
         data_response[$BaseConsts.result] == null ||
         data_response[$BaseConsts.result].isEmpty) {
-      gridReport.gridCont.hide();
+      gridCont.hide();
       return;
     }
-    gridReport.gridCont.show();
+    gridCont.show();
     menuLeftBottom[$BaseConsts.print]?.enable();
     menuLeftBottom[$BaseConsts.export]?.enable();
-    gridReport.grid.renderIt(data_response[$BaseConsts.result]);
+    setFooter(data_response);
+    grid.renderIt(data_response[$BaseConsts.result]);
   }
 
   void addHook(String scope, cl_util.ObserverFunction func,

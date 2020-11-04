@@ -119,32 +119,3 @@ class Lock extends cl_action.Button {
     });
   }
 }
-
-class PButton extends cl_action.Button {
-  cl_app.Application ap;
-  String permission;
-  final StreamController<bool> _contrTry =
-      new StreamController<bool>.broadcast();
-  final StreamController<bool> _contrDo =
-      new StreamController<bool>.broadcast();
-
-  Stream get onTry => _contrTry.stream;
-
-  Stream get onDo => _contrDo.stream;
-  CheckF checkF = () => false;
-
-  PButton(this.ap, this.permission, {CheckF f}) : super() {
-    if (f != null) checkF = f;
-    addAction((e) => _click());
-  }
-
-  void _click() {
-    if (permission != null &&
-        !ap.client.checkPermission(permission) &&
-        !checkF()) {
-      _contrTry.add(true);
-      return;
-    } else
-      _contrDo.add(true);
-  }
-}

@@ -14,8 +14,6 @@ class LayoutContainerWizard extends cl.Container {
 }
 
 abstract class ItemWizard extends ItemBase implements cl_app.Item {
-  @Deprecated('Use WinMeta instead')
-  Map w;
   cl_app.WinApp wapi;
   cl_app.WinMeta meta;
 
@@ -60,19 +58,7 @@ abstract class ItemWizard extends ItemBase implements cl_app.Item {
 
   void initLayout() {
     createLayout();
-    wapi = new cl_app.WinApp(ap);
-    if (w != null) {
-      wapi.load(
-          new cl_app.WinMeta()
-            ..title = w['title'](_id)
-            ..width = w['width']
-            ..height = w['height']
-            ..icon = w['icon'],
-          this);
-    } else {
-      wapi.load(meta, this);
-    }
-
+    wapi = new cl_app.WinApp(ap)..load(meta, this);
     menu = new cl_action.Menu(layout.contMenu);
     wapi.win.getContent().append(layout, scrollable: true);
     wapi.render();

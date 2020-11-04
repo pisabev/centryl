@@ -61,8 +61,6 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
   UrlPattern contr_get, contr_del, contr_print, contr_pdf;
 
   cl_app.Application<C> ap;
-  @Deprecated('Use WinMeta instead')
-  Map w;
   cl_app.WinMeta meta;
   cl_app.WinApp<C> wapi;
   ListingContainer layout;
@@ -117,18 +115,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
 
   void initLayout() {
     createLayout();
-    wapi = new cl_app.WinApp(ap);
-    if (w != null) {
-      wapi.load(
-          new cl_app.WinMeta()
-            ..title = w['title']
-            ..width = w['width']
-            ..height = w['height']
-            ..icon = w['icon'],
-          this);
-    } else {
-      wapi.load(meta, this);
-    }
+    wapi = new cl_app.WinApp(ap)..load(meta, this);
     menu = new cl_action.Menu(layout.contMenu);
     wapi.win.getContent().append(layout, scrollable: true);
     wapi.render();
@@ -204,9 +191,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
   }
 
   void filterActive() {
-    menu
-      ..setState($BaseConsts.filter, true)
-      ..setState($BaseConsts.clear, true);
+    menu..setState($BaseConsts.filter, true)..setState($BaseConsts.clear, true);
   }
 
   cl_form.GridColumn mapToGridColumn(Map hrow) {
@@ -467,8 +452,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
       actionSend($del, contr_del.reverse([]), loading);
 
   void _setData([dynamic data]) {
-    data_response =
-        data ?? {$BaseConsts.total: 0, $BaseConsts.result: []};
+    data_response = data ?? {$BaseConsts.total: 0, $BaseConsts.result: []};
   }
 
   void setData() {

@@ -3,7 +3,6 @@ part of ui;
 abstract class ItemBase<C extends cl_app.Client> {
   cl_app.Application<C> ap;
 
-  static const String init_item = 'init_item';
   static const String save_before = 'save_before';
   static const String save_after = 'save_after';
   static const String get_before = 'get_before';
