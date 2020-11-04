@@ -22,5 +22,4 @@ part 'ui/item_wizard.dart';
 part 'ui/listing.dart';
 part 'ui/lock.dart';
 part 'ui/report.dart';
-part 'ui/select_sync.dart';
 part 'ui/tree_builder.dart';
