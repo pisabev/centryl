@@ -18,8 +18,8 @@ import 'package:path/path.dart';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:task/task.dart';
 
-import 'path.dart';
 import 'mapper.dart';
+import 'path.dart';
 
 part 'svc/csv.dart';
 part 'svc/file_sync.dart';
