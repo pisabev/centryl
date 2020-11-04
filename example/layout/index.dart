@@ -7,7 +7,7 @@ import 'package:centryl/action.dart' as action;
 import 'package:centryl/forms.dart' as form;
 import 'package:centryl/layout.dart' as layout;
 
-import '../base/base.dart';
+import '../common/base.dart';
 import 'test.dart';
 
 void main() {

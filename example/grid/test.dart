@@ -5,7 +5,7 @@ import 'package:centryl/app.dart' as app;
 import 'package:centryl/base.dart';
 import 'package:centryl/forms.dart' as cl_form;
 
-import '../base/base.dart';
+import '../common/base.dart';
 
 void grid1() {
   final w = new app.Win(ap.desktop);

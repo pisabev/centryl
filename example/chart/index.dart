@@ -5,7 +5,7 @@ library application;
 import 'package:centryl/app.dart' as app;
 import 'package:centryl/chart.dart' as chart;
 
-import '../base/base.dart';
+import '../common/base.dart';
 
 void main() {
     init();

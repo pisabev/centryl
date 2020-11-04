@@ -8,7 +8,7 @@ import 'package:centryl/base.dart';
 import 'package:centryl/forms.dart' as cl_form;
 import 'dart:math';
 
-import '../base/base.dart';
+import '../common/base.dart';
 import 'test.dart';
 
 void main() {

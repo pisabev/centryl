@@ -4,7 +4,7 @@ library test;
 //import 'package:centryl/base.dart';
 import 'package:centryl/app.dart' as app;
 
-import '../base/base.dart';
+import '../common/base.dart';
 import 'test.dart';
 
 void main() {

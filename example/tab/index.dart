@@ -8,7 +8,7 @@ import 'package:centryl/forms.dart' as cl_form;
 //import 'package:centryl/action.dart' as cl_action;
 import 'package:centryl/gui.dart' as cl_gui;
 
-import '../base/base.dart';
+import '../common/base.dart';
 
 void main() {
   init();

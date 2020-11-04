@@ -13,7 +13,7 @@ library test.cl.accordion;
 
 import 'package:centryl/app.dart' as cl_app;
 
-import '../base/base.dart';
+import '../common/base.dart';
 import 'test.dart';
 
 void main() {

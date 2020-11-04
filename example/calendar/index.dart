@@ -6,7 +6,7 @@ import 'dart:async';
 import 'package:centryl/app.dart' as app;
 import 'package:centryl/calendar.dart' as ec;
 
-import '../base/base.dart';
+import '../common/base.dart';
 
 Future main() async {
   init();
