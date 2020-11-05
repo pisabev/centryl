@@ -16,6 +16,7 @@ part 'utils/calendar.dart';
 part 'utils/drag.dart';
 part 'utils/easing_engine.dart';
 part 'utils/event_validator.dart';
+part 'utils/full_screen.dart';
 part 'utils/helpers.dart';
 part 'utils/key_action.dart';
 part 'utils/observer.dart';
