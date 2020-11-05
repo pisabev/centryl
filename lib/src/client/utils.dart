@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import '../../intl/client.dart' as intl;
 import 'base.dart';
 
+part 'utils/boxing.dart';
 part 'utils/calendar.dart';
 part 'utils/drag.dart';
 part 'utils/easing_engine.dart';
@@ -21,4 +22,4 @@ part 'utils/key_action.dart';
 part 'utils/observer.dart';
 part 'utils/preloader.dart';
 part 'utils/scroll.dart';
-part 'utils/path.dart';
+part 'utils/slider.dart';
