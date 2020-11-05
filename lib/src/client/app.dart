@@ -16,7 +16,6 @@ import 'chart.dart' as chart;
 import 'forms.dart' as forms;
 import 'utils.dart' as utils;
 
-part 'app/winparams.dart';
 part 'app/application.dart';
 part 'app/client.dart';
 part 'app/clock.dart';

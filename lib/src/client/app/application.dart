@@ -214,7 +214,9 @@ class Application<C extends Client> {
       ..append(notify.messageDom())
       ..append(new action.Button()
         ..setIcon(Icon.fullscreen)
-        ..addAction((e) => utils.fullscreenWorkaround(fullScreen = !fullScreen))
+        ..addAction((e) => (fullScreen = !fullScreen)
+            ? document.body.requestFullscreen()
+            : document.exitFullscreen())
         ..setTip(intl.Fullscreen(), 'bottom'))
       ..append(new Clock());
     if (menu.mainElements.isNotEmpty) menu.render();
