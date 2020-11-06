@@ -24,7 +24,7 @@ class Base {
       };
       response(null, eo);
     } else if (e is WorkflowException) {
-      final settings = req.session['client']['settings'] ?? {};
+      final settings = req.session[sessionKey]['settings'] ?? {};
       final locale = settings['language'];
       final eo = {
         'type': 'work_exception',

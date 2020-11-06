@@ -6,8 +6,8 @@ class Index extends Base {
   Map data;
 
   Future<void> index() async {
-    if (req.session['client'] == null) return page404();
-    final settings = req.session['client']['settings'] ?? {};
+    if (req.session[sessionKey] == null) return page404();
+    final settings = req.session[sessionKey]['settings'] ?? {};
     final theme = settings['theme'] ?? 'main';
 
     String css;
@@ -53,7 +53,7 @@ class Index extends Base {
     final params = await getData();
     if (params != null && params.isNotEmpty) data.addAll(params);
     data['devmode'] = devmode;
-    data['client'] = req.session['client'];
+    data[sessionKey] = req.session[sessionKey];
     for (final f in boot_call) await f(data);
     response(data);
   }

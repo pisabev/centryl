@@ -97,7 +97,7 @@ void sendEvent(String key, [dynamic value]) {
   send(parts[0], parts[1], key, value);
 }
 
-Future addNotification(SMessage mes) async {
+Future<void> addNotification(SMessage mes) async {
   await dbWrap<void>((manager) async {
     final not = manager.app.notification.createObject()..key = mes.key;
     if (mes.value != null) not.value = mes.value;
