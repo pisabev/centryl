@@ -32,12 +32,10 @@ part 'svc/sservice.dart';
 part 'svc/tree.dart';
 part 'svc/xls.dart';
 
-final List<void Function(Router)> routes = [];
+final List<FutureOr<void> Function(Router)> routes = [];
 final List<FutureOr<void> Function(Map)> boot_call = [];
 
 WSRouter _wsrouter;
-final List<Client> _extraClients = [];
-
 const String $meta = 'base_meta';
 
 Meta meta;
@@ -55,23 +53,11 @@ final SNotificator notificator = new SNotificator();
 
 Future<bool> Function(HttpRequest req) onclose = (req) async => true;
 
-void Function(String group, String scope, List<String> access,
-        [bool defaultValue]) permissionRegister =
-    (group, scope, access, [defaultValue = false]) => null;
-
 bool Function(Map session, String group, String scope, String access)
     permissionCheck = (session, group, scope, access) => true;
 
 String Function(String group, String scope, String access) permissionMessage =
     (group, scope, access) => '';
-
-void permissionRegisterStandardPack(String group, String scope,
-    [bool defaultValue = false]) {
-  permissionRegister(group, scope, [$RunRights.read], defaultValue);
-  permissionRegister(group, scope, [$RunRights.create], defaultValue);
-  permissionRegister(group, scope, [$RunRights.update], defaultValue);
-  permissionRegister(group, scope, [$RunRights.delete], defaultValue);
-}
 
 class Meta {
   final String host;
@@ -95,20 +81,8 @@ Future<void> loadMeta() => dbWrap<void>((manager) async {
       meta = new Meta(data['host'], data['build']);
     });
 
-List<Client> getWSClients() {
-  if (_wsrouter == null) return [];
-  final clientList = _wsrouter.clients;
-  final List<Client> retList = []..addAll(clientList)..addAll(_extraClients);
-  return retList;
-}
-
-void addClient(Client cl) {
-  if (!_extraClients.contains(cl)) _extraClients.add(cl);
-}
-
-void removeClient(Client cl) {
-  if (_extraClients.contains(cl)) _extraClients.remove(cl);
-}
+List<Client> getWSClients() =>
+    (_wsrouter == null) ? [] : new List.from(_wsrouter.clients);
 
 void send(String group, String scope, String controller, dynamic value) {
   final wsClients = getWSClients();
