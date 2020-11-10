@@ -20,17 +20,17 @@ class LayoutContainer2 extends Container {
   TabContainer contBottom;
 
   LayoutContainer2() : super() {
-    contMenu = new Container();
     contTop = new Container();
     contBottom = new TabContainer()..auto = true;
+    contMenu = new Container();
 
     contTopLeft = new Container()..auto = true;
     contTopRight = new Container()..auto = true;
 
     contTop..addCol(contTopLeft)..addCol(contTopRight);
 
-    addRow(contMenu);
     addRow(contTop);
     addRow(contBottom);
+    addRow(contMenu);
   }
 }

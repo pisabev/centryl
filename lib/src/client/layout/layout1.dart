@@ -12,14 +12,14 @@ part of layout;
 /// +---------------------------------+
 ///
 class LayoutContainer1 extends Container {
-  Container contMenu;
   TabContainer contBottom;
+  Container contMenu;
 
   LayoutContainer1() : super() {
-    contMenu = new Container();
     contBottom = new TabContainer()..auto = true;
+    contMenu = new Container();
 
-    addRow(contMenu);
     addRow(contBottom);
+    addRow(contMenu);
   }
 }

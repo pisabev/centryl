@@ -27,7 +27,10 @@ class Warning {
     if (showAuto && warnings.isNotEmpty) {
       _timerWrn?.cancel();
       _timerWrn = new Timer(const Duration(seconds: 1), () {
-        show(const Duration(seconds: 5));
+        if (document.body
+            .getBoundingClientRect()
+            .containsPoint(warningIcon.getBoundingClientRect().bottomRight))
+          show(const Duration(seconds: 5));
         _timerWrn = null;
       });
     }
