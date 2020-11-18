@@ -43,7 +43,6 @@ abstract class $BaseConsts {
   static const String del_after = 'del_after';
   static const String print_before = 'print_before';
 
-
   static const String ids = 'ids';
   static const String id = 'id';
   static const String filter = 'filter';
