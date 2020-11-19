@@ -90,9 +90,12 @@ Future<void> loadMeta() => dbWrap<void>((manager) async {
 
 List<Client> getWSClients() => _wsrouter.clients;
 
-Stream<Client> get onWSClientIn => _wsrouter.onClientIn;
+StreamController<Client> _contrIn = new StreamController.broadcast();
+StreamController<Client> _contrOut = new StreamController.broadcast();
 
-Stream<Client> get onWSClientOut => _wsrouter.onClientOut;
+Stream<Client> get onWSClientIn => _contrIn.stream;
+
+Stream<Client> get onWSClientOut => _contrOut.stream;
 
 void send(String group, String scope, String controller, dynamic value) {
   final wsClients = getWSClients();
@@ -122,7 +125,7 @@ Future<void> addNotification(SMessage mes) async {
 Future<void> server(String address, int port, [Logger logger]) async {
   final server = await HttpServer.bind(address, port);
   final router = new HttpRouter(server, logger);
-  _wsrouter = new WSRouter();
+  _wsrouter = new WSRouter(_contrIn, _contrOut);
   router.serve(Routes.ws).listen((req) async {
     await _wsrouter.upgrade(req, pingInterval: 55);
   });
