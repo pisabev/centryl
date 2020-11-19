@@ -60,8 +60,6 @@ bool devmode = false;
 final Logger log = new Logger('Base');
 final SNotificator notificator = new SNotificator();
 
-Future<bool> Function(HttpRequest req) onclose = (req) async => true;
-
 bool Function(Map session, String group, String scope, String access)
     permissionCheck = (session, group, scope, access) => true;
 
@@ -90,12 +88,11 @@ Future<void> loadMeta() => dbWrap<void>((manager) async {
       meta = new Meta(data['host'], data['build']);
     });
 
-List<Client> getWSClients() =>
-    (_wsrouter == null) ? [] : new List.from(_wsrouter.clients);
+List<Client> getWSClients() => _wsrouter.clients;
 
-Stream<Client> get onWSClientIn => _wsrouter.onIn;
+Stream<Client> get onWSClientIn => _wsrouter.onClientIn;
 
-Stream<Client> get onWSClientOut => _wsrouter.onOut;
+Stream<Client> get onWSClientOut => _wsrouter.onClientOut;
 
 void send(String group, String scope, String controller, dynamic value) {
   final wsClients = getWSClients();
@@ -127,7 +124,7 @@ Future<void> server(String address, int port, [Logger logger]) async {
   final router = new HttpRouter(server, logger);
   _wsrouter = new WSRouter();
   router.serve(Routes.ws).listen((req) async {
-    await _wsrouter.upgrade(req, pingInterval: 55, onDone: () => onclose(req));
+    await _wsrouter.upgrade(req, pingInterval: 55);
   });
   routes.forEach((f) {
     f(router);
