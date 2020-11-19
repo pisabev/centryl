@@ -172,13 +172,14 @@ class GridList<T> extends GridBase<T> {
   html.TableRowElement rowAdd(Map obj) {
     final row = rowCreate(obj);
     renderer.rows.add(row);
+    tbody.dom.append(row);
     if (num) rowNumRerender();
     map.forEach((k, gc) => gc.renderAggregator(renderer.rows));
     return row;
   }
 
   void rowRemove(html.TableRowElement row, [bool show = false]) {
-    super.rowRemove(row, show);
+    row.remove();
     renderer.rows.remove(row);
     map.forEach((k, gc) => gc
       ..aggregator.remove(getCell(row, k))
