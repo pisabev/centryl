@@ -93,7 +93,11 @@ class Render extends RenderBase {
   void renderIt(List data) {
     final frg = html.document.createDocumentFragment();
     grid.map.forEach((k, gc) => gc.resetAggregator());
-    for (var i = 0; i < data.length; i++) frg.append(grid.rowCreate(data[i]));
+    for (var i = 0; i < data.length; i++) {
+      final row = grid.rowCreate(data[i]);
+      rows.add(row);
+      frg.append(row);
+    }
     grid.tbody.dom.append(frg);
     if (grid.num) grid.rowNumRerender();
     grid.map.forEach((k, gc) => gc.renderAggregator(gc.grid.tbody.dom.rows));

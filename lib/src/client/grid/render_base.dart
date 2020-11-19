@@ -1,6 +1,7 @@
 part of forms;
 
 abstract class RenderBase {
+  List<html.TableRowElement> rows;
   GridList grid;
 
   List<num> tbodyWidths;

@@ -169,6 +169,23 @@ class GridList<T> extends GridBase<T> {
     observer.execHooks(hook_render);
   }
 
+  html.TableRowElement rowAdd(Map obj) {
+    final row = rowCreate(obj);
+    renderer.rows.add(row);
+    if (num) rowNumRerender();
+    map.forEach((k, gc) => gc.renderAggregator(renderer.rows));
+    return row;
+  }
+
+  void rowRemove(html.TableRowElement row, [bool show = false]) {
+    super.rowRemove(row, show);
+    renderer.rows.remove(row);
+    map.forEach((k, gc) => gc
+      ..aggregator.remove(getCell(row, k))
+      ..renderAggregator(renderer.rows));
+    if (num) rowNumRerender();
+  }
+
   void rowNumRerender() {
     if (num) {
       for (var i = 0; i < tbody.dom.childNodes.length; i++)
@@ -267,5 +284,10 @@ class GridList<T> extends GridBase<T> {
 
   set scrollTop(int scroll_top) {
     tbody.dom.scrollTop = scroll_top;
+  }
+
+  void empty() {
+    super.empty();
+    renderer.rows = [];
   }
 }

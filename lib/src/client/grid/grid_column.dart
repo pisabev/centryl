@@ -9,6 +9,8 @@ abstract class Aggregator<T> {
 
   void add(RowDataCell object);
 
+  void remove(RowDataCell object);
+
   void render();
 
   void reset();
@@ -20,6 +22,8 @@ class NumAggregator extends Aggregator<num> {
   NumAggregator() : super(null);
 
   void add(RowDataCell object) => total += object.object;
+
+  void remove(RowDataCell object) => total -= object.object;
 
   void render() {
     dom
@@ -36,6 +40,8 @@ class CountAggregator extends Aggregator<num> {
   CountAggregator() : super(null);
 
   void add(RowDataCell object) => total++;
+
+  void remove(RowDataCell object) => total--;
 
   void render() {
     dom
