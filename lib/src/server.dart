@@ -22,14 +22,23 @@ import 'mapper.dart';
 import 'path.dart';
 
 part 'svc/csv.dart';
+
 part 'svc/file_sync.dart';
+
 part 'svc/ics.dart';
+
 part 'svc/mail.dart';
+
 part 'svc/manager.dart';
+
 part 'svc/pdf.dart';
+
 part 'svc/service.dart';
+
 part 'svc/sservice.dart';
+
 part 'svc/tree.dart';
+
 part 'svc/xls.dart';
 
 final List<FutureOr<void> Function(Router)> routes = [];
@@ -83,6 +92,10 @@ Future<void> loadMeta() => dbWrap<void>((manager) async {
 
 List<Client> getWSClients() =>
     (_wsrouter == null) ? [] : new List.from(_wsrouter.clients);
+
+Stream<Client> get onWSClientIn => _wsrouter.onIn;
+
+Stream<Client> get onWSClientOut => _wsrouter.onOut;
 
 void send(String group, String scope, String controller, dynamic value) {
   final wsClients = getWSClients();
