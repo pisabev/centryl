@@ -182,7 +182,7 @@ class GridList<T> extends GridBase<T> {
     row.remove();
     renderer.rows.remove(row);
     map.forEach((k, gc) => gc
-      ..aggregator.remove(getCell(row, k))
+      ..aggregator?.remove(getCell(row, k))
       ..renderAggregator(renderer.rows));
     if (num) rowNumRerender();
   }
