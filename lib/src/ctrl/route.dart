@@ -1,8 +1,5 @@
 part of cl_base.ctrl;
 
-final Map map = {};
-
-const String authCookieName = 'CENTRYLSESSID';
 const String sessionKey = 'client';
 
 void routesInit(Router router) => router
@@ -11,16 +8,7 @@ void routesInit(Router router) => router
 
 void routesAnonymous(Router router) {
   router.filter(new UrlPattern(r'(.*)'), (req) async {
-    final cookie = req.cookies
-        .firstWhere((cookie) => cookie.name == authCookieName, orElse: () {
-      final cookie = new Cookie(authCookieName, req.session.id);
-      req.response.cookies.add(cookie);
-      req.cookies.add(cookie);
-      req.session[sessionKey] = null;
-      return cookie;
-    });
-    if (map[cookie.value] == null) map[cookie.value] = {'name': 'Anonymous'};
-    req.session[sessionKey] = map[cookie.value];
+    req.session[sessionKey] = {'name': 'Anonymous'};
     return new Future.value(true);
   });
 }
