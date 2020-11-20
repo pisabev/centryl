@@ -44,7 +44,7 @@ class Room {
     if (unseen > 0)
       not.show();
     else
-      not.hide();
+      not.hide(useVisibility: true);
   }
 
   String getTitle() =>
@@ -73,12 +73,12 @@ class Room {
     members.forEach((m) {
       if (!m.isMe) m.renderProfile(contI);
     });
-    dom..append(contI)..append(contM)..append(rem);
+    dom..append(contI)..append(contM);
     not = new CLElement(new SpanElement())
       ..addClass('count')
       ..setText('$unseen');
-    dom.append(not);
-    if (unseen == 0) not.hide();
+    dom..append(not)..append(rem);
+    if (unseen == 0) not.hide(useVisibility: true);
     return dom;
   }
 
