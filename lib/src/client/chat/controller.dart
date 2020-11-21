@@ -34,7 +34,7 @@ class ChatController {
 
   Stream<Room> get onCallAnswer => notifierCallAnswer.stream;
 
-  Stream<Room> get onCallHangup => notifierCallAnswer.stream;
+  Stream<Room> get onCallHangup => notifierCallHangup.stream;
 
   FutureOr<List<Message>> Function(Room) loadRoomMessages;
   FutureOr<List<Message>> Function(Room) loadRoomMessagesNew;

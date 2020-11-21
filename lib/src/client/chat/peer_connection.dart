@@ -38,7 +38,7 @@ class PeerConnection {
             ..to = targetUserId
             ..description = offer;
           await _conn.setLocalDescription(dto.getDescription());
-          await controller.sendOffer(dto);
+          controller.sendOffer(dto);
         } catch (e) {
           throw Exception('Unable to PeerConnection:'
               'RtcPeerConnection.onNegotiationNeeded: ${e.message}');
@@ -58,7 +58,7 @@ class PeerConnection {
   }
 
   void setLocalStream(MediaStream stream) =>
-      stream.getTracks().forEach((t) => _conn.addTrack(t, stream));
+      stream.getTracks().forEach((dynamic t) => _conn.addTrack(t, stream));
 
   Future<void> handleOffer(OfferRequest offer) async {
     try {
@@ -70,7 +70,7 @@ class PeerConnection {
         ..isAnswer = true
         ..description = answer;
       await _conn.setLocalDescription(dto.getDescription());
-      await controller.sendOffer(dto);
+      controller.sendOffer(dto);
     } catch (e) {
       throw Exception('Unable to PeerConnection:handleOffer: ${e.message}');
     }
@@ -87,8 +87,8 @@ class PeerConnection {
 
   Future<void> handleNewICECandidateMsg(IceCandidate ice) async {
     try {
-      await _conn.addIceCandidate(
-          new RtcIceCandidate(ice.getCandidate()), () {}, (_) {});
+      await _conn.addIceCandidate(new RtcIceCandidate(ice.getCandidate()),
+          allowInterop(() {}), allowInterop((_) {}));
     } catch (e) {
       throw Exception(
           'Unable to PeerConnection:handleNewICECandidateMsg: ${e.message}');

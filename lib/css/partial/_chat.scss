@@ -72,7 +72,6 @@
     }
   }
 }
-
 .ui-room-list-context {
   .top {
     height: auto;
@@ -256,6 +255,28 @@
     }
   }
 }
+.ui-call-start {
+  .top {
+    align-items: center;
+    flex-direction: column;
+    .member {
+      width: 100px;
+      height: 100px;
+      .icon {
+        display: initial;
+      }
+    }
+    h2 {
+      font-size: 2rem;
+    }
+  }
+  .bottom {
+    align-self: center;
+    .ui-button {
+      margin: 10px;
+    }
+  }
+}
 .ui-video-remote {
   padding: $prem + rem;
   video {
@@ -279,13 +300,7 @@
     margin-top: $prem + rem;
   }
   .action {
+    align-self: center;
     padding: $prem + rem;
-    .answer {
-      margin-left: auto;
-      margin-right: $prem + rem;
-    }
-    .hangup {
-      margin-right: auto;
-    }
   }
 }

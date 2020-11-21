@@ -6,51 +6,44 @@ class PeerManager {
   int userId;
   List<PeerConnection> connections = [];
   CallView callView;
+  CallStartView callStartView;
   StreamSubscription _sub;
 
   PeerManager(this.ap, this.controller, this.userId) {
     controller.onNotifyOffer.listen((offer) {
-      if (callView == null) return;
+      if (callView == null && callStartView == null) return;
       final conn = getConnection(offer.from);
       if (offer.isAnswer)
         conn.handleOfferAnswer(offer);
-      else
+      else {
         conn.handleOffer(offer);
+        if (callStartView != null) initCallView(callStartView.room);
+      }
     });
     controller.onNotifyIce.listen((ice) {
       if (callView == null) return;
       getConnection(ice.from).handleNewICECandidateMsg(ice);
     });
     controller.onCallAnswer.listen((room) {
-      if (callView == null) return;
-      setStreamToTarget(room.members.first.user_id);
+      if (callStartView == null) return;
+      initCallView(room);
     });
     controller.onCallStart.listen((room) {
-      initCallView(room);
-      callView
+      initCallStartView(room, caller: false)
         ..answer.enable()
-        ..onAnswer = () async {
-          setStreamToTarget(room.members.first.user_id);
-          controller.callAnswer(room);
-        };
+        ..onAnswer = () => controller.callAnswer(room);
     });
     controller.onCallHangup.listen((room) {
-      removeConnection(room.members.first.user_id);
-      if (connections.isEmpty) hangup(room);
+      if (callStartView != null) closeCallStartView();
+      if (callView != null) closeCallView();
     });
-  }
-
-  void setStreamToTarget(int targetId) {
-    final conn = getConnection(targetId);
-    if (callView.localView._localStreamVideo != null)
-      conn.setLocalStream(callView.localView._localStreamVideo);
   }
 
   void removeConnection(int targetUserId) {
     final exist = connections.firstWhere(
         (c) => c.userId == userId && c.targetUserId == targetUserId,
         orElse: () => null);
-    if (exist != null) return;
+    if (exist == null) return;
     exist._conn.close();
     connections.remove(exist);
   }
@@ -71,28 +64,43 @@ class PeerManager {
     return con;
   }
 
+  CallStartView initCallStartView(Room room, {bool caller = true}) =>
+      callStartView = new CallStartView(ap, room, caller: caller)
+        ..onHangup = () {
+          closeCallStartView();
+          controller.callHangup(room);
+        };
+
   void initCallView(Room room) {
+    closeCallStartView();
     if (callView != null) return;
     _sub?.cancel();
-    callView = new CallView(ap, room)..onHangup = () => hangup(room);
-    callView.win.observer.addHook(app.Win.hookClose, (_) {
-      hangup(room);
-      return true;
-    });
+    getConnection(room.members.first.user_id);
+    callView = new CallView(ap, room)
+      ..onHangup = () {
+        closeCallView();
+        controller.callHangup(room);
+      };
     _sub = callView.localView.onLocalStreamChange
         .listen((s) => connections.forEach((c) => c.setLocalStream(s)));
   }
 
-  void hangup(Room room) {
-    callView?.localView?.close();
-    _sub.cancel();
-    connections = [];
+  void closeCallStartView() {
+    if (callStartView == null) return;
+    callStartView.close();
+    callStartView = null;
+  }
+
+  void closeCallView() {
+    if (callView == null) return;
+    _sub?.cancel();
+    removeConnection(callView.room.members.first.user_id);
+    callView.close();
     callView = null;
-    controller.callHangup(room);
   }
 
   Future<void> doCall(Room room) async {
-    initCallView(room);
+    initCallStartView(room);
     controller.callStart(room);
   }
 }
@@ -142,7 +150,9 @@ class LocalView {
     selectAudio.cleanOptions();
     final map = ap.storageFetch('chat') ?? {};
     media.getDevices(type: DeviceKind.videoinput).then((cameras) {
-      cameras.forEach((c) => selectVideo.addOption(c.deviceId, c.label, false));
+      cameras.forEach((c) {
+        selectVideo.addOption(c.deviceId, c.label, false);
+      });
       selectVideo.setValue(map['video_id']);
     });
     media.getDevices(type: DeviceKind.audioinput).then((audios) {
@@ -153,7 +163,7 @@ class LocalView {
 
   Future<void> setShareStream() async {
     try {
-      _localStreamScreen?.getTracks()?.forEach((t) => t.stop());
+      closeStreamScreen();
       _localStreamScreen = await media.getScreen();
       _localStreamContr.add(_localStreamScreen);
       videoScreen.dom
@@ -166,7 +176,7 @@ class LocalView {
     try {
       selectVideo.removeWarnings();
       final map = ap.storageFetch('chat') ?? {};
-      _localStreamVideo?.getTracks()?.forEach((t) => t.stop());
+      closeStreamVideo();
       _localStreamVideo =
           await media.getUserMedia(map['video_id'], map['audio_id']);
       map['video_id'] =
@@ -179,32 +189,98 @@ class LocalView {
         ..autoplay = true
         ..muted = true
         ..srcObject = _localStreamVideo;
-      initDevices();
     } catch (e) {
       selectVideo.setWarning(new DataWarning('video', e.toString()));
     }
   }
 
+  void closeStreamScreen() {
+    _localStreamScreen?.getTracks()?.forEach((dynamic t) => t.stop());
+    videoScreen?.dom?.srcObject = null;
+    _localStreamScreen = null;
+  }
+
+  void closeStreamVideo() {
+    _localStreamVideo?.getTracks()?.forEach((dynamic t) => t.stop());
+    videoLocal?.dom?.srcObject = null;
+    _localStreamVideo = null;
+  }
+
   void close() {
-    _localStreamVideo?.getTracks()?.forEach((t) => t.stop());
-    _localStreamScreen?.getTracks()?.forEach((t) => t.stop());
+    closeStreamScreen();
+    closeStreamVideo();
+  }
+}
+
+class CallStartView {
+  app.Application ap;
+  app.Win win;
+  Container contTop, contBottom;
+  action.Button answer;
+  action.Button hangup;
+  void Function() onAnswer;
+  void Function() onHangup;
+  Room room;
+  final bool caller;
+
+  CallStartView(this.ap, this.room, {this.caller = true}) {
+    createDom();
+  }
+
+  void createDom() {
+    final calling = room.members.firstWhere((m) => m != null);
+    win = ap.winmanager.loadWindow(title: intl.Calling(), icon: Icon.call);
+    win.win_close.hide();
+    answer = new action.Button()
+      ..setIcon(Icon.call)
+      ..disable()
+      ..addClass('important')
+      ..addAction((e) {
+        answer.disable();
+        if (onAnswer is Function) onAnswer();
+      });
+    hangup = new action.Button()
+      ..setIcon(Icon.call_end)
+      ..addClass('warning')
+      ..addAction((e) {
+        if (onHangup is Function) onHangup();
+      });
+    final cont = new Container()..addClass('ui-call-start');
+    contTop = new Container()
+      ..addClass('top')
+      ..auto = true
+      ..append(calling.createDom(status: false))
+      ..append(new HeadingElement.h2()..text = calling.name);
+    contBottom = new Container()..addClass('bottom');
+    if (!caller) contBottom.append(answer);
+    contBottom.append(hangup);
+    cont..addRow(contTop)..addRow(contBottom);
+    win
+      ..getContent().append(cont)
+      ..render(300, 300);
+    contBottom.append(new AudioElement()
+      ..src = '${ap.baseurl}packages/centryl/sound/ringing.wav'
+      ..play().catchError((e) => null));
+  }
+
+  void close() {
+    win.close();
   }
 }
 
 class CallView {
   app.Application ap;
   app.Win win;
+  Container contLeft, contRight, contRightTop, contRightBottom;
   CLElement<VideoElement> videoRemote;
-  action.Button answer;
   action.Button hangup;
-  void Function() onAnswer;
   void Function() onHangup;
   Room room;
   LocalView localView;
 
   CallView(this.ap, this.room) {
-    localView = new LocalView(ap);
     createDom();
+    createLocalView();
   }
 
   void analyzer() {
@@ -222,42 +298,47 @@ class CallView {
 
   void createDom() {
     win = ap.winmanager.loadWindow(title: room.title, icon: Icon.call);
-
+    win.win_close.hide();
+    // win.observer.addHook(app.Win.hookClose, (_) {
+    //   if (onHangup is Function && !_closed) onHangup();
+    //   return true;
+    // });
     videoRemote = new CLElement<VideoElement>(new VideoElement());
-    answer = new action.Button()
-      ..setIcon(Icon.call)
-      ..disable()
-      ..addClass('important')
-      ..addAction((e) {
-        answer.disable();
-        if (onAnswer is Function) onAnswer();
-      });
     hangup = new action.Button()
       ..setIcon(Icon.call_end)
       ..addClass('warning')
       ..addAction((e) {
         if (onHangup is Function) onHangup();
-        win.close();
       });
     final cont = new Container();
-    final contLeft = new Container()..auto = true;
-    final contRight = new Container();
-    final contRightBottom = new Container();
+    contLeft = new Container()..auto = true;
+    contRight = new Container();
+    contRightTop = new Container()..addClass('ui-video-local');
+    contRightBottom = new Container();
     cont..addCol(contLeft)..addCol(contRight);
     contLeft
       ..addClass('ui-video-remote')
       ..append(videoRemote);
     contRight
-      ..addClass('ui-video-local')
-      ..append(localView.videoLocal)
-      ..append(localView.selectVideo..addClass('max'))
-      ..append(localView.selectAudio..addClass('max'))
+      ..addRow(contRightTop)
       ..addRow(contRightBottom
         ..addClass('action')
-        ..append(answer..addClass('answer'))
         ..append(hangup..addClass('hangup')));
     win
       ..getContent().append(cont)
       ..render(900, 400);
+  }
+
+  void createLocalView() {
+    localView = new LocalView(ap);
+    contRightTop
+      ..append(localView.videoLocal)
+      ..append(localView.selectVideo..addClass('max'))
+      ..append(localView.selectAudio..addClass('max'));
+  }
+
+  void close() {
+    localView.close();
+    win.close();
   }
 }
