@@ -272,44 +272,61 @@
   }
   .bottom {
     align-self: center;
-    .ui-button {
-      margin: 10px;
+    padding: 1rem;
+    & > * {
+      margin: 0 $prem + rem;
     }
   }
 }
-.ui-video-remote {
-  background: #313131;
-  padding: $prem + rem;
-  video {
-    background: #000000;
-    width: 100%;
-    height: 100%;
+.ui-video {
+  background: #000000;
+  & > .inner {
+    padding: 0 $prem + rem;
+    video {
+      background: #000000;
+      width: 100%;
+    }
   }
-}
-.ui-video-local {
-  background: #313131;
-  display: flex;
-  flex-direction: column;
-  padding: $prem + rem;
-  width: 150px;
-  position: relative;
-  video {
-    width: 100%;
-    height: 100px;
-    background: #000000;
-  }
-  span.settings {
-    position: absolute;
-  }
-  .bottom {
-    align-self: center;
+  & > .top {
+    display: flex;
+    flex-direction: column;
     padding: $prem + rem;
+    position: relative;
+    .local-video {
+      width: 80px;
+      video {
+        background: #000000;
+        width: 100%;
+        height: 80px;
+        @include border-radius(100%);
+      }
+      span {
+        display: none;
+        position: absolute;
+      }
+      &:hover {
+        span {
+          display: flex;
+        }
+      }
+    }
+  }
+  & > .bottom {
+    align-self: center;
+    padding: 1rem;
+    & > * {
+      margin: 0 $prem + rem;
+    }
   }
 }
 .ui-video-settings {
   align-self: center;
   flex-direction: column;
   padding: $rem + rem;
+  video {
+    width: 100%;
+    height: 170px;
+  }
   .ui-field-select {
     width: 100%;
     margin-top: $prem + rem;

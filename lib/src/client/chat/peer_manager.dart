@@ -109,7 +109,7 @@ class LocalView {
   app.Application ap;
   Media media;
   app.Win win;
-  CLElement<VideoElement> videoLocal;
+  CLElement<VideoElement> videoLocal, previewLocal;
   CLElement<VideoElement> videoScreen;
   MediaStream _localStreamVideo;
   MediaStream _localStreamScreen;
@@ -166,23 +166,36 @@ class LocalView {
         selectAudio.setWarning(new DataWarning('video', e.toString()));
       }
     });
+    previewLocal = new CLElement<VideoElement>(new VideoElement());
+    previewLocal.dom
+      ..autoplay = true
+      ..muted = true
+      ..srcObject = _localStreamVideo;
     final cont = new Container()
+      ..append(previewLocal)
       ..append(selectVideo)
       ..append(selectAudio)
       ..addClass('ui-video-settings');
-    new app.Confirmer(ap, cont)
+    final w = new app.Confirmer(ap, cont)
       ..icon = Icon.settings
       ..title = intl.Settings()
-      ..render(width: 250, height: 250);
+      ..render(width: 250, height: 450);
+    w.win.observer.addHook(app.Win.hookClose, (_) {
+      previewLocal.dom.srcObject = null;
+      previewLocal = null;
+      return true;
+    });
   }
 
   Future<void> setShareStream() async {
     closeStreamScreen();
-    _localStreamScreen = await media.getScreen();
-    _localStreamContr.add(_localStreamScreen);
-    videoScreen.dom
-      ..autoplay = true
-      ..srcObject = _localStreamScreen;
+    try {
+      _localStreamScreen = await media.getScreen();
+      _localStreamContr.add(_localStreamScreen);
+      videoScreen.dom
+        ..autoplay = true
+        ..srcObject = _localStreamScreen;
+    } catch (e) {}
   }
 
   Future<void> setStream() async {
@@ -200,6 +213,12 @@ class LocalView {
       ..autoplay = true
       ..muted = true
       ..srcObject = _localStreamVideo;
+    if (previewLocal != null) {
+      previewLocal.dom
+        ..autoplay = true
+        ..muted = true
+        ..srcObject = _localStreamVideo;
+    }
   }
 
   void closeStreamScreen() {
@@ -212,7 +231,6 @@ class LocalView {
     _localStreamVideo
         ?.getTracks()
         ?.forEach(allowInterop((dynamic t) => t.stop()));
-    videoLocal?.dom?.srcObject = null;
     _localStreamVideo = null;
   }
 
@@ -220,6 +238,11 @@ class LocalView {
     closeStreamScreen();
     closeStreamVideo();
   }
+
+  Container getContainer() => new Container()
+    ..addClass('local-video')
+    ..append(videoLocal)
+    ..append(settings);
 }
 
 class CallStartView {
@@ -281,7 +304,7 @@ class CallStartView {
 class CallView {
   app.Application ap;
   app.Win win;
-  Container contLeft, contRight, contRightTop, contRightBottom;
+  Container contTop, contInner, contBottom;
   CLElement<VideoElement> videoRemote;
   action.Button hangup;
   void Function() onHangup;
@@ -320,23 +343,23 @@ class CallView {
       ..addAction((e) {
         if (onHangup is Function) onHangup();
       });
-    final cont = new Container();
-    contLeft = new Container()..auto = true;
-    contRight = new Container()..addClass('ui-video-local');
-    contRightTop = new Container();
-    contRightBottom = new Container()..addClass('bottom');
-    cont..addCol(contLeft)..addCol(contRight);
-    contLeft
-      ..addClass('ui-video-remote')
-      ..append(videoRemote);
-    contRight
-      ..addRow(contRightTop
-        ..append(localView.videoLocal)
-        ..append(localView.settings..addClass('settings')))
-      ..addRow(contRightBottom..append(hangup));
+    final share = new action.Button()
+      ..setIcon(Icon.content_copy)
+      ..addClass('attention')
+      ..addAction((e) => localView.setShareStream());
+    final cont = new Container()..addClass('ui-video');
+    contTop = new Container()..addClass('top');
+    contInner = new Container()
+      ..auto = true
+      ..addClass('inner');
+    contBottom = new Container()..addClass('bottom');
+    cont..addRow(contTop)..addRow(contInner)..addRow(contBottom);
+    contTop.addRow(localView.getContainer());
+    contInner.append(videoRemote);
+    contBottom..append(hangup)..append(share);
     win
       ..getContent().append(cont)
-      ..render(1000, 600);
+      ..render(800, 600);
   }
 
   void close() {
