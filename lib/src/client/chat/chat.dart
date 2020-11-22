@@ -33,6 +33,7 @@ class Chat {
     controller
       .._doCall = peerManager.doCall
       ..showRoom = renderRoom
+      ..closeChat = (() => ap.asideHide())
       ..closeRoom = (room) {
         renderList();
         if (room.context != null) renderChat();

@@ -56,20 +56,37 @@ class Room {
     final contM = new CLElement(new DivElement())
       ..addClass('title')
       ..setText(getTitle());
-    final rem = new action.ButtonOption()
-      ..buttonOption.addAction((e) => e.stopPropagation())
-      ..addSub(new action.Button()
-        ..setTitle(intl.Open())
-        ..setIcon(Icon.message)
-        ..addAction(openRoom))
-      ..addSub(new action.Button()
-        ..setTitle(intl.Add_member())
+    action.Button rem;
+    if (room_id != null) {
+      rem = new action.ButtonOption()
+        ..buttonOption.addAction((e) => e.stopPropagation())
+        ..addSub(new action.Button()
+          ..setTitle(intl.Open())
+          ..setIcon(Icon.message)
+          ..addAction(openRoom));
+      if (_controller.callStart != null) {
+        final call = new action.Button()
+          ..setIcon(Icon.call)
+          ..setTitle(intl.Call())
+          ..addAction((e) => _controller._doCall(this));
+        rem.addSub(call);
+      }
+      rem
+        ..addSub(new action.Button()
+          ..setTitle(intl.Add_member())
+          ..setIcon(Icon.add)
+          ..addAction(addMember))
+        ..addSub(new action.Button()
+          ..setTitle(intl.Delete())
+          ..setIcon(Icon.delete)
+          ..addAction(deleteRoom));
+      dom.addAction(openRoom);
+    } else {
+      rem = new action.Button()
+        ..setTip(intl.Add_member())
         ..setIcon(Icon.add)
-        ..addAction(addMember))
-      ..addSub(new action.Button()
-        ..setTitle(intl.Delete())
-        ..setIcon(Icon.delete)
-        ..addAction(deleteRoom));
+        ..addAction(createRoom);
+    }
     members.forEach((m) {
       if (!m.isMe) m.renderProfile(contI);
     });
@@ -80,6 +97,14 @@ class Room {
     dom..append(not)..append(rem);
     if (unseen == 0) not.hide(useVisibility: true);
     return dom;
+  }
+
+  Future<void> createRoom([_]) async {
+    if (_controller.createRoom != null) {
+      final room = await _controller.createRoom(
+          this..members.add(new Member()..user_id = Chat.me_user_id));
+      if (room != null) _controller.showRoom(room);
+    }
   }
 
   void openRoom([_]) {

@@ -42,14 +42,28 @@ class RoomListContext extends Container {
     listRDom = new Container()..addClass('room-list');
     roomInnerCont.append(listRDom, scrollable: true);
 
+    action.Button clear;
     sInput = new form.Input()
-      ..setPrefixElement(new CLElement(new Icon(Icon.search).dom));
+      ..setPlaceHolder(intl.Search_people())
+      ..setPrefixElement(new CLElement(new Icon(Icon.search).dom))
+      ..addAction((e) {
+        loadUsers(sInput.field.dom.value);
+        if (sInput.field.dom.value.isNotEmpty)
+          clear.show();
+        else
+          clear.hide();
+      }, 'keyup');
     roomTopCont
       ..append(sInput)
-      ..append(new action.Button()
-        ..addClass('warning')
-        ..addAction(addRoom)
-        ..setIcon(Icon.add));
+      ..append(clear = new action.Button()
+        ..setIcon(Icon.clear)
+        ..addClass('light')
+        ..hide()
+        ..addAction((e) {
+          clear.hide();
+          sInput.setValue(null);
+          load();
+        }));
   }
 
   Future load() async {
@@ -59,13 +73,16 @@ class RoomListContext extends Container {
     rooms.forEach(renderRoom);
   }
 
-  void addRoom([_]) {
-    if (controller.addRoom != null) controller.addRoom();
+  Future loadUsers(String search) async {
+    if (search.isEmpty) return load();
+    if (controller.loadUsers == null) return;
+    rooms = await controller.loadUsers(search);
+    listRDom.removeChilds();
+    rooms.forEach(renderRoom);
   }
 
   void renderRoom(Room room) {
     room._controller = controller;
     listRDom.addRow(room.render());
-    room.dom.addAction(room.openRoom);
   }
 }

@@ -80,6 +80,10 @@ String Browser_refresh(int seconds) =>
     Intl.message('The browser will refresh in $seconds seconds!',
         name: 'Browser_refresh', args: [seconds]);
 
+String Search_people() => Intl.message('Search people', name: 'Search_people');
+
+String Call() => Intl.message('Call', name: 'Call');
+
 String Calling() => Intl.message('Calling', name: 'Calling');
 
 String Type_message() =>

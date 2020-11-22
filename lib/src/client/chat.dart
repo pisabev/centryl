@@ -16,8 +16,11 @@ import 'base.dart';
 import 'forms.dart' as form;
 import 'utils.dart' as utils;
 
+part 'chat/call_start_view.dart';
+part 'chat/call_view.dart';
 part 'chat/chat.dart';
 part 'chat/controller.dart';
+part 'chat/local_view.dart';
 part 'chat/media.dart';
 part 'chat/member.dart';
 part 'chat/message.dart';

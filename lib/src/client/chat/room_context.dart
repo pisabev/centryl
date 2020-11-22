@@ -189,6 +189,7 @@ class RoomContext extends Container {
     if (controller.callStart != null) {
       final call = new action.Button()
         ..setIcon(Icon.call)
+        ..setTip(intl.Call())
         ..addAction((e) => controller._doCall(activeRoom))
         ..addClass('attention');
       mBottomBottom.append(call);
