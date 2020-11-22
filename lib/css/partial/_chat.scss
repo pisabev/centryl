@@ -278,6 +278,7 @@
   }
 }
 .ui-video-remote {
+  background: #313131;
   padding: $prem + rem;
   video {
     background: #000000;
@@ -286,21 +287,31 @@
   }
 }
 .ui-video-local {
+  background: #313131;
   display: flex;
   flex-direction: column;
   padding: $prem + rem;
-  width: 300px;
+  width: 150px;
+  position: relative;
   video {
     width: 100%;
-    height: 150px;
+    height: 100px;
     background: #000000;
   }
+  span.settings {
+    position: absolute;
+  }
+  .bottom {
+    align-self: center;
+    padding: $prem + rem;
+  }
+}
+.ui-video-settings {
+  align-self: center;
+  flex-direction: column;
+  padding: $rem + rem;
   .ui-field-select {
     width: 100%;
     margin-top: $prem + rem;
-  }
-  .action {
-    align-self: center;
-    padding: $prem + rem;
   }
 }

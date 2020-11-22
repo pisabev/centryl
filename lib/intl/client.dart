@@ -98,6 +98,7 @@ String Connection_timeout() =>
 
 String Save_and_close() =>
     Intl.message('Save and close', name: 'Save_and_close');
+String Settings() => Intl.message('Settings', name: 'Settings');
 String Save() => Intl.message('Save', name: 'Save');
 String Continue() => Intl.message('Continue', name: 'Continue');
 String Back() => Intl.message('Back', name: 'Back');

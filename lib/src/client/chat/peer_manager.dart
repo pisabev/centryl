@@ -111,10 +111,9 @@ class LocalView {
   app.Win win;
   CLElement<VideoElement> videoLocal;
   CLElement<VideoElement> videoScreen;
-  form.Select selectVideo;
-  form.Select selectAudio;
   MediaStream _localStreamVideo;
   MediaStream _localStreamScreen;
+  action.Button settings;
 
   final StreamController<MediaStream> _localStreamContr =
       new StreamController.broadcast();
@@ -128,70 +127,79 @@ class LocalView {
 
   void createDom() {
     videoLocal = new CLElement<VideoElement>(new VideoElement());
-    selectVideo = new form.Select()
-      ..onValueChanged.listen((e) {
-        final map = ap.storageFetch('chat') ?? {};
-        map['video_id'] = e.getValue();
-        ap.storagePut('chat', map);
-        setStream();
-      });
-    selectAudio = new form.Select()
-      ..onValueChanged.listen((e) {
-        final map = ap.storageFetch('chat') ?? {};
-        map['audio_id'] = e.getValue();
-        ap.storagePut('chat', map);
-        setStream();
-      });
-    initDevices();
+    settings = new action.Button()
+      ..setIcon(Icon.settings)
+      ..setTip(intl.Settings())
+      ..addAction((e) => settingsPopUp());
+    setStream();
   }
 
-  void initDevices() {
-    selectVideo.cleanOptions();
-    selectAudio.cleanOptions();
+  Future<void> settingsPopUp() async {
+    final selectVideo = new form.Select();
+    final selectAudio = new form.Select();
+    final cameras = await media.getDevices(type: DeviceKind.videoinput);
+    cameras.forEach((c) => selectVideo.addOption(c.deviceId, c.label, false));
+    final audios = await media.getDevices(type: DeviceKind.audioinput);
+    audios.forEach((c) => selectAudio.addOption(c.deviceId, c.label, false));
     final map = ap.storageFetch('chat') ?? {};
-    media.getDevices(type: DeviceKind.videoinput).then((cameras) {
-      cameras.forEach((c) {
-        selectVideo.addOption(c.deviceId, c.label, false);
-      });
-      selectVideo.setValue(map['video_id']);
+    if (map['video_id'] != null) selectVideo.setValue(map['video_id']);
+    if (map['audio_id'] != null) selectAudio.setValue(map['audio_id']);
+    selectVideo.onValueChanged.listen((e) async {
+      selectVideo.removeWarnings();
+      final map = ap.storageFetch('chat') ?? {};
+      map['video_id'] = e.getValue();
+      ap.storagePut('chat', map);
+      try {
+        await setStream();
+      } catch (e) {
+        selectVideo.setWarning(new DataWarning('video', e.toString()));
+      }
     });
-    media.getDevices(type: DeviceKind.audioinput).then((audios) {
-      audios.forEach((c) => selectAudio.addOption(c.deviceId, c.label, false));
-      selectAudio.setValue(map['audio_id']);
+    selectAudio.onValueChanged.listen((e) async {
+      selectAudio.removeWarnings();
+      final map = ap.storageFetch('chat') ?? {};
+      map['audio_id'] = e.getValue();
+      ap.storagePut('chat', map);
+      try {
+        await setStream();
+      } catch (e) {
+        selectAudio.setWarning(new DataWarning('video', e.toString()));
+      }
     });
+    final cont = new Container()
+      ..append(selectVideo)
+      ..append(selectAudio)
+      ..addClass('ui-video-settings');
+    new app.Confirmer(ap, cont)
+      ..icon = Icon.settings
+      ..title = intl.Settings()
+      ..render(width: 250, height: 250);
   }
 
   Future<void> setShareStream() async {
-    try {
-      closeStreamScreen();
-      _localStreamScreen = await media.getScreen();
-      _localStreamContr.add(_localStreamScreen);
-      videoScreen.dom
-        ..autoplay = true
-        ..srcObject = _localStreamScreen;
-    } catch (e) {}
+    closeStreamScreen();
+    _localStreamScreen = await media.getScreen();
+    _localStreamContr.add(_localStreamScreen);
+    videoScreen.dom
+      ..autoplay = true
+      ..srcObject = _localStreamScreen;
   }
 
   Future<void> setStream() async {
-    try {
-      selectVideo.removeWarnings();
-      final map = ap.storageFetch('chat') ?? {};
-      closeStreamVideo();
-      _localStreamVideo =
-          await media.getUserMedia(map['video_id'], map['audio_id']);
-      map['video_id'] =
-          _localStreamVideo.getVideoTracks().first.getSettings()['deviceId'];
-      map['audio_id'] =
-          _localStreamVideo.getAudioTracks().first.getSettings()['deviceId'];
-      ap.storagePut('chat', map);
-      _localStreamContr.add(_localStreamVideo);
-      videoLocal.dom
-        ..autoplay = true
-        ..muted = true
-        ..srcObject = _localStreamVideo;
-    } catch (e) {
-      selectVideo.setWarning(new DataWarning('video', e.toString()));
-    }
+    closeStreamVideo();
+    final map = ap.storageFetch('chat') ?? {};
+    _localStreamVideo =
+        await media.getUserMedia(map['video_id'], map['audio_id']);
+    map['video_id'] =
+        _localStreamVideo.getVideoTracks().first.getSettings()['deviceId'];
+    map['audio_id'] =
+        _localStreamVideo.getAudioTracks().first.getSettings()['deviceId'];
+    ap.storagePut('chat', map);
+    _localStreamContr.add(_localStreamVideo);
+    videoLocal.dom
+      ..autoplay = true
+      ..muted = true
+      ..srcObject = _localStreamVideo;
   }
 
   void closeStreamScreen() {
@@ -201,7 +209,9 @@ class LocalView {
   }
 
   void closeStreamVideo() {
-    _localStreamVideo?.getTracks()?.forEach((dynamic t) => t.stop());
+    _localStreamVideo
+        ?.getTracks()
+        ?.forEach(allowInterop((dynamic t) => t.stop()));
     videoLocal?.dom?.srcObject = null;
     _localStreamVideo = null;
   }
@@ -228,7 +238,7 @@ class CallStartView {
   }
 
   void createDom() {
-    final calling = room.members.firstWhere((m) => m != null);
+    final calling = room.members.firstWhere((m) => !m.isMe);
     win = ap.winmanager.loadWindow(title: intl.Calling(), icon: Icon.call);
     win.win_close.hide();
     answer = new action.Button()
@@ -279,8 +289,8 @@ class CallView {
   LocalView localView;
 
   CallView(this.ap, this.room) {
+    localView = new LocalView(ap);
     createDom();
-    createLocalView();
   }
 
   void analyzer() {
@@ -312,29 +322,21 @@ class CallView {
       });
     final cont = new Container();
     contLeft = new Container()..auto = true;
-    contRight = new Container();
-    contRightTop = new Container()..addClass('ui-video-local');
-    contRightBottom = new Container();
+    contRight = new Container()..addClass('ui-video-local');
+    contRightTop = new Container();
+    contRightBottom = new Container()..addClass('bottom');
     cont..addCol(contLeft)..addCol(contRight);
     contLeft
       ..addClass('ui-video-remote')
       ..append(videoRemote);
     contRight
-      ..addRow(contRightTop)
-      ..addRow(contRightBottom
-        ..addClass('action')
-        ..append(hangup..addClass('hangup')));
+      ..addRow(contRightTop
+        ..append(localView.videoLocal)
+        ..append(localView.settings..addClass('settings')))
+      ..addRow(contRightBottom..append(hangup));
     win
       ..getContent().append(cont)
-      ..render(900, 400);
-  }
-
-  void createLocalView() {
-    localView = new LocalView(ap);
-    contRightTop
-      ..append(localView.videoLocal)
-      ..append(localView.selectVideo..addClass('max'))
-      ..append(localView.selectAudio..addClass('max'));
+      ..render(1000, 600);
   }
 
   void close() {
