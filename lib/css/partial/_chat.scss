@@ -256,12 +256,14 @@
   }
 }
 .ui-call-start {
+  align-self: center;
   .top {
     align-items: center;
     flex-direction: column;
     .member {
       width: 100px;
       height: 100px;
+      background-repeat: no-repeat;
       .icon {
         display: initial;
       }
