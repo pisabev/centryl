@@ -5,6 +5,7 @@ import 'src/ctrl.dart';
 import 'src/server.dart';
 
 export 'src/ctrl.dart';
+export 'src/dto.dart';
 export 'src/mapper.dart';
 export 'src/path.dart';
 export 'src/server.dart';
