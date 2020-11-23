@@ -8,25 +8,29 @@ import 'package:centryl/chart.dart' as chart;
 import '../common/base.dart';
 
 void main() {
-    init();
-    testChart();
-    testChart1();
-    testCircle();
-    testBarSmall();
-    testPie();
+  init();
+  testChart();
+  testChart1();
+  testCircle();
+  testBarSmall();
+  testPie();
 }
 
 void testChart1() {
   final w = new app.Win(ap.desktop)
-    ..setTitle('Chart')..render(600, 600);
+    ..setTitle('Chart')
+    ..render(600, 600);
 
   new chart.Chart(w.getContent())
-    ..addData([
-      ['Иван Иванов', 23141],
-      ['Димитър Димитров', 10000],
-      ['Петър Събев', 31314],
-      ['Христо Балабанов', 1333],
-      ['Александър Александров', 200]], 'Група 1')
+    ..addData(new chart.DataContainer()
+      ..label = 'Група 1'
+      ..set = [
+        new chart.DataSet('Иван Иванов', 23141),
+        new chart.DataSet('Димитър Димитров', 10000),
+        new chart.DataSet('Петър Събев', 31314),
+        new chart.DataSet('Христо Балабанов', 1333),
+        new chart.DataSet('Александър Александров', 200)
+      ])
     ..initGraph()
     ..renderGrid()
     ..renderGraph();
@@ -34,15 +38,17 @@ void testChart1() {
 
 void testChart() {
   final w = new app.Win(ap.desktop)
-    ..setTitle('Chart Bar')..render(600, 600);
+    ..setTitle('Chart Bar')
+    ..render(600, 600);
 
   new chart.Bar(w.getContent())
     ..setData([
-    ['Иван Иванов', 23141],
-    ['Димитър Димитров', 10000],
-    ['Петър Събев', 31314],
-    ['Христо Балабанов', 1333],
-    ['Александър Александров', 200]])
+      new chart.DataSet('Иван Иванов', 23141),
+      new chart.DataSet('Димитър Димитров', 10000),
+      new chart.DataSet('Петър Събев', 31314),
+      new chart.DataSet('Христо Балабанов', 1333),
+      new chart.DataSet('Александър Александров', 200)
+    ])
     ..initGraph()
     ..renderGrid()
     ..renderGraph();
@@ -50,15 +56,18 @@ void testChart() {
 
 void testCircle() {
   final w = new app.Win(ap.desktop)
-   ..setTitle('Circle')..render(350, 350);
+    ..setTitle('Circle')
+    ..render(350, 350);
 
   new chart.Circle(w.getContent())
-   ..setData(75)..draw();
+    ..setData(75)
+    ..draw();
 }
 
 void testBarSmall() {
   final w = new app.Win(ap.desktop)
-   ..setTitle('Bar small')..render(350, 350);
+    ..setTitle('Bar small')
+    ..render(350, 350);
 
   w.getContent()
     ..setStyle({'padding': '50px'})
@@ -67,14 +76,16 @@ void testBarSmall() {
 
 void testPie() {
   final w = new app.Win(ap.desktop)
-    ..setTitle('Pie')..render(600, 600);
+    ..setTitle('Pie')
+    ..render(600, 600);
 
   new chart.Pie(w.getContent())
     ..setData([
-      ['Иван Иванов', 23141],
-      ['Димитър Димитров', 10000],
-      ['Петър Събев', 31314],
-      ['Христо Балабанов', 1333],
-      ['Александър Александров', 200]])
+      new chart.DataSet('Иван Иванов', 23141),
+      new chart.DataSet('Димитър Димитров', 10000),
+      new chart.DataSet('Петър Събев', 31314),
+      new chart.DataSet('Христо Балабанов', 1333),
+      new chart.DataSet('Александър Александров', 200)
+    ])
     ..redraw();
 }

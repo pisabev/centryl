@@ -36,7 +36,7 @@ class Bar {
   num highestX = 0;
   num gridRatioX = 1;
 
-  List data = [];
+  List<DataSet> data;
   Map label_map = {};
 
   Bar(this.container) {
@@ -56,7 +56,7 @@ class Bar {
     data = [];
   }
 
-  void setData(List d) {
+  void setData(List<DataSet> d) {
     data = d;
   }
 
@@ -73,11 +73,10 @@ class Bar {
     var highest = highestX;
     var longest = longestLabel;
     for (var i = 0; i < data.length; i++) {
-      if (data[i][1] == null) data[i][1] = 0;
-      final cur = data[i][1];
+      final cur = data[i].value;
       if (cur > highest) highest = cur;
 
-      _calcTextParts(data[i][0]).forEach((part) {
+      _calcTextParts(data[i].key).forEach((part) {
         if (part.length > longest) longest = part.length;
       });
     }
@@ -125,7 +124,7 @@ class Bar {
   void renderGrid() {
     for (var i = 0; i < data.length; i++) {
       final y = i * (bar_height + bar_offset);
-      _createLabelY(data[i][0], graphStartX, graphStartY + y + 10);
+      _createLabelY(data[i].key, graphStartX, graphStartY + y + 10);
     }
     for (var i = 0; i <= gridCountX; i++) {
       final x = (i * gridOffsetX).floor();
@@ -142,7 +141,7 @@ class Bar {
   void renderGraph() {
     final group = new GElement();
     for (var i = 0; i < data.length; i++) {
-      final width = (data[i][1] / gridRatioX) * gridOffsetX;
+      final width = (data[i].value / gridRatioX) * gridOffsetX;
       final rect = new RectElement()
         ..setAttribute('class', 'rect${i + 1}')
         ..setAttribute('y', '${i * (bar_height + bar_offset)}')

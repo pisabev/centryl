@@ -45,56 +45,6 @@ abstract class GadgetBase<T> extends CLElement<DivElement> {
   Future load() => contr.load(this);
 }
 
-class StatsGadget extends GadgetBase {
-  String title;
-
-  CLElement titleDom, contentDom;
-
-  StatsGadget(this.title, GadgetController contr) : super(contr);
-
-  @override
-  void createDom() {
-    if (title != null) {
-      titleDom = new CLElement(new HeadingElement.h2())
-        ..appendTo(this)
-        ..dom.text = title;
-    }
-    contentDom = new CLElement(new DivElement())..appendTo(this);
-  }
-
-  @override
-  void update() {
-    contentDom.removeChilds();
-    if (contr.result != null)
-      contr.result.forEach((r) {
-        final c = new DivElement()..classes.add('stats');
-        final c1 = new DivElement()..classes.add('inner');
-        final k = new SpanElement()
-          ..classes.add('key')
-          ..text = '${r[0]}';
-        c1.append(k);
-        final value = r[1];
-        if ((value is String || value is List) && value.isEmpty) {
-          c1.append(new SpanElement()
-            ..classes.add('value')
-            ..text = '-');
-        } else if (value is List) {
-          value.forEach((v) {
-            c1.append(new SpanElement()
-              ..classes.add('value')
-              ..text = '$v');
-          });
-        } else {
-          c1.append(new SpanElement()
-            ..classes.add('value')
-            ..text = '$value');
-        }
-        c.append(c1);
-        contentDom.append(c);
-      });
-  }
-}
-
 class CardGadget extends GadgetBase<String> {
   String title;
   String icon;
@@ -102,14 +52,15 @@ class CardGadget extends GadgetBase<String> {
   CLElement titleDom, contentDom;
   Element domIcon;
 
-  CardGadget(this.title, this.icon, GadgetController contr) : super(contr);
+  CardGadget(this.title, this.icon, GadgetController<String> contr)
+      : super(contr);
 
   @override
   void createDom() {
     final cont = new CLElement(new SpanElement())
       ..addClass('left')
-      ..append(contentDom = new CLElement(new SpanElement())..addClass('value'))
-      ..append(titleDom = new CLElement(new SpanElement())
+      ..append(contentDom = new CLElement(new SpanElement())
+        ..addClass('value'))..append(titleDom = new CLElement(new SpanElement())
         ..addClass('title')
         ..setText(title));
     append(cont);
@@ -120,13 +71,12 @@ class CardGadget extends GadgetBase<String> {
   void update() => contentDom.setText('${contr.result}');
 }
 
-class ChartGadget extends GadgetBase {
+class ChartGadget extends GadgetBase<List<chart.DataContainer>> {
   String title;
   chart.Chart ch;
   CLElement titleDom, contentDom;
-  final bool formatDate;
 
-  ChartGadget(this.title, GadgetController contr, {this.formatDate = true})
+  ChartGadget(this.title, GadgetController<List<chart.DataContainer>> contr)
       : super(contr);
 
   @override
@@ -136,46 +86,26 @@ class ChartGadget extends GadgetBase {
         ..appendTo(this)
         ..dom.text = title;
     }
-    contentDom = new CLElement(new DivElement())..appendTo(this);
+    contentDom = new CLElement(new DivElement())
+      ..appendTo(this);
     ch = new chart.Chart(contentDom);
   }
 
   @override
   void update() {
     ch.reset();
-    var result = contr.result;
-    if (result == null || result.isEmpty)
-      result = [
-        {'graph': {}, 'label': ''}
-      ];
-    result.forEach((g) {
-      final data = [];
-      g['graph'].forEach((k, v) {
-        final d = [];
-        if (formatDate) {
-          final x = utils.Calendar.parse(k);
-          d.add(new DateFormat('d MMM \nyyyy').format(x));
-        } else {
-          d.add(k);
-        }
-        d.add(v);
-        data.add(d);
-      });
-      ch.addData(data, g['label']);
-    });
-    ch
-      ..initGraph()
-      ..renderGrid()
-      ..renderGraph();
+    contr.result.forEach(ch.addData);
+    ch.redraw();
   }
 }
 
-class PieGadget extends GadgetBase<List> {
+class PieGadget extends GadgetBase<List<chart.DataSet>> {
   String title;
   chart.Pie ch;
   CLElement titleDom, contentDom;
 
-  PieGadget(this.title, GadgetController contr) : super(contr);
+  PieGadget(this.title, GadgetController<List<chart.DataSet>> contr)
+      : super(contr);
 
   @override
   void createDom() {
@@ -184,7 +114,8 @@ class PieGadget extends GadgetBase<List> {
         ..appendTo(this)
         ..dom.text = title;
     }
-    contentDom = new CLElement(new DivElement())..appendTo(this);
+    contentDom = new CLElement(new DivElement())
+      ..appendTo(this);
     ch = new chart.Pie(contentDom);
   }
 
@@ -196,12 +127,13 @@ class PieGadget extends GadgetBase<List> {
   }
 }
 
-class BarGadget extends GadgetBase<List> {
+class BarGadget extends GadgetBase<List<chart.DataSet>> {
   String title;
   chart.Bar bar;
   CLElement titleDom, contentDom;
 
-  BarGadget(this.title, GadgetController contr) : super(contr);
+  BarGadget(this.title, GadgetController<List<chart.DataSet>> contr)
+      : super(contr);
 
   @override
   void createDom() {
@@ -210,7 +142,8 @@ class BarGadget extends GadgetBase<List> {
         ..appendTo(this)
         ..dom.text = title;
     }
-    contentDom = new CLElement(new DivElement())..appendTo(this);
+    contentDom = new CLElement(new DivElement())
+      ..appendTo(this);
     bar = new chart.Bar(contentDom);
   }
 
@@ -251,7 +184,8 @@ class GadgetContainer extends Container {
     if (clas != null) cont.addClass(clas);
   }
 
-  void load() => gadgets.forEach((g) {
+  void load() =>
+      gadgets.forEach((g) {
         if (g.scope == null || ap.client.checkPermission(g.scope))
           g.load();
         else

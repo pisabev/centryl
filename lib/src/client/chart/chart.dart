@@ -1,5 +1,20 @@
 part of chart;
 
+class DataContainer {
+  String label;
+  String clas;
+  List<DataSet> set = [];
+}
+
+class DataSet {
+  String key;
+  num value;
+
+  DataSet(this.key, this.value) {
+    value ??= 0;
+  }
+}
+
 class Chart {
   CLElement container;
   num width = 0;
@@ -50,7 +65,7 @@ class Chart {
 
   bool intData = true;
 
-  List data = [];
+  List<DataContainer> data = [];
 
   Chart(this.container) {
     reset();
@@ -70,24 +85,17 @@ class Chart {
     data = [];
   }
 
-  void addData(List d, String title, [String clas]) {
+  void addData(DataContainer cont) {
     var highest = highestY;
-    final set = (d.length == 1)
-        ? [
-            ['', 0],
-            d[0],
-            ['', 0]
-          ]
-        : d;
-    for (var i = 0; i < set.length; i++) {
-      if (set[i][1] == null) set[i][1] = 0;
-      final cur = set[i][1];
-      if (cur > highest) {
-        highest = cur;
-      }
+    if (cont.set.length == 1) {
+      cont.set = [new DataSet('', 0), cont.set.first, new DataSet('', 0)];
+    }
+    for (var i = 0; i < cont.set.length; i++) {
+      final cur = cont.set[i].value;
+      if (cur > highest) highest = cur;
       if (intData) intData = !cur.toString().contains('.');
     }
-    data.add({'set': set, 'label': title, 'class': clas});
+    data.add(cont);
     highestY = highest;
   }
 
@@ -142,15 +150,15 @@ class Chart {
         ..setAttribute('y2', '$graphHeight');
       graph.append(l);
       _createLabelX(
-          data.first['set'][i * gridRatioX][0], graphStartX + x, graphEndY);
+          data.first.set[i * gridRatioX].key, graphStartX + x, graphEndY);
     }
   }
 
   void renderGraph() {
-    data.forEach((set) {
-      final data = set['set'];
-      final label = set['label'];
-      final clas = set['class'];
+    data.forEach((cont) {
+      final data = cont.set;
+      final label = cont.label;
+      final clas = cont.clas;
       _createLabel();
       graph_count++;
       final classname = clas ?? 'path$graph_count';
@@ -177,13 +185,13 @@ class Chart {
       add_points ??= data.length * 6 < graphWidth;
       for (var i = 0; i < data.length; i++) {
         final y =
-            (gridRatioY == 0) ? 0 : (data[i][1] / gridRatioY) * gridOffsetY;
+            (gridRatioY == 0) ? 0 : (data[i].value / gridRatioY) * gridOffsetY;
         final x = i * (gridOffsetX / gridRatioX);
         sb.write(' $x,$y');
         sb_anim_from.write(' $x, 0');
         if (add_points)
-          points.add(
-              _createPoint('${data[i][0]} - ${data[i][1]}', classname, x, y));
+          points.add(_createPoint(
+              '${data[i].key} - ${data[i].value}', classname, x, y));
       }
       if (!linesOnly) sb.write(' $graphWidth,0 z');
       path.setAttribute('d', sb.toString());
@@ -243,7 +251,7 @@ class Chart {
   }
 
   void _calcGridX() {
-    var gridCountX = data.first['set'].length - 1;
+    var gridCountX = data.first.set.length - 1;
     gridCountX = (gridCountX >= 1) ? gridCountX : 1;
     var gridRatioX = 1;
     while ((graphWidth / (gridCountX / gridRatioX)) / minOffsetGridX < 1) {

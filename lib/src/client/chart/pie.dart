@@ -19,7 +19,7 @@ class Pie {
   List segmentAnims = [];
   List segmentLabels = [];
 
-  List data;
+  List<DataSet> data;
   num total = 0.0;
 
   Pie(this.container) {
@@ -53,13 +53,13 @@ class Pie {
     draw();
   }
 
-  void setData(List data) {
+  void setData(List<DataSet> data) {
     this.data = data;
   }
 
   void draw() {
     total = 0.0;
-    data.forEach((set) => total += set[1]);
+    data.forEach((set) => total += set.value);
     var i = 0;
     data.forEach((set) {
       final path = new PathElement();
@@ -75,9 +75,9 @@ class Pie {
         ..setAttribute('fill', 'freeze');
       path.append(anim);
 
-      final percentage = set[1] / total;
+      final percentage = set.value / total;
       final label_anim = _getLegend(
-          '${set[0]} - ${(percentage * 100).toStringAsFixed(2)} %',
+          '${set.key} - ${(percentage * 100).toStringAsFixed(2)} %',
           classname,
           legend_l,
           i);
