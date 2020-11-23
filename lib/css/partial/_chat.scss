@@ -79,9 +79,13 @@
     .ui-field-input {
       margin: $prem + rem;
       flex: 1 1 auto;
+      .input, .icon {
+        border: none !important;
+        background-color: transparent !important;
+      }
     }
     .ui-button {
-      margin: $prem + rem;
+      margin: 0 $prem + rem 0 0;
     }
   }
   .room-list {
