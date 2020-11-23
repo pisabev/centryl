@@ -3,7 +3,7 @@ part of app;
 class GadgetController<T> {
   T result;
 
-  FutureOr<dynamic> Function(CLElement) init;
+  FutureOr<T> Function(CLElement) init;
   MessageBusSub feed;
   FutureOr<void> Function<E>(E v) loadFeed;
   void Function() update;
