@@ -16,13 +16,13 @@ class Member {
 
   bool get isMe => Chat.me_user_id == user_id;
 
-  CLElement createDom({bool status = true}) {
+  CLElement createDom({bool showStatus = true}) {
     final contU = new CLElement(new DivElement())..addClass('member');
     if (picture != null) {
       contU.setStyle({'background-image': 'url(${Chat.baseurl}$picture)'});
     } else
       contU.append(new Icon(Icon.person).dom);
-    if (!isMe && status) {
+    if (!isMe && showStatus) {
       final contStatus = new CLElement(new DivElement())
         ..addClass('status')
         ..addClass(status ? 'online' : 'offline');
@@ -36,7 +36,7 @@ class Member {
   void renderProfileSmall(CLElement cont) {
     final uniqueId = 'chat-member-$user_id';
     document.body.querySelector('#$uniqueId')?.remove();
-    cont.append(createDom(status: false)..dom.id = uniqueId);
+    cont.append(createDom(showStatus: false)..dom.id = uniqueId);
   }
 
   Map toJson() => {'user_id': user_id, 'name': name, 'picture': picture};

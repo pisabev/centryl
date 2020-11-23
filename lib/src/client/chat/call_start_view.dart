@@ -36,7 +36,7 @@ class CallStartView {
     final cont = new Container()..addClass('ui-call-start');
     contTop = new Container()
       ..addClass('top')
-      ..append(calling.createDom(status: false))
+      ..append(calling.createDom(showStatus: false))
       ..append(new HeadingElement.h2()..text = calling.name);
     contBottom = new Container()..addClass('bottom');
     if (!caller) contBottom.append(answer);
