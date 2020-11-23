@@ -1,20 +1,5 @@
 part of chart;
 
-class DataContainer {
-  String label;
-  String clas;
-  List<DataSet> set = [];
-}
-
-class DataSet {
-  String key;
-  num value;
-
-  DataSet(this.key, this.value) {
-    value ??= 0;
-  }
-}
-
 class Chart {
   CLElement container;
   num width = 0;
@@ -65,7 +50,7 @@ class Chart {
 
   bool intData = true;
 
-  List<DataContainer> data = [];
+  List<dto.DataContainer> data = [];
 
   Chart(this.container) {
     reset();
@@ -85,10 +70,14 @@ class Chart {
     data = [];
   }
 
-  void addData(DataContainer cont) {
+  void addData(dto.DataContainer cont) {
     var highest = highestY;
     if (cont.set.length == 1) {
-      cont.set = [new DataSet('', 0), cont.set.first, new DataSet('', 0)];
+      cont.set = [
+        new dto.DataSet('', 0),
+        cont.set.first,
+        new dto.DataSet('', 0)
+      ];
     }
     for (var i = 0; i < cont.set.length; i++) {
       final cur = cont.set[i].value;

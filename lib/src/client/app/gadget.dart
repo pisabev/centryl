@@ -59,8 +59,8 @@ class CardGadget extends GadgetBase<String> {
   void createDom() {
     final cont = new CLElement(new SpanElement())
       ..addClass('left')
-      ..append(contentDom = new CLElement(new SpanElement())
-        ..addClass('value'))..append(titleDom = new CLElement(new SpanElement())
+      ..append(contentDom = new CLElement(new SpanElement())..addClass('value'))
+      ..append(titleDom = new CLElement(new SpanElement())
         ..addClass('title')
         ..setText(title));
     append(cont);
@@ -71,12 +71,12 @@ class CardGadget extends GadgetBase<String> {
   void update() => contentDom.setText('${contr.result}');
 }
 
-class ChartGadget extends GadgetBase<List<chart.DataContainer>> {
+class ChartGadget extends GadgetBase<List<dto.DataContainer>> {
   String title;
   chart.Chart ch;
   CLElement titleDom, contentDom;
 
-  ChartGadget(this.title, GadgetController<List<chart.DataContainer>> contr)
+  ChartGadget(this.title, GadgetController<List<dto.DataContainer>> contr)
       : super(contr);
 
   @override
@@ -86,8 +86,7 @@ class ChartGadget extends GadgetBase<List<chart.DataContainer>> {
         ..appendTo(this)
         ..dom.text = title;
     }
-    contentDom = new CLElement(new DivElement())
-      ..appendTo(this);
+    contentDom = new CLElement(new DivElement())..appendTo(this);
     ch = new chart.Chart(contentDom);
   }
 
@@ -99,12 +98,12 @@ class ChartGadget extends GadgetBase<List<chart.DataContainer>> {
   }
 }
 
-class PieGadget extends GadgetBase<List<chart.DataSet>> {
+class PieGadget extends GadgetBase<List<dto.DataSet>> {
   String title;
   chart.Pie ch;
   CLElement titleDom, contentDom;
 
-  PieGadget(this.title, GadgetController<List<chart.DataSet>> contr)
+  PieGadget(this.title, GadgetController<List<dto.DataSet>> contr)
       : super(contr);
 
   @override
@@ -114,8 +113,7 @@ class PieGadget extends GadgetBase<List<chart.DataSet>> {
         ..appendTo(this)
         ..dom.text = title;
     }
-    contentDom = new CLElement(new DivElement())
-      ..appendTo(this);
+    contentDom = new CLElement(new DivElement())..appendTo(this);
     ch = new chart.Pie(contentDom);
   }
 
@@ -127,12 +125,12 @@ class PieGadget extends GadgetBase<List<chart.DataSet>> {
   }
 }
 
-class BarGadget extends GadgetBase<List<chart.DataSet>> {
+class BarGadget extends GadgetBase<List<dto.DataSet>> {
   String title;
   chart.Bar bar;
   CLElement titleDom, contentDom;
 
-  BarGadget(this.title, GadgetController<List<chart.DataSet>> contr)
+  BarGadget(this.title, GadgetController<List<dto.DataSet>> contr)
       : super(contr);
 
   @override
@@ -142,8 +140,7 @@ class BarGadget extends GadgetBase<List<chart.DataSet>> {
         ..appendTo(this)
         ..dom.text = title;
     }
-    contentDom = new CLElement(new DivElement())
-      ..appendTo(this);
+    contentDom = new CLElement(new DivElement())..appendTo(this);
     bar = new chart.Bar(contentDom);
   }
 
@@ -184,8 +181,7 @@ class GadgetContainer extends Container {
     if (clas != null) cont.addClass(clas);
   }
 
-  void load() =>
-      gadgets.forEach((g) {
+  void load() => gadgets.forEach((g) {
         if (g.scope == null || ap.client.checkPermission(g.scope))
           g.load();
         else

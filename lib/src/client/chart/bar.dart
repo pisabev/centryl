@@ -36,7 +36,7 @@ class Bar {
   num highestX = 0;
   num gridRatioX = 1;
 
-  List<DataSet> data;
+  List<dto.DataSet> data;
   Map label_map = {};
 
   Bar(this.container) {
@@ -56,7 +56,7 @@ class Bar {
     data = [];
   }
 
-  void setData(List<DataSet> d) {
+  void setData(List<dto.DataSet> d) {
     data = d;
   }
 

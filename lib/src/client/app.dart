@@ -10,6 +10,7 @@ import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
 import '../../intl/client.dart' as intl;
+import '../dto.dart' as dto;
 import 'action.dart' as action;
 import 'base.dart';
 import 'chart.dart' as chart;

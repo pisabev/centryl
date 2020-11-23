@@ -19,7 +19,7 @@ class Pie {
   List segmentAnims = [];
   List segmentLabels = [];
 
-  List<DataSet> data;
+  List<dto.DataSet> data;
   num total = 0.0;
 
   Pie(this.container) {
@@ -53,7 +53,7 @@ class Pie {
     draw();
   }
 
-  void setData(List<DataSet> data) {
+  void setData(List<dto.DataSet> data) {
     this.data = data;
   }
 
