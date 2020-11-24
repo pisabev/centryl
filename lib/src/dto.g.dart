@@ -38,3 +38,143 @@ DataSet _$DataSetFromMap(Map data) =>
 
 Map<String, dynamic> _$DataSetToMap(DataSet obj) =>
     <String, dynamic>{$DataSet.key: obj.key, $DataSet.value: obj.value};
+
+abstract class $ChatSearchDTO {
+  static const String search = 'search';
+}
+
+ChatSearchDTO _$ChatSearchDTOFromMap(Map data) =>
+    new ChatSearchDTO()..search = data[$ChatSearchDTO.search];
+
+Map<String, dynamic> _$ChatSearchDTOToMap(ChatSearchDTO obj) =>
+    <String, dynamic>{$ChatSearchDTO.search: obj.search};
+
+abstract class $Message {
+  static const String typeMessage = 'typeMessage';
+  static const String typeFile = 'typeFile';
+  static const String id = 'id';
+  static const String type = 'type';
+  static const String member = 'member';
+  static const String seen = 'seen';
+  static const String room_id = 'room_id';
+  static const String context = 'context';
+  static const String content = 'content';
+  static const String timestamp = 'timestamp';
+}
+
+Message _$MessageFromMap(Map data) => new Message()
+  ..id = data[$Message.id]
+  ..type = data[$Message.type]
+  ..member = data[$Message.member] == null
+      ? null
+      : new Member.fromMap(data[$Message.member])
+  ..seen = (data[$Message.seen] as List)
+      ?.map((v0) => v0 == null ? null : new Member.fromMap(v0))
+      ?.toList()
+  ..room_id = data[$Message.room_id]
+  ..context = data[$Message.context]
+  ..content = data[$Message.content]
+  ..timestamp = data[$Message.timestamp] is String
+      ? DateTime.tryParse(data[$Message.timestamp])
+      : data[$Message.timestamp];
+
+Map<String, dynamic> _$MessageToMap(Message obj) => <String, dynamic>{
+      $Message.id: obj.id,
+      $Message.type: obj.type,
+      $Message.member: obj.member?.toMap(),
+      $Message.seen: obj.seen == null
+          ? null
+          : new List.generate(obj.seen.length, (i0) => obj.seen[i0]?.toMap()),
+      $Message.room_id: obj.room_id,
+      $Message.context: obj.context,
+      $Message.content: obj.content,
+      $Message.timestamp: obj.timestamp?.toIso8601String()
+    };
+
+abstract class $Member {
+  static const String user_id = 'user_id';
+  static const String name = 'name';
+  static const String picture = 'picture';
+  static const String status = 'status';
+}
+
+Member _$MemberFromMap(Map data) => new Member()
+  ..user_id = data[$Member.user_id]
+  ..name = data[$Member.name]
+  ..picture = data[$Member.picture]
+  ..status = data[$Member.status];
+
+Map<String, dynamic> _$MemberToMap(Member obj) => <String, dynamic>{
+      $Member.user_id: obj.user_id,
+      $Member.name: obj.name,
+      $Member.picture: obj.picture,
+      $Member.status: obj.status
+    };
+
+abstract class $Room {
+  static const String room_id = 'room_id';
+  static const String context = 'context';
+  static const String members = 'members';
+  static const String lsm_id = 'lsm_id';
+  static const String unseen = 'unseen';
+  static const String title = 'title';
+}
+
+Room _$RoomFromMap(Map data) => new Room()
+  ..room_id = data[$Room.room_id]
+  ..context = data[$Room.context]
+  ..members = (data[$Room.members] as List)
+      ?.map((v0) => v0 == null ? null : new Member.fromMap(v0))
+      ?.toList()
+  ..lsm_id = data[$Room.lsm_id]
+  ..unseen = data[$Room.unseen]
+  ..title = data[$Room.title];
+
+Map<String, dynamic> _$RoomToMap(Room obj) => <String, dynamic>{
+      $Room.room_id: obj.room_id,
+      $Room.context: obj.context,
+      $Room.members: obj.members == null
+          ? null
+          : new List.generate(
+              obj.members.length, (i0) => obj.members[i0]?.toMap()),
+      $Room.lsm_id: obj.lsm_id,
+      $Room.unseen: obj.unseen,
+      $Room.title: obj.title
+    };
+
+abstract class $OfferRequest {
+  static const String from = 'from';
+  static const String to = 'to';
+  static const String isAnswer = 'isAnswer';
+  static const String description = 'description';
+}
+
+OfferRequest _$OfferRequestFromMap(Map data) => new OfferRequest()
+  ..from = data[$OfferRequest.from]
+  ..to = data[$OfferRequest.to]
+  ..isAnswer = data[$OfferRequest.isAnswer]
+  ..description = data[$OfferRequest.description];
+
+Map<String, dynamic> _$OfferRequestToMap(OfferRequest obj) => <String, dynamic>{
+      $OfferRequest.from: obj.from,
+      $OfferRequest.to: obj.to,
+      $OfferRequest.isAnswer: obj.isAnswer,
+      $OfferRequest.description: obj.description
+    };
+
+abstract class $IceCandidate {
+  static const String from = 'from';
+  static const String to = 'to';
+  static const String candidate = 'candidate';
+}
+
+IceCandidate _$IceCandidateFromMap(Map data) => new IceCandidate()
+  ..from = data[$IceCandidate.from]
+  ..to = data[$IceCandidate.to]
+  ..candidate = data[$IceCandidate.candidate];
+
+Map<String, dynamic> _$IceCandidateToMap(IceCandidate obj) => <String, dynamic>{
+      $IceCandidate.from: obj.from,
+      $IceCandidate.to: obj.to,
+      $IceCandidate.candidate: obj.candidate
+    };

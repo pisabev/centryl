@@ -14,6 +14,15 @@ class PeerConnection {
 
   Stream<MediaStream> get onRemoteStream => _contrRemoteStream.stream;
 
+  Map _rtcIceCandidateToMap(RtcIceCandidate candidate) => {
+        'candidate': candidate.candidate,
+        'sdpMLineIndex': candidate.sdpMLineIndex,
+        'sdpMid': candidate.sdpMid
+      };
+
+  Map _rtcSessionDescriptionToMap(RtcSessionDescription description) =>
+      {'type': description.type, 'sdp': description.sdp};
+
   void _createConnection() {
     _conn = new RtcPeerConnection({
       'iceServers': [
@@ -23,22 +32,22 @@ class PeerConnection {
       ..onAddStream.listen((e) => _contrRemoteStream.add(e.stream))
       ..onIceCandidate.listen((e) {
         if (e.candidate is RtcIceCandidate) {
-          final dto = new IceCandidate()
+          final o = new dto.IceCandidate()
             ..from = userId
             ..to = targetUserId
-            ..candidate = e.candidate;
-          controller.sendIce(dto);
+            ..candidate = _rtcIceCandidateToMap(e.candidate);
+          controller.sendIce(o);
         }
       })
       ..onNegotiationNeeded.listen((e) async {
         try {
           final RtcSessionDescription offer = await _conn.createOffer();
-          final dto = new OfferRequest()
+          final o = new dto.OfferRequest()
             ..from = userId
             ..to = targetUserId
-            ..description = offer;
-          await _conn.setLocalDescription(dto.getDescription());
-          controller.sendOffer(dto);
+            ..description = _rtcSessionDescriptionToMap(offer);
+          await _conn.setLocalDescription(o.description);
+          controller.sendOffer(o);
         } catch (e) {
           throw Exception('Unable to PeerConnection:'
               'RtcPeerConnection.onNegotiationNeeded: ${e.message}');
@@ -60,34 +69,34 @@ class PeerConnection {
   void setLocalStream(MediaStream stream) =>
       stream.getTracks().forEach((dynamic t) => _conn.addTrack(t, stream));
 
-  Future<void> handleOffer(OfferRequest offer) async {
+  Future<void> handleOffer(dto.OfferRequest offer) async {
     try {
-      await _conn.setRemoteDescription(offer.getDescription());
+      await _conn.setRemoteDescription(offer.description);
       final RtcSessionDescription answer = await _conn.createAnswer();
-      final dto = new OfferRequest()
+      final o = new dto.OfferRequest()
         ..from = userId
         ..to = targetUserId
         ..isAnswer = true
-        ..description = answer;
-      await _conn.setLocalDescription(dto.getDescription());
-      controller.sendOffer(dto);
+        ..description = _rtcSessionDescriptionToMap(answer);
+      await _conn.setLocalDescription(o.description);
+      controller.sendOffer(o);
     } catch (e) {
       throw Exception('Unable to PeerConnection:handleOffer: ${e.message}');
     }
   }
 
-  Future<void> handleOfferAnswer(OfferRequest offer) async {
+  Future<void> handleOfferAnswer(dto.OfferRequest offer) async {
     try {
-      await _conn.setRemoteDescription(offer.getDescription());
+      await _conn.setRemoteDescription(offer.description);
     } catch (e) {
       throw Exception(
           'Unable to PeerConnection:handleOfferAnswer: ${e.message}');
     }
   }
 
-  Future<void> handleNewICECandidateMsg(IceCandidate ice) async {
+  Future<void> handleNewICECandidateMsg(dto.IceCandidate ice) async {
     try {
-      await _conn.addIceCandidate(new RtcIceCandidate(ice.getCandidate()),
+      await _conn.addIceCandidate(new RtcIceCandidate(ice.candidate),
           allowInterop(() {}), allowInterop((_) {}));
     } catch (e) {
       throw Exception(

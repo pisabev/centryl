@@ -8,11 +8,14 @@ class Member {
 
   Member({this.user_id, this.name, this.picture, this.status = false});
 
-  factory Member.fromMap(Map data) => new Member(
-      user_id: data['user_id'],
-      name: data['name'],
-      picture: data['picture'],
-      status: data['status'] ?? false);
+  factory Member.fromDto(dto.Member d) => new Member(
+      user_id: d.user_id,
+      name: d.name,
+      picture: d.picture,
+      status: d.status ?? false);
+
+  factory Member.fromMap(Map data) =>
+      new Member.fromDto(new dto.Member.fromMap(data));
 
   bool get isMe => Chat.me_user_id == user_id;
 
@@ -39,5 +42,10 @@ class Member {
     cont.append(createDom(showStatus: false)..dom.id = uniqueId);
   }
 
-  Map toJson() => {'user_id': user_id, 'name': name, 'picture': picture};
+  dto.Member toDto() => new dto.Member()
+    ..user_id = user_id
+    ..name = name
+    ..picture = picture;
+
+  Map toJson() => toDto().toJson();
 }

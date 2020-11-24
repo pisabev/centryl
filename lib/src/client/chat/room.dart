@@ -8,6 +8,7 @@ class Room {
   int lsm_id;
   int unseen;
   String title;
+  int messages;
 
   CLElement not;
   Container dom;
@@ -18,7 +19,8 @@ class Room {
       this.title,
       this.members,
       this.lsm_id = 0,
-      this.unseen = 0});
+      this.unseen = 0,
+      this.messages});
 
   bool sameAs(Room r) {
     if (room_id != null && r.room_id != null)
@@ -27,15 +29,17 @@ class Room {
     return false;
   }
 
-  factory Room.fromMap(Map data) => new Room(
-      room_id: data['room_id'],
-      context: data['context'],
-      members: (data['members'] as List)
-          .map<Member>((m) => new Member.fromMap(m))
-          .toList(),
-      lsm_id: data['lsm_id'],
-      unseen: data['unseen'] ?? 0,
-      title: data['title']);
+  factory Room.fromDto(dto.Room d) => new Room(
+      room_id: d.room_id,
+      context: d.context,
+      title: d.title,
+      members: d.members.map<Member>((m) => new Member.fromDto(m)).toList(),
+      lsm_id: d.lsm_id,
+      unseen: d.unseen ?? 0,
+      messages: d.messages);
+
+  factory Room.fromMap(Map data) =>
+      new Room.fromDto(new dto.Room.fromMap(data));
 
   void setUnseen(int num) {
     unseen = num;
@@ -119,12 +123,14 @@ class Room {
     if (_controller.deleteRoom != null) _controller.deleteRoom(this);
   }
 
-  Map toJson() => {
-        'room_id': room_id,
-        'context': context,
-        'lsm_id': lsm_id,
-        'members': members,
-        'unseen': unseen,
-        'title': title
-      };
+  dto.Room toDto() => new dto.Room()
+    ..room_id = room_id
+    ..context = context
+    ..lsm_id = lsm_id
+    ..members = members.map((e) => e.toDto()).toList()
+    ..unseen = unseen
+    ..title = title
+    ..messages = messages;
+
+  Map toJson() => toDto().toJson();
 }

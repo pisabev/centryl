@@ -76,7 +76,8 @@ class RoomListContext extends Container {
   Future loadUsers(String search) async {
     if (search.isEmpty) return load();
     if (controller.loadUsers == null) return;
-    rooms = await controller.loadUsers(search);
+    rooms =
+        await controller.loadUsers(new dto.ChatSearchDTO()..search = search);
     listRDom.removeChilds();
     rooms.forEach(renderRoom);
   }

@@ -40,6 +40,7 @@ class Chat {
       };
 
     controller.onNotifyMessage.listen((event) => init());
+    controller.onNotifyMessageSeen.listen((m) => init());
 
     new MessageDecoratorManager()
       ..registerDecorator(Message.typeMessage, new MessageDecoratorLink())

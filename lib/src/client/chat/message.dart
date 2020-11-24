@@ -29,17 +29,18 @@ class Message {
       this.content,
       this.timestamp});
 
-  factory Message.fromMap(Map data) => new Message(
-      id: data['id'],
-      type: data['type'],
-      member: new Member.fromMap(data['member']),
-      seen: (data['seen'] as List)
-          ?.map<Member>((m) => new Member.fromMap(m))
-          ?.toList(),
-      room_id: data['room_id'],
-      context: data['context'],
-      content: data['content'],
-      timestamp: DateTime.parse(data['timestamp']));
+  factory Message.fromDto(dto.Message d) => new Message(
+      id: d.id,
+      type: d.type,
+      member: new Member.fromDto(d.member),
+      seen: d.seen?.map<Member>((m) => new Member.fromDto(m))?.toList(),
+      room_id: d.room_id,
+      context: d.context,
+      content: d.content,
+      timestamp: d.timestamp);
+
+  factory Message.fromMap(Map data) =>
+      new Message.fromDto(new dto.Message.fromMap(data));
 
   Container render({bool renderImage = true}) {
     dom = new Container()..addClass('message-box');
@@ -115,14 +116,15 @@ class Message {
     timestampDom.setText(utils.Calendar.stringWithTime(timestamp.toLocal()));
   }
 
-  Map toJson() => {
-        'id': id,
-        'type': type,
-        'member': member.toJson(),
-        'seen': seen,
-        'room_id': room_id,
-        'context': context,
-        'content': content,
-        'timestamp': timestamp.toIso8601String()
-      };
+  dto.Message toDto() => new dto.Message()
+    ..id = id
+    ..type = type
+    ..member = member.toDto()
+    ..seen = seen?.map((e) => e.toDto())?.toList()
+    ..room_id = room_id
+    ..context = context
+    ..content = content
+    ..timestamp = timestamp;
+
+  Map toJson() => toDto().toJson();
 }

@@ -10,6 +10,7 @@ import 'package:js/js.dart';
 import 'package:pdf/pdf.dart';
 
 import '../../intl/client.dart' as intl;
+import '../dto.dart' as dto;
 import 'action.dart' as action;
 import 'app.dart' as app;
 import 'base.dart';
@@ -30,4 +31,3 @@ part 'chat/peer_manager.dart';
 part 'chat/room.dart';
 part 'chat/room_context.dart';
 part 'chat/room_list_context.dart';
-part 'chat/rtc_request.dart';

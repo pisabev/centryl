@@ -9,9 +9,10 @@ class ChatController {
       new StreamController.broadcast();
   StreamController<Room> notifierType = new StreamController.broadcast();
 
-  StreamController<OfferRequest> notifierOffer =
+  StreamController<dto.OfferRequest> notifierOffer =
       new StreamController.broadcast();
-  StreamController<IceCandidate> notifierIce = new StreamController.broadcast();
+  StreamController<dto.IceCandidate> notifierIce =
+      new StreamController.broadcast();
   StreamController<Room> notifierCallStart = new StreamController.broadcast();
   StreamController<Room> notifierCallAnswer = new StreamController.broadcast();
   StreamController<Room> notifierCallHangup = new StreamController.broadcast();
@@ -26,9 +27,9 @@ class ChatController {
 
   Stream<Room> get onNotifyType => notifierType.stream;
 
-  Stream<OfferRequest> get onNotifyOffer => notifierOffer.stream;
+  Stream<dto.OfferRequest> get onNotifyOffer => notifierOffer.stream;
 
-  Stream<IceCandidate> get onNotifyIce => notifierIce.stream;
+  Stream<dto.IceCandidate> get onNotifyIce => notifierIce.stream;
 
   Stream<Room> get onCallStart => notifierCallStart.stream;
 
@@ -40,7 +41,7 @@ class ChatController {
   FutureOr<List<Message>> Function(Room) loadRoomMessagesNew;
   FutureOr<int> Function() loadUnread;
   FutureOr<List<Room>> Function() loadRooms;
-  FutureOr<List<Room>> Function(String) loadUsers;
+  FutureOr<List<Room>> Function(dto.ChatSearchDTO) loadUsers;
   FutureOr<bool> Function(Message) persistMessage;
   FutureOr<bool> Function(Message) markMessageAsSeen;
   FutureOr<bool> Function(Message) messageUpdate;
@@ -52,8 +53,8 @@ class ChatController {
   FutureOr Function(Room) closeRoom;
   FutureOr Function() closeChat;
 
-  FutureOr Function(OfferRequest) sendOffer;
-  FutureOr Function(IceCandidate) sendIce;
+  FutureOr Function(dto.OfferRequest) sendOffer;
+  FutureOr Function(dto.IceCandidate) sendIce;
   FutureOr Function(Room) callStart;
   FutureOr Function(Room) callAnswer;
   FutureOr Function(Room) callHangup;
