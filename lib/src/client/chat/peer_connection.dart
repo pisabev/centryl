@@ -29,7 +29,7 @@ class PeerConnection {
         {'urls': 'stun:stun.stunprotocol.org'}
       ]
     })
-      ..onAddStream.listen((e) => _contrRemoteStream.add(e.stream))
+      ..onTrack.listen((e) => _contrRemoteStream.add(e.streams[0]))
       ..onIceCandidate.listen((e) {
         if (e.candidate is RtcIceCandidate) {
           final o = new dto.IceCandidate()

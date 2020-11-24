@@ -42,10 +42,6 @@ class CallView {
       ..addAction((e) {
         if (onHangup is Function) onHangup();
       });
-    final share = new action.Button()
-      ..setIcon(Icon.content_copy)
-      ..addClass('attention')
-      ..addAction((e) => localView.setShareStream());
     final cont = new Container()..addClass('ui-video');
     contTop = new Container()..addClass('top');
     contInner = new Container()
@@ -55,7 +51,11 @@ class CallView {
     cont..addRow(contTop)..addRow(contInner)..addRow(contBottom);
     contTop.addRow(localView.getContainer());
     contInner.append(videoRemote);
-    contBottom..append(hangup)..append(share);
+    contBottom
+      ..append(hangup)
+      ..append(localView.camera)
+      ..append(localView.mic)
+      ..append(localView.share);
     win
       ..getContent().append(cont)
       ..render(800, 600);

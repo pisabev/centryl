@@ -78,7 +78,10 @@ class Icon {
   static const String mail = '$spr#mail';
   static const String menu = '$spr#menu';
   static const String videocam = '$spr#videocam';
+  static const String videocam_off = '$spr#videocam_off';
   static const String message = '$spr#message';
+  static const String mic = '$spr#mic';
+  static const String mic_off = '$spr#mic_off';
   static const String visibility = '$spr#visibility';
   static const String mode_comment = '$spr#mode_comment';
   static const String more_horiz = '$spr#more_horiz';

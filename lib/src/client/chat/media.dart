@@ -32,7 +32,7 @@ class Media {
   static Future<MediaStream> requestPermissions() =>
       window.navigator.getUserMedia(video: true, audio: true);
 
-  Future<MediaStream> getUserMedia(String deviceId, [String audioId]) =>
+  Future<MediaStream> getUserMedia(String deviceId, String audioId) =>
       window.navigator.getUserMedia(
           video: {
             if (deviceId != null && deviceId.isNotEmpty)
@@ -42,6 +42,12 @@ class Media {
             'aspectRatio': {'ideal': '1.7777777778'},
             'frameRate': {'ideal': '60', 'min': '10'}
           },
+          audio: (audioId != null && audioId.isNotEmpty)
+              ? {'deviceId': audioId}
+              : true);
+
+  Future<MediaStream> getUserMediaAudio(String audioId) =>
+      window.navigator.getUserMedia(
           audio: (audioId != null && audioId.isNotEmpty)
               ? {'deviceId': audioId}
               : true);

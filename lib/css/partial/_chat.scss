@@ -282,6 +282,9 @@
     & > * {
       margin: 0 $prem + rem;
     }
+    .ui-button {
+      @include border-radius(100%);
+    }
   }
 }
 .ui-video {
@@ -320,6 +323,19 @@
   & > .bottom {
     align-self: center;
     padding: 1rem;
+    .ui-button:not(:hover) {
+      .icon {
+        use {
+          fill: #FFFFFF;
+        }
+      }
+    }
+    .ui-button {
+      @include border-radius(100%);
+      &.attention {
+        background: $button-background-attention;
+      }
+    }
     & > * {
       margin: 0 $prem + rem;
     }
