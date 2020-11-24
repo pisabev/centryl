@@ -322,14 +322,14 @@
   & > .bottom {
     align-self: center;
     padding: 1rem;
-    .ui-button.light:not(:hover) {
+    .ui-button.light:not(:hover, .attention) {
       .icon {
         use {
           fill: $icon-color;
         }
       }
     }
-    .ui-button {
+    .ui-button.light {
       @include border-radius(100%);
       &.attention {
         background: $button-background-attention;
