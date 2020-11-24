@@ -288,11 +288,11 @@
   }
 }
 .ui-video {
-  background: #000000;
+  background: $panel-color;
   & > .inner {
     padding: 0 $prem + rem;
     video {
-      background: #000000;
+      background: $page-background;
       width: 100%;
     }
   }
@@ -304,7 +304,7 @@
     .local-video {
       width: 80px;
       video {
-        background: #000000;
+        background: $page-background;
         width: 100%;
         height: 80px;
       }
@@ -322,10 +322,10 @@
   & > .bottom {
     align-self: center;
     padding: 1rem;
-    .ui-button:not(:hover) {
+    .ui-button.light:not(:hover) {
       .icon {
         use {
-          fill: #FFFFFF;
+          fill: $icon-color;
         }
       }
     }
@@ -347,6 +347,7 @@
   video {
     width: 100%;
     height: 170px;
+    background: $panel-color;
   }
   .ui-field-select {
     width: 100%;

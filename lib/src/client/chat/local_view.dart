@@ -53,10 +53,12 @@ class LocalView {
   }
 
   Future<void> initAudioVideo([bool init = false]) async {
-    final stream = await getStreamAudioVideo();
-    _setStream(stream);
-    micAction(init);
-    cameraAction(init);
+    try {
+      final stream = await getStreamAudioVideo();
+      _setStream(stream);
+      micAction(init);
+      cameraAction(init);
+    } catch (e) {}
   }
 
   Future<void> settingsPopUp() async {
@@ -70,15 +72,16 @@ class LocalView {
     if (map['video_id'] != null) selectVideo.setValue(map['video_id']);
     if (map['audio_id'] != null) selectAudio.setValue(map['audio_id']);
     final previewLocal = new CLElement<VideoElement>(new VideoElement());
-    MediaStream stream;
     void setPreviewStream(MediaStream str) {
       previewLocal.dom
         ..autoplay = true
         ..muted = true
         ..srcObject = str;
-      stream = str;
     }
-    setPreviewStream(await getStreamAudioVideo());
+
+    try {
+      setPreviewStream(await getStreamAudioVideo());
+    } catch (e) {}
     selectVideo.onValueChanged.listen((e) async {
       selectVideo.removeWarnings();
       final map = ap.storageFetch('chat') ?? {};
@@ -112,6 +115,9 @@ class LocalView {
       ..onOk = (() => true)
       ..render(width: 250, height: 450);
     w.win.observer.addHook(app.Win.hookClose, (_) {
+      previewLocal.dom.srcObject
+          .getTracks()
+          .forEach(allowInterop((dynamic t) => t.stop()));
       previewLocal.dom.srcObject = null;
       return true;
     });
