@@ -117,7 +117,7 @@ abstract class $Room {
   static const String members = 'members';
   static const String lsm_id = 'lsm_id';
   static const String unseen = 'unseen';
-  static const String title = 'title';
+  static const String messages = 'messages';
 }
 
 Room _$RoomFromMap(Map data) => new Room()
@@ -128,7 +128,7 @@ Room _$RoomFromMap(Map data) => new Room()
       ?.toList()
   ..lsm_id = data[$Room.lsm_id]
   ..unseen = data[$Room.unseen]
-  ..title = data[$Room.title];
+  ..messages = data[$Room.messages];
 
 Map<String, dynamic> _$RoomToMap(Room obj) => <String, dynamic>{
       $Room.room_id: obj.room_id,
@@ -139,7 +139,7 @@ Map<String, dynamic> _$RoomToMap(Room obj) => <String, dynamic>{
               obj.members.length, (i0) => obj.members[i0]?.toMap()),
       $Room.lsm_id: obj.lsm_id,
       $Room.unseen: obj.unseen,
-      $Room.title: obj.title
+      $Room.messages: obj.messages
     };
 
 abstract class $OfferRequest {

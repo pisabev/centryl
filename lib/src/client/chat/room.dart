@@ -7,7 +7,6 @@ class Room {
   List<Member> members;
   int lsm_id;
   int unseen;
-  String title;
   int messages;
 
   CLElement not;
@@ -16,7 +15,6 @@ class Room {
   Room(
       {this.room_id,
       this.context,
-      this.title,
       this.members,
       this.lsm_id = 0,
       this.unseen = 0,
@@ -32,7 +30,6 @@ class Room {
   factory Room.fromDto(dto.Room d) => new Room(
       room_id: d.room_id,
       context: d.context,
-      title: d.title,
       members: d.members.map<Member>((m) => new Member.fromDto(m)).toList(),
       lsm_id: d.lsm_id,
       unseen: d.unseen ?? 0,
@@ -52,7 +49,7 @@ class Room {
   }
 
   String getTitle() =>
-      title ?? members.where((u) => !u.isMe).map((u) => u.name).join(', ');
+      members.where((u) => !u.isMe).map((u) => u.name).join(', ');
 
   Container render() {
     dom = new Container()..addClass('room-box');
@@ -129,7 +126,6 @@ class Room {
     ..lsm_id = lsm_id
     ..members = members.map((e) => e.toDto()).toList()
     ..unseen = unseen
-    ..title = title
     ..messages = messages;
 
   Map toJson() => toDto().toJson();

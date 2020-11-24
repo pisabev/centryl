@@ -59,7 +59,6 @@ class Room {
   List<Member> members;
   int lsm_id;
   int unseen;
-  String title;
   int messages;
 
   Room();

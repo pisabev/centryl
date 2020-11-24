@@ -29,7 +29,7 @@ class CallView {
   }
 
   void createDom() {
-    win = ap.winmanager.loadWindow(title: room.title, icon: Icon.call);
+    win = ap.winmanager.loadWindow(title: room.getTitle(), icon: Icon.call);
     win.win_close.hide();
     // win.observer.addHook(app.Win.hookClose, (_) {
     //   if (onHangup is Function && !_closed) onHangup();
