@@ -9,6 +9,8 @@ class Room {
   int unseen;
   int messages;
 
+  String title;
+
   CLElement not;
   Container dom;
 
@@ -49,7 +51,7 @@ class Room {
   }
 
   String getTitle() =>
-      members.where((u) => !u.isMe).map((u) => u.name).join(', ');
+      title ?? members.where((u) => !u.isMe).map((u) => u.name).join(', ');
 
   Container render() {
     dom = new Container()..addClass('room-box');
