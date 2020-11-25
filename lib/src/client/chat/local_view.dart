@@ -16,7 +16,7 @@ class LocalView {
 
   LocalView(this.ap,
       {this.shareOn = false, this.micOn = true, this.cameraOn = false}) {
-    media = new Media();
+    media = new Media(ap);
     createDom();
     init();
   }
@@ -54,8 +54,7 @@ class LocalView {
 
   Future<void> initAudioVideo([bool init = false]) async {
     try {
-      final stream = await getStreamAudioVideo();
-      _setStream(stream);
+      _setStream(await media.getUserMedia(video: cameraOn, audio: micOn));
       micAction(init);
       cameraAction(init);
     } catch (e) {}
@@ -68,9 +67,8 @@ class LocalView {
     cameras.forEach((c) => selectVideo.addOption(c.deviceId, c.label, false));
     final audios = await media.getDevices(type: DeviceKind.audioinput);
     audios.forEach((c) => selectAudio.addOption(c.deviceId, c.label, false));
-    final map = ap.storageFetch('chat') ?? {};
-    if (map['video_id'] != null) selectVideo.setValue(map['video_id']);
-    if (map['audio_id'] != null) selectAudio.setValue(map['audio_id']);
+    if (media.videoId != null) selectVideo.setValue(media.videoId);
+    if (media.audioId != null) selectAudio.setValue(media.audioId);
     final previewLocal = new CLElement<VideoElement>(new VideoElement());
     void setPreviewStream(MediaStream str) {
       previewLocal.dom
@@ -80,26 +78,22 @@ class LocalView {
     }
 
     try {
-      setPreviewStream(await getStreamAudioVideo());
+      setPreviewStream(await media.getUserMedia());
     } catch (e) {}
     selectVideo.onValueChanged.listen((e) async {
       selectVideo.removeWarnings();
-      final map = ap.storageFetch('chat') ?? {};
-      map['video_id'] = e.getValue();
-      ap.storagePut('chat', map);
+      media._videoId = e.getValue();
       try {
-        setPreviewStream(await getStreamAudioVideo());
+        setPreviewStream(await media.getUserMedia());
       } catch (e) {
         selectVideo.setWarning(new DataWarning('video', e.toString()));
       }
     });
     selectAudio.onValueChanged.listen((e) async {
       selectAudio.removeWarnings();
-      final map = ap.storageFetch('chat') ?? {};
-      map['audio_id'] = e.getValue();
-      ap.storagePut('chat', map);
+      media._audioId = e.getValue();
       try {
-        setPreviewStream(await getStreamAudioVideo());
+        setPreviewStream(await media.getUserMedia());
       } catch (e) {
         selectAudio.setWarning(new DataWarning('audio', e.toString()));
       }
@@ -127,8 +121,7 @@ class LocalView {
     if (!init && shareOn) {
       await initAudioVideo(true);
     } else {
-      final stream = await getStreamShare();
-      _setStream(stream);
+      _setStream(await getStreamShare());
     }
     if (!init) shareOn = !shareOn;
     shareOn ? share.addClass('attention') : share.removeClass('attention');
@@ -141,25 +134,32 @@ class LocalView {
   }
 
   void cameraAction([bool init = false]) {
-    if (!init) cameraOn = !cameraOn;
-    _localStream.getVideoTracks().forEach((t) => t.enabled = cameraOn);
+    if (!init) {
+      cameraOn = !cameraOn;
+      media.getUserMedia(video: cameraOn, audio: true).then((stream) {
+        if (!micOn)
+          _localStream.getAudioTracks().forEach((t) => t.enabled = micOn);
+        _setStream(stream);
+      });
+    }
     camera.setIcon(cameraOn ? Icon.videocam : Icon.videocam_off);
   }
 
   Future<MediaStream> getStreamShare() async {
     final stream = await media.getScreen();
-    final audio = await media.getUserMediaAudio(null);
-    audio.getAudioTracks().forEach(stream.addTrack);
+    final audioTracks = await getAudioTracks();
+    audioTracks.forEach(stream.addTrack);
     return stream;
   }
 
-  Future<MediaStream> getStreamAudioVideo() async {
-    final map = ap.storageFetch('chat') ?? {};
-    final stream = await media.getUserMedia(map['video_id'], map['audio_id']);
-    map['video_id'] = stream.getVideoTracks().first.getSettings()['deviceId'];
-    map['audio_id'] = stream.getAudioTracks().first.getSettings()['deviceId'];
-    ap.storagePut('chat', map);
-    return stream;
+  Future<List<MediaStreamTrack>> getVideoTracks() async {
+    final stream = await media.getUserMedia(video: true, audio: false);
+    return stream.getVideoTracks().cast<MediaStreamTrack>();
+  }
+
+  Future<List<MediaStreamTrack>> getAudioTracks() async {
+    final stream = await media.getUserMedia(audio: true, video: false);
+    return stream.getAudioTracks().cast<MediaStreamTrack>();
   }
 
   void _setStream(MediaStream stream) {
