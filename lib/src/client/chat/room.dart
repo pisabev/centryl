@@ -32,7 +32,7 @@ class Room {
   factory Room.fromDto(dto.Room d) => new Room(
       room_id: d.room_id,
       context: d.context,
-      members: d.members.map<Member>((m) => new Member.fromDto(m)).toList(),
+      members: d?.members?.map<Member>((m) => new Member.fromDto(m))?.toList(),
       lsm_id: d.lsm_id,
       unseen: d.unseen ?? 0,
       messages: d.messages);

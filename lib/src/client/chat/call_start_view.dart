@@ -6,12 +6,15 @@ class CallStartView {
   Container contTop, contBottom;
   action.Button answer;
   action.Button hangup;
-  void Function() onAnswer;
-  void Function() onHangup;
+  final void Function() onAnswer;
+  final void Function() onHangup;
   Room room;
   final bool caller;
+  Timer _timer;
+  Duration duration = const Duration(seconds: 30);
 
-  CallStartView(this.ap, this.room, {this.caller = true}) {
+  CallStartView(this.ap, this.room,
+      {this.onHangup, this.onAnswer, this.caller = true}) {
     createDom();
   }
 
@@ -46,11 +49,14 @@ class CallStartView {
       ..getContent().append(cont)
       ..render(300, 300);
     contBottom.append(new AudioElement()
+      ..loop = true
       ..src = '${ap.baseurl}packages/centryl/sound/ringing.wav'
       ..play().catchError((e) => null));
+    _timer = new Timer(duration, onHangup);
   }
 
   void close() {
+    _timer.cancel();
     win.close();
   }
 }

@@ -29,9 +29,9 @@ class PeerManager {
       initCallView(room);
     });
     controller.onCallStart.listen((room) {
-      initCallStartView(room, caller: false)
-        ..answer.enable()
-        ..onAnswer = () => controller.callAnswer(room);
+      initCallStartView(room,
+          caller: false,
+          onAnswer: () => controller.callAnswer(room)).answer.enable();
     });
     controller.onCallHangup.listen((room) {
       if (callStartView != null) closeCallStartView();
@@ -64,23 +64,22 @@ class PeerManager {
     return con;
   }
 
-  CallStartView initCallStartView(Room room, {bool caller = true}) =>
-      callStartView = new CallStartView(ap, room, caller: caller)
-        ..onHangup = () {
-          closeCallStartView();
-          controller.callHangup(room);
-        };
+  CallStartView initCallStartView(Room room,
+          {bool caller = true, void Function() onAnswer}) =>
+      callStartView = new CallStartView(ap, room, onHangup: () {
+        closeCallStartView();
+        controller.callHangup(room);
+      }, onAnswer: onAnswer, caller: caller);
 
   void initCallView(Room room) {
     closeCallStartView();
     if (callView != null) return;
     _sub?.cancel();
     getConnection(room.members.first.user_id);
-    callView = new CallView(ap, room)
-      ..onHangup = () {
-        closeCallView();
-        controller.callHangup(room);
-      };
+    callView = new CallView(ap, room, onHangup: () {
+      closeCallView();
+      controller.callHangup(room);
+    });
     _sub = callView.localView.onLocalStreamChange
         .listen((s) => connections.forEach((c) => c.setLocalStream(s)));
   }
