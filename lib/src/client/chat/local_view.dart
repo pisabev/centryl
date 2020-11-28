@@ -54,9 +54,9 @@ class LocalView {
 
   Future<void> initAudioVideo([bool init = false]) async {
     try {
-      _setStream(await media.getUserMedia(video: cameraOn, audio: micOn));
       micAction(init);
       cameraAction(init);
+      _setStream(await media.getUserMedia(video: cameraOn, audio: micOn));
     } catch (e) {}
   }
 
@@ -129,7 +129,7 @@ class LocalView {
 
   void micAction([bool init = false]) {
     if (!init) micOn = !micOn;
-    _localStream.getAudioTracks().forEach((t) => t.enabled = micOn);
+    _localStream?.getAudioTracks()?.forEach((t) => t.enabled = micOn);
     mic.setIcon(micOn ? Icon.mic : Icon.mic_off);
   }
 
@@ -140,7 +140,7 @@ class LocalView {
         if (!micOn)
           _localStream.getAudioTracks().forEach((t) => t.enabled = micOn);
         _setStream(stream);
-      });
+      }).catchError((e) {});
     }
     camera.setIcon(cameraOn ? Icon.videocam : Icon.videocam_off);
   }
