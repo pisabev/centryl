@@ -33,7 +33,10 @@ class XLS {
       ..appendRow(_data.first.keys.toList());
     sheet.row(0).forEach((cell) {
       cell.cellStyle = xls.CellStyle(
-          backgroundColorHex: '#666666', fontColorHex: '#FFFFFF', bold: true);
+          backgroundColorHex: '#666666',
+          fontColorHex: '#FFFFFF',
+          bold: true,
+          fontFamily: 'arial');
     });
     _data.forEach((row) => sheet.appendRow(row.values.toList()));
 
