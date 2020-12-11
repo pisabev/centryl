@@ -7,9 +7,7 @@ part of dto;
 // **************************************************************************
 
 abstract class $DataContainer {
-  static const String label = 'label';
-  static const String clas = 'clas';
-  static const String set = 'set';
+  static const String label = 'label', clas = 'clas', set = 'set';
 }
 
 DataContainer _$DataContainerFromMap(Map data) => new DataContainer()
@@ -29,8 +27,7 @@ Map<String, dynamic> _$DataContainerToMap(DataContainer obj) =>
     };
 
 abstract class $DataSet {
-  static const String key = 'key';
-  static const String value = 'value';
+  static const String key = 'key', value = 'value';
 }
 
 DataSet _$DataSetFromMap(Map data) =>
@@ -50,16 +47,16 @@ Map<String, dynamic> _$ChatSearchDTOToMap(ChatSearchDTO obj) =>
     <String, dynamic>{$ChatSearchDTO.search: obj.search};
 
 abstract class $Message {
-  static const String typeMessage = 'typeMessage';
-  static const String typeFile = 'typeFile';
-  static const String id = 'id';
-  static const String type = 'type';
-  static const String member = 'member';
-  static const String seen = 'seen';
-  static const String room_id = 'room_id';
-  static const String context = 'context';
-  static const String content = 'content';
-  static const String timestamp = 'timestamp';
+  static const String typeMessage = 'typeMessage',
+      typeFile = 'typeFile',
+      id = 'id',
+      type = 'type',
+      member = 'member',
+      seen = 'seen',
+      room_id = 'room_id',
+      context = 'context',
+      content = 'content',
+      timestamp = 'timestamp';
 }
 
 Message _$MessageFromMap(Map data) => new Message()
@@ -92,10 +89,10 @@ Map<String, dynamic> _$MessageToMap(Message obj) => <String, dynamic>{
     };
 
 abstract class $Member {
-  static const String user_id = 'user_id';
-  static const String name = 'name';
-  static const String picture = 'picture';
-  static const String status = 'status';
+  static const String user_id = 'user_id',
+      name = 'name',
+      picture = 'picture',
+      status = 'status';
 }
 
 Member _$MemberFromMap(Map data) => new Member()
@@ -112,12 +109,12 @@ Map<String, dynamic> _$MemberToMap(Member obj) => <String, dynamic>{
     };
 
 abstract class $Room {
-  static const String room_id = 'room_id';
-  static const String context = 'context';
-  static const String members = 'members';
-  static const String lsm_id = 'lsm_id';
-  static const String unseen = 'unseen';
-  static const String messages = 'messages';
+  static const String room_id = 'room_id',
+      context = 'context',
+      members = 'members',
+      lsm_id = 'lsm_id',
+      unseen = 'unseen',
+      messages = 'messages';
 }
 
 Room _$RoomFromMap(Map data) => new Room()
@@ -143,10 +140,10 @@ Map<String, dynamic> _$RoomToMap(Room obj) => <String, dynamic>{
     };
 
 abstract class $OfferRequest {
-  static const String from = 'from';
-  static const String to = 'to';
-  static const String isAnswer = 'isAnswer';
-  static const String description = 'description';
+  static const String from = 'from',
+      to = 'to',
+      isAnswer = 'isAnswer',
+      description = 'description';
 }
 
 OfferRequest _$OfferRequestFromMap(Map data) => new OfferRequest()
@@ -163,9 +160,7 @@ Map<String, dynamic> _$OfferRequestToMap(OfferRequest obj) => <String, dynamic>{
     };
 
 abstract class $IceCandidate {
-  static const String from = 'from';
-  static const String to = 'to';
-  static const String candidate = 'candidate';
+  static const String from = 'from', to = 'to', candidate = 'candidate';
 }
 
 IceCandidate _$IceCandidateFromMap(Map data) => new IceCandidate()

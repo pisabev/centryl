@@ -7,11 +7,11 @@ part of cl_base.entity;
 // **************************************************************************
 
 abstract class $APILocal {
-  static const String api_local_id = 'api_local_id';
-  static const String name = 'name';
-  static const String key = 'key';
-  static const String limit = 'limit';
-  static const String active = 'active';
+  static const String api_local_id = 'api_local_id',
+      name = 'name',
+      key = 'key',
+      limit = 'limit',
+      active = 'active';
 }
 
 void _$APILocalFromMap(APILocal obj, Map data) => obj
@@ -31,10 +31,10 @@ Map<String, dynamic> _$APILocalToMap(APILocal obj, [asJson = false]) =>
     };
 
 abstract class $APIRemote {
-  static const String api_remote_id = 'api_remote_id';
-  static const String name = 'name';
-  static const String key = 'key';
-  static const String host = 'host';
+  static const String api_remote_id = 'api_remote_id',
+      name = 'name',
+      key = 'key',
+      host = 'host';
 }
 
 void _$APIRemoteFromMap(APIRemote obj, Map data) => obj
@@ -52,9 +52,7 @@ Map<String, dynamic> _$APIRemoteToMap(APIRemote obj, [asJson = false]) =>
     };
 
 abstract class $Cache {
-  static const String key = 'key';
-  static const String value = 'value';
-  static const String expire = 'expire';
+  static const String key = 'key', value = 'value', expire = 'expire';
 }
 
 void _$CacheFromMap(Cache obj, Map data) => obj
@@ -72,10 +70,10 @@ Map<String, dynamic> _$CacheToMap(Cache obj, [asJson = false]) =>
     };
 
 abstract class $Notification {
-  static const String notification_id = 'notification_id';
-  static const String key = 'key';
-  static const String value = 'value';
-  static const String date = 'date';
+  static const String notification_id = 'notification_id',
+      key = 'key',
+      value = 'value',
+      date = 'date';
 }
 
 void _$NotificationFromMap(Notification obj, Map data) => obj
