@@ -19,6 +19,7 @@ dependencies:
   convert: ^2.1.1
   mailer: 3.1.0
   csv: ^4.0.3
+  excel: ^1.1.5
   resource: ^2.1.6
   stack_trace: ^1.9.3
   pdf:

@@ -8,6 +8,7 @@ import 'package:communicator/server.dart';
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:csv/csv.dart' as csv;
+import 'package:excel/excel.dart' as xls;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
@@ -22,23 +23,14 @@ import 'mapper.dart';
 import 'path.dart';
 
 part 'svc/csv.dart';
-
 part 'svc/file_sync.dart';
-
 part 'svc/ics.dart';
-
 part 'svc/mail.dart';
-
 part 'svc/manager.dart';
-
 part 'svc/pdf.dart';
-
 part 'svc/service.dart';
-
 part 'svc/sservice.dart';
-
 part 'svc/tree.dart';
-
 part 'svc/xls.dart';
 
 final List<FutureOr<void> Function(Router)> routes = [];
