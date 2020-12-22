@@ -150,8 +150,10 @@ class Button extends CLElement {
     if (title != null) {
       inner.dom.text = title;
       inner.addClass('button-title');
-    } else
+    } else {
+      inner.dom.text = '';
       inner.removeClass('button-title');
+    }
   }
 
   String getTitle() => inner.dom.text;
