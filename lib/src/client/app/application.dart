@@ -160,6 +160,20 @@ class Application<C extends Client> {
       winmanager.initWinLayouts();
   }
 
+  void onInactive(
+      Duration duration, void Function() onInactive, void Function() onActive) {
+    Timer t = new Timer(duration, onInactive);
+    final _reset = () {
+      t.cancel();
+      t = new Timer(duration, onInactive);
+      onActive();
+    };
+    document.onMouseMove.listen((event) => _reset());
+    document.onMouseDown.listen((event) => _reset());
+    document.onKeyPress.listen((event) => _reset());
+    document.onTouchMove.listen((event) => _reset());
+  }
+
   void menuHide() {
     page.addClass('menu-hide');
     winmanager.initWinLayouts();
