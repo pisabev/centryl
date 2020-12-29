@@ -50,7 +50,7 @@ class CallStartView {
       ..render(300, 300);
     contBottom.append(new AudioElement()
       ..loop = true
-      ..src = '${ap.baseurl}packages/centryl/sound/ringing.wav'
+      ..src = '${ap.baseurl}packages/centryl/sound/ringing.mp3'
       ..play().catchError((e) => null));
     _timer = new Timer(duration, onHangup);
   }
