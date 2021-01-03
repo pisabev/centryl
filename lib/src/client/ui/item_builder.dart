@@ -78,9 +78,6 @@ abstract class ItemBuilderBase<C extends cl_app.Client> extends ItemBase<C>
   final StreamController<bool> _contr = new StreamController.broadcast();
   cl_action.Menu menu;
 
-  StreamSubscription _formLoad;
-  StreamSubscription _valueChange;
-
   bool _listenForChange = false;
   bool isDirty = false;
 
@@ -95,6 +92,20 @@ abstract class ItemBuilderBase<C extends cl_app.Client> extends ItemBase<C>
       setActions();
       setHooks();
       setUI();
+      form.onLoadStart.listen((e) {
+        setMenuState(false);
+        StreamSubscription _loadEnd;
+        _loadEnd = form.onLoadEnd.listen((e) {
+          if (isDirty) setMenuState(true);
+          _loadEnd.cancel();
+        });
+      });
+      form.onValueChanged.listen((el) {
+        if (listenForChange) {
+          setDirtyState(true);
+          setMenuState(true);
+        }
+      });
     } catch (e, s) {
       cl.logging.severe(runtimeType.toString(), e, s);
     }
@@ -206,20 +217,6 @@ abstract class ItemBuilderBase<C extends cl_app.Client> extends ItemBase<C>
   Future setOnChangeSubscription() => new Future(() {
         listenForChange = true;
         _contr.add(true);
-        _formLoad = form.onLoadStart.listen((e) {
-          setMenuState(false);
-          StreamSubscription _loadEnd;
-          _loadEnd = form.onLoadEnd.listen((e) {
-            if (isDirty) setMenuState(true);
-            _loadEnd.cancel();
-          });
-        });
-        _valueChange = form.onValueChanged.listen((el) {
-          if (listenForChange) {
-            setDirtyState(true);
-            setMenuState(true);
-          }
-        });
       });
 
   FutureOr<String> getTitle() => null;
@@ -359,14 +356,6 @@ abstract class ItemBuilderBase<C extends cl_app.Client> extends ItemBase<C>
     listenForChange = false;
     _contr.add(false);
     setDirtyState(false);
-    if (_formLoad != null) {
-      _formLoad.cancel();
-      _formLoad = null;
-    }
-    if (_valueChange != null) {
-      _valueChange.cancel();
-      _valueChange = null;
-    }
   }
 
   void readData() {
