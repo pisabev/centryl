@@ -46,7 +46,6 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
   static const String MODE_CHOOSE = 'choose';
   static const String $del = 'del';
   static const String $print = 'print';
-  static const String $refresh = 'refresh';
 
   static String get get_after => $BaseConsts.get_after;
 
@@ -232,19 +231,14 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
     final filter = new cl_action.ButtonOption()
           ..setName($BaseConsts.filter)
           ..setDefault(new cl_action.Button()
-            ..setTitle(intl.Filter())
+            ..setTitle(intl.Refresh())
             ..setIcon(cl.Icon.filter_list)
             ..addAction(filterGet)),
         clear = new cl_action.Button()
           ..setName($BaseConsts.clear)
           ..setTitle(intl.Clean())
           ..setIcon(cl.Icon.clear)
-          ..addAction(filterClear),
-        refresh = new cl_action.Button()
-          ..setName($refresh)
-          ..setTitle(intl.Refresh())
-          ..setIcon(cl.Icon.sync)
-          ..addAction(filterGet);
+          ..addAction(filterClear);
     filter.addSub(clear);
     if (useCache) {
       final cache = new cl_action.Button()
@@ -255,7 +249,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
       filter.addSub(cache);
     }
     filter.setState(false);
-    menu..add(filter)..add(refresh);
+    menu.add(filter);
   }
 
   void setHooks() {
