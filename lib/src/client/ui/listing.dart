@@ -179,18 +179,13 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
     if (column.filter is List) {
       column.filter.forEach((el_inner) {
         form.add(el_inner);
-        el_inner.onValueChanged.listen((_) => filterActive());
         el_inner.addAction(_validateEnter, $BaseConsts.keyup);
       });
     } else {
       form.add(column.filter);
-      column.filter.onValueChanged.listen((_) => filterActive());
       column.filter.addAction(_validateEnter, $BaseConsts.keyup);
     }
-  }
-
-  void filterActive() {
-    menu..setState($BaseConsts.filter, true)..setState($BaseConsts.clear, true);
+    form.onValueChanged.listen((_) => filterActive());
   }
 
   cl_form.GridColumn mapToGridColumn(Map hrow) {
@@ -232,7 +227,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
           ..setName($BaseConsts.filter)
           ..setDefault(new cl_action.Button()
             ..setTitle(intl.Refresh())
-            ..setIcon(cl.Icon.filter_list)
+            ..setIcon(cl.Icon.sync)
             ..addAction(filterGet)),
         clear = new cl_action.Button()
           ..setName($BaseConsts.clear)
@@ -248,7 +243,6 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
         ..addAction(saveToCache);
       filter.addSub(cache);
     }
-    filter.setState(false);
     menu.add(filter);
   }
 
@@ -324,7 +318,21 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
 
   void filterClear([_]) {
     form.clear();
-    menu.setState($BaseConsts.clear, false);
+  }
+
+  void filterActive() {
+    final values = form.getValue();
+    bool way = false;
+    values.forEach((k, v) {
+      if (way == true) return;
+      if (v is List)
+        way = v.any((e) => e != null);
+      else
+        way = v != null;
+    });
+    (menu[$BaseConsts.filter] as cl_action.ButtonOption)
+        .buttonDefault
+        .setIcon(way ? cl.Icon.filter_list : cl.Icon.sync);
   }
 
   void filterGet([_]) {
