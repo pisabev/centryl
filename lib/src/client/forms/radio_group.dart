@@ -26,7 +26,10 @@ class RadioGroup<T> extends Data<T> {
     }
     final v =
         elements.firstWhere((e) => e.getValue() == value, orElse: () => null);
-    v?.click();
+    if (v != null) {
+
+    }
+    v?.setChecked();
   }
 
   T getValue() {

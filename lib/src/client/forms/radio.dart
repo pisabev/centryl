@@ -38,8 +38,12 @@ class Radio<T> extends DataElement<T, html.SpanElement> {
   void click() => _onClick();
 
   void _onClick([e]) {
-    field.focus();
     if (field.disabled) return;
+    field.focus();
+    setChecked();
+  }
+
+  void setChecked() {
     if (!field.checked) contrValue.add(this);
     field.checked = true;
   }
