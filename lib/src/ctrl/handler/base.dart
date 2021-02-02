@@ -174,7 +174,13 @@ class Base {
       final callKey = '${req.requestedUri.toString()}$params';
       if (await cs.get(callKey) != null) return response(null);
       try {
+        final watch = Stopwatch()..start();
+        final history = new History(req.session.id,
+            req is WSRequest ? req.controller : req.requestedUri.path);
+        notificator.addHistory(history);
         await f();
+        watch.stop();
+        notificator.addHistory(history..execTime = watch.elapsedMilliseconds);
         await cs.set(callKey, {},
             expireAfter: new Duration(seconds: bounce), persist: false);
       } catch (e, s) {
@@ -187,8 +193,4 @@ class Base {
       });
     }
   }
-
-  Future<void> wrap(Future Function() f,
-          {String group, String scope, String access}) =>
-      f().catchError(error);
 }
