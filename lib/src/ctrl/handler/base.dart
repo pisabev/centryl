@@ -179,10 +179,10 @@ class Base {
             req is WSRequest ? req.controller : req.requestedUri.path);
         notificator.addHistory(history);
         await f();
-        watch.stop();
-        notificator.addHistory(history..execTime = watch.elapsedMilliseconds);
         await cs.set(callKey, {},
             expireAfter: new Duration(seconds: bounce), persist: false);
+        watch.stop();
+        notificator.addHistory(history..execTime = watch.elapsedMilliseconds);
       } catch (e, s) {
         error(e, s);
       }
