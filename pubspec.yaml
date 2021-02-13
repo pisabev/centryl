@@ -19,7 +19,9 @@ dependencies:
   convert: ^2.1.1
   mailer: 3.2.1
   csv: ^4.0.3
-  excel: ^1.1.5
+  #excel: ^1.1.5
+  excel:
+    git: git@repo.centryl.org:utils/excel.git
   resource: ^2.1.6
   stack_trace: ^1.9.3
   pdf:
