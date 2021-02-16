@@ -131,26 +131,16 @@ class GridColumn {
   void _setOrder(String way) {
     if (orderDom != null) orderDom.remove();
 
-/*    ///clear other columns order
-    if (way != null) {
-      grid.map.forEach((currentKey, currentCol) {
-        if (currentKey != key) currentCol._setOrder(null);
-      });
-    }*/
-
     orderDom = new CLElement(new html.AnchorElement())
       ..addClass('sort')
       ..appendTo(contDom)
       ..addAction((e) {
-        if (grid.order == null) {
+        if (grid.order == null || grid.order?.way == 'DESC') {
           grid.setOrder(new GridOrder(key, 'ASC'));
           _setOrder('ASC');
-        } else if (grid.order?.way == 'ASC') {
+        } else {
           grid.setOrder(new GridOrder(key, 'DESC'));
           _setOrder('DESC');
-        } else {
-          grid.setOrder(null);
-          _setOrder(null);
         }
       });
     var icon1 = new Icon(Icon.arrow_drop_up);
