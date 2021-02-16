@@ -130,6 +130,14 @@ class GridColumn {
 
   void _setOrder(String way) {
     if (orderDom != null) orderDom.remove();
+
+    ///clear other columns order
+    if (way != null) {
+      grid.map.forEach((currentKey, currentCol) {
+        if (currentKey != key) currentCol._setOrder(null);
+      });
+    }
+
     orderDom = new CLElement(new html.AnchorElement())
       ..addClass('sort')
       ..appendTo(contDom)
