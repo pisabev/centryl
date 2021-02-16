@@ -131,6 +131,13 @@ class GridColumn {
   void _setOrder(String way) {
     if (orderDom != null) orderDom.remove();
 
+    ///clear other columns order
+    if (way != null) {
+      grid.map.forEach((currentKey, currentCol) {
+        if (currentKey != key) currentCol._setOrder(null);
+      });
+    }
+
     orderDom = new CLElement(new html.AnchorElement())
       ..addClass('sort')
       ..appendTo(contDom)
@@ -154,13 +161,6 @@ class GridColumn {
       icon2 = new Icon('');
     }
     orderDom..append(icon1.dom)..append(icon2.dom);
-
-/*    ///clear other columns order
-    if (way != null) {
-      grid.map.forEach((currentKey, currentCol) {
-        if (currentKey != key) currentCol._setOrder(null);
-      });
-    }*/
   }
 
   void _setWidth() {
