@@ -134,12 +134,15 @@ class GridColumn {
       ..addClass('sort')
       ..appendTo(contDom)
       ..addAction((e) {
-        if (grid.order == null || grid.order?.way == 'DESC') {
+        if (grid.order == null) {
           grid.setOrder(new GridOrder(key, 'ASC'));
           _setOrder('ASC');
-        } else {
+        } else if (grid.order?.way == 'ASC') {
           grid.setOrder(new GridOrder(key, 'DESC'));
           _setOrder('DESC');
+        } else {
+          grid.setOrder(null);
+          _setOrder(null);
         }
       });
     var icon1 = new Icon(Icon.arrow_drop_up);
