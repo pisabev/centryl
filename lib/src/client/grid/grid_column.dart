@@ -155,12 +155,12 @@ class GridColumn {
     }
     orderDom..append(icon1.dom)..append(icon2.dom);
 
-    ///clear other columns order
+/*    ///clear other columns order
     if (way != null) {
       grid.map.forEach((currentKey, currentCol) {
         if (currentKey != key) currentCol._setOrder(null);
       });
-    }
+    }*/
   }
 
   void _setWidth() {
