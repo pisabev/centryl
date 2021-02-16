@@ -131,13 +131,12 @@ class GridColumn {
   void _setOrder(String way) {
     if (orderDom != null) orderDom.remove();
 
-    print('miro way $way');
-    ///clear other columns order
+/*    ///clear other columns order
     if (way != null) {
       grid.map.forEach((currentKey, currentCol) {
         if (currentKey != key) currentCol._setOrder(null);
       });
-    }
+    }*/
 
     orderDom = new CLElement(new html.AnchorElement())
       ..addClass('sort')
