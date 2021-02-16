@@ -137,12 +137,15 @@ class GridColumn {
         if (grid.order == null) {
           grid.setOrder(new GridOrder(key, 'ASC'));
           _setOrder('ASC');
+          print('miro ASC');
         } else if (grid.order?.way == 'ASC') {
           grid.setOrder(new GridOrder(key, 'DESC'));
           _setOrder('DESC');
+          print('miro DESC');
         } else {
           grid.setOrder(null);
           _setOrder(null);
+          print('miro null');
         }
       });
     var icon1 = new Icon(Icon.arrow_drop_up);
