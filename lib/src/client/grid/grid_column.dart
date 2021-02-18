@@ -130,6 +130,7 @@ class GridColumn {
 
   void _setOrder(String way) {
     if (orderDom != null) orderDom.remove();
+
     orderDom = new CLElement(new html.AnchorElement())
       ..addClass('sort')
       ..appendTo(contDom)
