@@ -248,7 +248,7 @@ table.ui-table-list {
       border: none;
     }
 
-    &.light > tbody > tr > td, &.ligth > tfoot > tr > td {
+    &.light > tbody:not(.tbody-fix) > tr > td, &.ligth > tfoot > tr > td {
       border-top: $grid-border-width solid $grid-border-color;
     }
 

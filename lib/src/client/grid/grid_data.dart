@@ -7,7 +7,7 @@ class GridData extends GridList<Object> {
 
   bool fullData = false;
 
-  GridData() {
+  GridData([RenderBase renderer]) : super(renderer) {
     setClass('ui-table-grid');
     tfoot.hide();
     initSendRows();

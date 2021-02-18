@@ -14,9 +14,9 @@ import 'test.dart';
 void main() {
   init();
   //grid1();
-//  grid2();
-   grid3();
-//  grid4();
+  grid2();
+//   grid3();
+  //grid4();
 //  grid5();
  // grid6();
 }
@@ -52,7 +52,7 @@ void grid2() {
     ..addRow(new Container()..addClass('bottom'));
   w.render(700, 700);
 
-  final form = new cl_form.GridList(new cl_form.RenderBuffered());
+  final form = new cl_form.GridData(new cl_form.RenderBuffered());
   form
     ..initGridHeader([
       new cl_form.GridColumn('test')..title = 'test',
@@ -71,7 +71,7 @@ void grid2() {
       print(b);
     });
   final d = <Map>[];
-  for (var i = 0; i < 100; i++) {
+  for (var i = 0; i < 1000; i++) {
     d.add({'test': 'test$i', 'test2': 'sd', 'product': 'product$i'});
   }
   final cont = new cl_form.GridListContainer(form, auto: true);
