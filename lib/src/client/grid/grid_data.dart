@@ -49,22 +49,22 @@ class GridData extends GridList<Object> {
     final m = {};
     if (insert.isNotEmpty) {
       m['insert'] = [];
-      insert.forEach((row) => m['insert'].add(rowToMap(row)));
+      insert.forEach((row) => m['insert'].add(getRowMapSerialized(row)));
     }
     if (update.isNotEmpty) {
       m['update'] = [];
-      update.forEach((row) => m['update'].add(rowToMap(row)));
+      update.forEach((row) => m['update'].add(getRowMapSerialized(row)));
     }
     if (delete.isNotEmpty) {
       m['delete'] = [];
-      delete.forEach((row) => m['delete'].add(rowToMap(row)));
+      delete.forEach((row) => m['delete'].add(getRowMapSerialized(row)));
     }
     return m;
   }
 
   List<Data> getNotReady() {
     final a = <Data>[];
-    tbody.dom.childNodes.forEach((row) => getRowMap(row).forEach((k, dc) {
+    renderer.rows.forEach((row) => getRowMap(row).forEach((k, dc) {
           if (dc is RowDataCell) {
             if (dc.object is Data && !dc.object.isReady()) a.add(dc.object);
             if (dc.object is List)
@@ -78,9 +78,7 @@ class GridData extends GridList<Object> {
   }
 
   bool isReady() =>
-      !(_required && tbody.dom.childNodes.isEmpty) &&
-      _valid &&
-      getNotReady().isEmpty;
+      !(_required && renderer.rows.isEmpty) && _valid && getNotReady().isEmpty;
 
   List<html.TableRowElement> rowsAdd(List<Map> rows) {
     final resRows = <html.TableRowElement>[];
@@ -139,9 +137,7 @@ class GridData extends GridList<Object> {
   }
 
   void rowRemove(html.TableRowElement row, [bool show = false]) {
-    row.remove();
-    renderer.rows.remove(row);
-    if (!show && tbody.dom.childNodes.isEmpty) hide();
+    super.rowRemove(row);
     final result = insert.remove(row);
     if (!result) {
       update.remove(row);
@@ -149,26 +145,24 @@ class GridData extends GridList<Object> {
     }
     contrValue.add(this);
     observer.execHooks(GridList.hook_render);
-    if (super.num) rowNumRerender();
   }
 
   bool checkRowValue(String key, dynamic value) {
-    for (var i = 0; i < tbody.dom.childNodes.length; i++) {
+    for (var i = 0; i < renderer.rows.length; i++) {
       //bug dart2js
       try {
         value = value.toString();
       } catch (e) {}
-      if (getRowMap(tbody.dom.childNodes[i])[key].toString() == value)
-        return true;
+      if (getRowMap(renderer.rows[i])[key].toString() == value) return true;
     }
     return false;
   }
 
   html.TableRowElement findRowByKeyValue(String key, dynamic value) {
     html.TableRowElement row;
-    for (var i = 0; i < tbody.dom.childNodes.length; i++) {
-      if (rowToMap(tbody.dom.childNodes[i])[key] == value) {
-        row = tbody.dom.childNodes[i];
+    for (var i = 0; i < renderer.rows.length; i++) {
+      if (getRowMapSerialized(renderer.rows[i])[key] == value) {
+        row = renderer.rows[i];
         break;
       }
     }
@@ -177,15 +171,14 @@ class GridData extends GridList<Object> {
 
   void rowNumRerender() {
     if (this.num)
-      for (var i = 0; i < tbody.dom.childNodes.length; i++)
-        setCellValue(tbody.dom.childNodes[i], 'position', i + 1);
+      for (var i = 0; i < renderer.rows.length; i++)
+        setCellValue(renderer.rows[i], 'position', i + 1);
   }
 
   int _rowSwap(int s_rownum, int t_rownum) {
     if (s_rownum == t_rownum) return s_rownum;
     final n = math.max(super._rowSwap(s_rownum, t_rownum), 0);
-    for (var i = n; i < tbody.dom.childNodes.length; i++)
-      rowChanged(tbody.dom.childNodes[i]);
+    for (var i = n; i < renderer.rows.length; i++) rowChanged(renderer.rows[i]);
     return n;
   }
 
@@ -225,13 +218,13 @@ class GridData extends GridList<Object> {
     });
   }
 
-  void disable() => tbody.dom.childNodes.forEach(disableRow);
+  void disable() => renderer.rows.forEach(disableRow);
 
-  void enable() => tbody.dom.childNodes.forEach(enableRow);
+  void enable() => renderer.rows.forEach(enableRow);
 
   void rowRemoveAll([bool show = false]) {
     final toDelete = <html.TableRowElement>[];
-    tbody.dom.childNodes.forEach(toDelete.add);
+    renderer.rows.forEach(toDelete.add);
     toDelete.forEach((row) => rowRemove(row, show));
   }
 

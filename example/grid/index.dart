@@ -1,15 +1,14 @@
 library test;
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:centryl/action.dart' as cl_action;
 import 'package:centryl/app.dart' as app;
 import 'package:centryl/base.dart';
 import 'package:centryl/forms.dart' as cl_form;
-import 'dart:math';
 
 import '../common/base.dart';
-import 'test.dart';
 
 void main() {
   init();
@@ -18,7 +17,7 @@ void main() {
 //   grid3();
   //grid4();
 //  grid5();
- // grid6();
+  // grid6();
 }
 
 void grid1() {
@@ -66,7 +65,7 @@ void grid2() {
       obj['product'] = new cl_action.Button()..setTitle('test button');
     })
     ..addHookRowAfter((row, obj) {
-      final r = form.rowToMap(row);
+      final r = form.getRowMapSerialized(row);
       final b = r['product'] as cl_action.Button;
       print(b);
     });
@@ -110,14 +109,14 @@ void grid3() async {
     ]);
 
   final cont =
-  new cl_form.GridListContainer(form, auto: true, fixedFooter: true);
+      new cl_form.GridListContainer(form, auto: true, fixedFooter: true);
   content.append(cont);
 
   final d = <Map>[];
   for (var i = 0; i < 100; i++) {
     int r = new Random().nextInt(50);
     final sb = new StringBuffer();
-    while(r > 0) sb.write('test${r--} ');
+    while (r > 0) sb.write('test${r--} ');
     d.add({'test': '$sb', 'product': 'product$i', 'total': i});
   }
 

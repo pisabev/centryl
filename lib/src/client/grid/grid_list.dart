@@ -46,8 +46,6 @@ class GridList<T> extends GridBase<T> {
 
   bool get drag => _drag;
 
-  Map getRowMap(html.TableRowElement row) => _exp[row];
-
   dynamic getCell(html.TableRowElement row, String key) => getRowMap(row)[key];
 
   void addHookRow(_HookRowFunction func) => observer.addHook(hook_row, (arr) {
@@ -177,15 +175,6 @@ class GridList<T> extends GridBase<T> {
     return row;
   }
 
-  void rowRemove(html.TableRowElement row, [bool show = false]) {
-    row.remove();
-    renderer.rows.remove(row);
-    map.forEach((k, gc) => gc
-      ..aggregator?.remove(getCell(row, k))
-      ..renderAggregator(renderer.rows));
-    if (num) rowNumRerender();
-  }
-
   void rowNumRerender() {
     if (num) {
       for (var i = 0; i < tbody.dom.childNodes.length; i++)
@@ -224,7 +213,18 @@ class GridList<T> extends GridBase<T> {
     return row;
   }
 
-  Map rowToMap(html.TableRowElement row) {
+  void rowRemove(html.TableRowElement row, [bool show = false]) {
+    super.rowRemove(row);
+    renderer.rows.remove(row);
+    map.forEach((k, gc) => gc
+      ..aggregator?.remove(getCell(row, k))
+      ..renderAggregator(renderer.rows));
+    if (num) rowNumRerender();
+  }
+
+  Map getRowMap(html.TableRowElement row) => _exp[row];
+
+  Map getRowMapSerialized(html.TableRowElement row) {
     final m = {};
     getRowMap(row).forEach((k, dynamic dc) {
       if (dc is RowDataCell) {
@@ -237,7 +237,7 @@ class GridList<T> extends GridBase<T> {
   }
 
   List<Map> getValueAll() => tbody.dom.childNodes
-      .map<Map>((row) => rowToMap(row as html.TableRowElement))
+      .map<Map>((row) => getRowMapSerialized(row as html.TableRowElement))
       .toList();
 
   void rowChanged(html.TableRowElement row) {}

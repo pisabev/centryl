@@ -305,7 +305,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
 
   bool inRange(dynamic id) {
     final row = gridList.grid.tbody.dom.childNodes.firstWhere(
-        (r) => gridList.grid.rowToMap(r)[key] == id,
+        (r) => gridList.grid.getRowMapSerialized(r)[key] == id,
         orElse: () => null);
     return row != null;
   }

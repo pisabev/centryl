@@ -52,7 +52,7 @@ void grid2() {
       obj['product'] = new cl_action.Button()..setTitle('test button');
     })
     ..addHookRowAfter((row, obj) {
-      final r = form.rowToMap(row);
+      final r = form.getRowMapSerialized(row);
       final b = r['product'] as cl_action.Button;
       print(b);
     });
