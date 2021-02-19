@@ -27,7 +27,7 @@ class RenderBuffered extends RenderBase {
     rows = [];
     _currentSet = -1;
     grid.map.forEach((k, gc) => gc.resetAggregator());
-    for (var i = 0; i < data.length; i++) rows.add(grid.rowCreate(data[i]));
+    for (var i = 0; i < data.length; i++) grid.rowCreate(data[i]);
     if (grid.num) grid.rowNumRerender();
     grid.map.forEach((k, gc) => gc.renderAggregator(rows));
     if (rows.isNotEmpty) onScroll();
@@ -94,11 +94,8 @@ class Render extends RenderBase {
     rows = [];
     final frg = html.document.createDocumentFragment();
     grid.map.forEach((k, gc) => gc.resetAggregator());
-    for (var i = 0; i < data.length; i++) {
-      final row = grid.rowCreate(data[i]);
-      rows.add(row);
-      frg.append(row);
-    }
+    for (var i = 0; i < data.length; i++)
+      frg.append(grid.rowCreate(data[i]));
     grid.tbody.dom.append(frg);
     if (grid.num) grid.rowNumRerender();
     grid.map.forEach((k, gc) => gc.renderAggregator(gc.grid.tbody.dom.rows));

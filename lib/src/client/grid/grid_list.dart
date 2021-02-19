@@ -171,7 +171,6 @@ class GridList<T> extends GridBase<T> {
 
   html.TableRowElement rowAdd(Map obj) {
     final row = rowCreate(obj);
-    renderer.rows.add(row);
     tbody.dom.append(row);
     if (num) rowNumRerender();
     map.forEach((k, gc) => gc.renderAggregator(renderer.rows));
@@ -217,6 +216,7 @@ class GridList<T> extends GridBase<T> {
 
   html.TableRowElement rowCreate([Map obj]) {
     final row = _rowTemplate.clone(true);
+    renderer.rows.add(row);
     if (drag) _setDraggable(row);
     observer.execHooks(hook_row, [row, obj]);
     rowSet(row, obj);
