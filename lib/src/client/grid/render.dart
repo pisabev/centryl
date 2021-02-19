@@ -1,8 +1,6 @@
 part of forms;
 
 class RenderBuffered extends RenderBase {
-  List<html.TableRowElement> rows;
-
   int visibleSet = 50;
   int offset = 20;
   int _currentSet = -1;
