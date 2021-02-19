@@ -64,7 +64,7 @@ class GridData extends GridList<Object> {
 
   List<Data> getNotReady() {
     final a = <Data>[];
-    renderer.rows.forEach((row) => getRowMap(row).forEach((k, dc) {
+    (renderer.rows ?? []).forEach((row) => getRowMap(row).forEach((k, dc) {
           if (dc is RowDataCell) {
             if (dc.object is Data && !dc.object.isReady()) a.add(dc.object);
             if (dc.object is List)
