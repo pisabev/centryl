@@ -140,6 +140,7 @@ class GridData extends GridList<Object> {
 
   void rowRemove(html.TableRowElement row, [bool show = false]) {
     row.remove();
+    renderer.rows.remove(row);
     if (!show && tbody.dom.childNodes.isEmpty) hide();
     final result = insert.remove(row);
     if (!result) {
