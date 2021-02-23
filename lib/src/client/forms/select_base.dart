@@ -174,6 +174,7 @@ abstract class _SelectBase<T> extends DataElement<T, html.Element>
     list = [];
     currentIndex = 0;
     domList.removeChilds();
+    setValue(null);
     setShadowValue();
   }
 
