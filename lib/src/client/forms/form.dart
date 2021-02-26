@@ -189,7 +189,7 @@ class Form<T extends Data> extends Data<Map> {
   void forEach(void Function(T e) com) =>
       _indexOfElements.forEach((element) => com(element.element));
 
-  void clear() {
-    _indexOfElements.forEach((el) => el.element.setValue(null));
-  }
+  List<T> get elements => _indexOfElements.map((e) => e.element).toList();
+
+  void clear() => _indexOfElements.forEach((el) => el.element.setValue(null));
 }
