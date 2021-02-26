@@ -1,8 +1,23 @@
 part of forms;
 
+class ElementTrack<T extends Data> {
+  final T element;
+  StreamSubscription valueChange;
+  StreamSubscription readyChange;
+  StreamSubscription warning;
+  bool inLoadingQueue = false;
+
+  ElementTrack(this.element);
+
+  void destroy() {
+    valueChange.cancel();
+    readyChange.cancel();
+    warning.cancel();
+  }
+}
+
 class Form<T extends Data> extends Data<Map> {
   bool isLoading = false;
-  final List<Data> _loadingQueue = [];
   final StreamController _contrLoadStart = new StreamController.broadcast();
   final StreamController _contrLoadEnd = new StreamController.broadcast();
 
@@ -12,23 +27,28 @@ class Form<T extends Data> extends Data<Map> {
 
   Map<String, bool Function()> validationRules = {};
 
-  final List<T> indexOfElements = [];
+  final List<ElementTrack<T>> _indexOfElements = [];
 
   void add(dynamic el) {
-    el.onValueChanged.listen((_) => contrValue.add(this));
-    el.onReadyChanged.listen((_) => contrReady.add(this));
-    el.onWarning.listen((_) => contrWarning.add(this));
+    final track = new ElementTrack<T>(el)
+      ..valueChange = el.onValueChanged.listen((_) => contrValue.add(this))
+      ..readyChange = el.onReadyChanged.listen((_) => contrReady.add(this))
+      ..warning = el.onWarning.listen((_) => contrWarning.add(this));
+    _indexOfElements.add(track);
+
     void _addToQueue(Data el) {
-      if (!_loadingQueue.contains(el))
-        _loadingQueue.add(el);
+      final found = _indexOfElements.firstWhere((e) => e.element == el);
+      if (!found.inLoadingQueue)
+        found.inLoadingQueue = true;
       else
         throw new Exception(
             'Form\'s LoadingQueue error - addToQueue: ${el.getName()}');
     }
 
     void _removeFromQueue(Data el) {
-      if (_loadingQueue.contains(el))
-        _loadingQueue.remove(el);
+      final found = _indexOfElements.firstWhere((e) => e.element == el);
+      if (found.inLoadingQueue)
+        found.inLoadingQueue = false;
       else
         throw new Exception(
             'Form\'s loadingQueue error - removeFromQueue: ${el.getName()}');
@@ -47,21 +67,20 @@ class Form<T extends Data> extends Data<Map> {
       });
       el.onLoadEnd.listen((_) async {
         _removeFromQueue(el);
-        if (_loadingQueue.isEmpty) {
+        if (_indexOfElements.every((e) => !e.inLoadingQueue)) {
           isLoading = false;
           _contrLoadEnd.add(this);
         }
       });
     }
-    indexOfElements.add(el);
   }
 
   T remove(String name) {
     Data el;
-    indexOfElements.removeWhere((e) {
-      if (e.getName() == name) {
-        el = e;
-        _loadingQueue.remove(e);
+    _indexOfElements.removeWhere((e) {
+      if (e.element.getName() == name) {
+        el = e.element;
+        e.destroy();
         return true;
       }
       return false;
@@ -70,17 +89,17 @@ class Form<T extends Data> extends Data<Map> {
   }
 
   void removeAll() =>
-      indexOfElements.toList()..forEach((el) => remove(el.getName()));
+      _indexOfElements.toList().forEach((el) => remove(el.element.getName()));
 
   Map<String, dynamic> getValue() {
     if (!_send) return null;
     final o = <String, dynamic>{};
-    for (var i = 0; i < indexOfElements.length; i++) {
-      final el = indexOfElements[i];
-      if (!el._send) continue;
-      final key = el.getName(), value = el.getValue();
+    for (var i = 0; i < _indexOfElements.length; i++) {
+      final el = _indexOfElements[i];
+      if (!el.element._send) continue;
+      final key = el.element.getName(), value = el.element.getValue();
       if (key == null) continue;
-      final context = el.getContext();
+      final context = el.element.getContext();
       if (context != null) {
         if (o[context] == null) o[context] = <String, dynamic>{};
         o[context][key] = value;
@@ -90,13 +109,15 @@ class Form<T extends Data> extends Data<Map> {
     return o;
   }
 
-  List<T> getNotReady() =>
-      indexOfElements.where((el) => !el.isReady()).toList();
+  List<T> getNotReady() => _indexOfElements
+      .where((el) => !el.element.isReady())
+      .map((e) => e.element)
+      .toList();
 
   List<DataWarning> getWarnings() {
     final w = <DataWarning>[];
-    indexOfElements.forEach((el) {
-      if (el.hasWarnings()) w.addAll(el.getWarnings());
+    _indexOfElements.forEach((el) {
+      if (el.element.hasWarnings()) w.addAll(el.element.getWarnings());
     });
     w.addAll(super.getWarnings());
     return w;
@@ -104,33 +125,38 @@ class Form<T extends Data> extends Data<Map> {
 
   void removeWarning(String wrnKey) {
     super.removeWarning(wrnKey);
-    indexOfElements.forEach((el) => el.removeWarning(wrnKey));
+    _indexOfElements.forEach((el) => el.element.removeWarning(wrnKey));
   }
 
   void removeWarnings() {
     super.removeWarnings();
-    indexOfElements.forEach((el) => el.removeWarnings());
+    _indexOfElements.forEach((el) => el.element.removeWarnings());
   }
 
   bool isReady() =>
       super.isReady() &&
-      indexOfElements.every((el) => el.isReady()) &&
+      _indexOfElements.every((el) => el.element.isReady()) &&
       validationRules.keys.every((k) => validationRules[k]());
 
-  List<E> getElementsByContext<E extends T>(String context) =>
-      indexOfElements.where((el) => el.getContext() == context).toList();
+  List<E> getElementsByContext<E extends T>(String context) => _indexOfElements
+      .where((el) => el.element.getContext() == context)
+      .map((e) => e.element)
+      .toList();
 
-  E getElement<E extends T>(String name, [String context]) =>
-      indexOfElements.firstWhere(
-          (el) => el.getName() == name && el.getContext() == context,
-          orElse: () => null);
+  E getElement<E extends T>(String name, [String context]) => _indexOfElements
+      .firstWhere(
+          (el) =>
+              el.element.getName() == name &&
+              el.element.getContext() == context,
+          orElse: () => null)
+      ?.element;
 
   void setState(bool state) =>
-      indexOfElements.forEach((el) => el.setState(state));
+      _indexOfElements.forEach((el) => el.element.setState(state));
 
-  void disable() => indexOfElements.forEach((el) => el.disable());
+  void disable() => _indexOfElements.forEach((el) => el.element.disable());
 
-  void enable() => indexOfElements.forEach((el) => el.enable());
+  void enable() => _indexOfElements.forEach((el) => el.element.enable());
 
   void setValue(Map value) {
     if (value == null) {
@@ -160,7 +186,10 @@ class Form<T extends Data> extends Data<Map> {
     });
   }
 
+  void forEach(void Function(T e) com) =>
+      _indexOfElements.forEach((element) => com(element.element));
+
   void clear() {
-    indexOfElements.forEach((el) => el.setValue(null));
+    _indexOfElements.forEach((el) => el.element.setValue(null));
   }
 }
