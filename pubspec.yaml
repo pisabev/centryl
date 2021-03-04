@@ -3,25 +3,27 @@ author: Petar Sabev
 description: Centryl Framework
 version: 2.0.0
 
+publish_to: none
+
 environment:
   sdk: '>=2.8.0 <3.0.0'
 
 dependencies:
-  logging: ^0.11.4
   args: ^1.6.0
-  intl: ^0.16.1
   codemirror: ^0.5.21+5.58.0
-  sass_builder: ^2.1.3
-  http_server: ^0.9.8+3
-  http: ^0.12.0+2
-  path: ^1.6.4
-  crypto: ^2.1.3
   convert: ^2.1.1
-  mailer: 3.2.1
+  crypto: ^2.1.3
   csv: ^4.0.3
   #excel: ^1.1.5
   excel:
     git: https://github.com/justkawal/excel.git
+  http: ^0.12.0+2
+  http_server: ^0.9.8+3
+  intl: ^0.16.1
+  logging: ^0.11.4
+  mailer: 3.2.1
+  path: ^1.6.4
+  sass_builder: ^2.1.3
   resource: ^2.1.6
   stack_trace: ^1.9.3
   pdf:
@@ -42,6 +44,6 @@ dependencies:
     git: git@repo.centryl.org:centryl/cl_gen.git
 
 dev_dependencies:
-  test: ^1.15.4
   build_runner: ^1.10.3
   build_web_compilers: ^2.12.1
+  test: ^1.15.4
