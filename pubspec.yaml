@@ -23,8 +23,8 @@ dependencies:
   logging: ^0.11.4
   mailer: 3.2.1
   path: ^1.6.4
-  sass_builder: ^2.1.3
   resource: ^2.1.6
+  sass_builder: ^2.1.3
   stack_trace: ^1.9.3
   pdf:
     git: git@repo.centryl.org:centryl/pdf.git
