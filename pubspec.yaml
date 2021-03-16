@@ -15,7 +15,8 @@ dependencies:
   crypto: ^3.0.0
   csv: ^4.0.3
   #excel: ^1.1.5
-  #excel:
+  excel:
+    git: git@repo.centryl.org:centryl/excel.git
    # git: https://github.com/justkawal/excel.git
   http: ^0.12.0+2
   http_server: ^0.9.8+3
