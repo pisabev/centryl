@@ -9,8 +9,8 @@ class _WinC {
 
 class WinTabContainer extends CLElement {
   Application ap;
-  CLElement cont, but;
-  List<WinTab> tabs;
+  late CLElement cont, but;
+  List<WinTab>? tabs;
   final Map<String, WinTab> _map = {};
 
   WinTabContainer(this.ap) : super(new DivElement()) {
@@ -22,7 +22,7 @@ class WinTabContainer extends CLElement {
     but = new CLElement(new AnchorElement())
       ..addClass('ui-tabs-more')
       ..append(new Icon(Icon.arrow_drop_down).dom)
-      ..addAction((e) {
+      ..addAction<Event>((e) {
         e.stopPropagation();
         toggleClass('show');
       })
@@ -46,9 +46,9 @@ class WinTabContainer extends CLElement {
       removeClass('dropdown');
   }
 
-  WinTab getTab(Win w) => _map[w.hashCode.toString()];
+  WinTab? getTab(Win w) => _map[w.hashCode.toString()];
 
-  WinTab removeTab(Win w) {
+  WinTab? removeTab(Win w) {
     final tab = getTab(w);
     if (tab != null) {
       tab.remove();
@@ -61,9 +61,9 @@ class WinTabContainer extends CLElement {
 
 class WinTab extends CLElement {
   String tabClas = 'ui-win-tab';
-  CLElement _span;
+  late CLElement _span;
 
-  WinTab(String title, String icon) : super(new AnchorElement()) {
+  WinTab(String title, String? icon) : super(new AnchorElement()) {
     setClass(tabClas);
     _span = new CLElement(new SpanElement())..appendTo(this);
     setTitle(title);
@@ -96,7 +96,7 @@ class WinManager<C extends Client> {
 
   WinManager(this.app) : registry = new Registry();
 
-  Item<C> run(String key, [List addParams]) {
+  Item<C> run(String key, [List? addParams]) {
     final obj = registry.get(key);
     if (obj != null) {
       if (obj.wapi != null) refreshWinTabs(obj.wapi.win);
@@ -119,7 +119,8 @@ class WinManager<C extends Client> {
   void pushUrl(String urlSlug) =>
       window.history.pushState(urlSlug, '', '${app.baseurl}$urlSlug');
 
-  Win loadWindow({@required String title, String icon, WinType type}) {
+  Win loadWindow(
+      {required String title, String? icon, WinType type = WinType.normal}) {
     final win = new Win(app.desktop, type: type)..setTitle(title);
     if (icon != null) win.setIcon(icon);
 
@@ -205,7 +206,7 @@ class WinManager<C extends Client> {
     if (!has) app.gadgetsContainer.setStyle({'opacity': '1'});
   }
 
-  Win loadBoundWin({@required String title, String icon}) =>
+  Win loadBoundWin({required String title, String icon}) =>
       loadWindow(title: title, icon: icon, type: WinType.bound);
 
   void setItem(Win w, _WinC item) => _map_items[w.hashCode.toString()] = item;

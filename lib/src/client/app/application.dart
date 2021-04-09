@@ -12,21 +12,21 @@ class AppSettings {
 enum ScreenType { phone, tablet, desktop, large }
 
 class Application<C extends Client> {
-  AppSettings settings;
+  late AppSettings settings;
 
-  CLElement container;
+  late CLElement container;
 
-  CLElement page, fieldLeft, fieldTop, fieldRight, menuBut;
-  Container desktop, gadgetsContainer, addons;
+  late CLElement page, fieldLeft, fieldTop, fieldRight, menuBut;
+  late Container desktop, gadgetsContainer, addons;
 
-  Notify notify;
-  MessageBus messagebus;
-  IconContainer iconContainer;
+  late Notify notify;
+  late MessageBus messagebus;
+  late IconContainer iconContainer;
   List<GadgetContainer> gadgetContainers = [];
-  WinManager winmanager;
-  C client;
-  Menu menu;
-  WinTabContainer tabs;
+  late WinManager winmanager;
+  late C client;
+  late Menu menu;
+  late WinTabContainer tabs;
 
   bool disabledNavigation = false;
   bool preventRefresh = false;
@@ -37,8 +37,8 @@ class Application<C extends Client> {
   static const String _appWorkException = 'AppWorkException';
   static const String _appPermissionException = 'AppPermissionException';
 
-  Future<T> Function<T>(String, Map) _server_call;
-  Future<Map> Function(String, Map) _download_call;
+  late Future<T> Function<T>(String, Map) _server_call;
+  late Future<Map> Function(String, Map) _download_call;
 
   bool fullScreen = false;
 
@@ -46,9 +46,9 @@ class Application<C extends Client> {
 
   set download_call(Future<Map> Function(String, Map) c) => _download_call = c;
 
-  Application({CLElement container, this.settings}) {
-    settings ??= new AppSettings();
-    Icon.BASEURL = settings.baseurl;
+  Application({CLElement? container, AppSettings? settings}) {
+    this.settings = settings ?? new AppSettings();
+    Icon.BASEURL = settings!.baseurl;
     Icon.ICON_FLAG_PATH = '${settings.baseurl}packages/centryl/images/flags/';
     onLoadStart();
     this.container = container ?? new CLElement(document.body);
@@ -57,7 +57,7 @@ class Application<C extends Client> {
     initLayout();
   }
 
-  String get baseurl => settings?.baseurl;
+  String get baseurl => settings.baseurl;
 
   void createDom() {
     page = new CLElement(new Element.tag('main'))..addClass('ui-page');
@@ -115,8 +115,8 @@ class Application<C extends Client> {
   }
 
   void initLayout() {
-    final label = getDeviceBasedOnWidth(window.innerWidth);
-    document.body.classes = [label.toString().split('.').last];
+    final label = getDeviceBasedOnWidth(window.innerWidth ?? 0);
+    document.body!.classes = [label.toString().split('.').last];
     if (label == ScreenType.phone || !settings.menuDefaultOpen) {
       settings.menuHideOnAction = true;
       menuHide();
@@ -127,14 +127,14 @@ class Application<C extends Client> {
   void storagePut(String key, Map value) =>
       window.localStorage[key] = json.encode(value);
 
-  Map storageFetch(String key) {
+  Map? storageFetch(String key) {
     try {
-      return json.decode(window.localStorage[key]);
+      return json.decode(window.localStorage[key]!);
     } catch (e) {}
     return null;
   }
 
-  void reboot([Duration delay]) {
+  void reboot([Duration? delay]) {
     if (delay != null) {
       final r = new NotificationMessage(NotificationMessage.error)
         ..persist = false
@@ -212,8 +212,7 @@ class Application<C extends Client> {
     Logger.root.level = Level.ALL;
     Logger.root.onRecord.listen((rec) {
       if (rec.level == Level.SEVERE) {
-        if (rec != null &&
-            rec.error != null &&
+        if (rec.error != null &&
             (rec.error.toString().contains(_appServerException) ||
                 rec.error.toString().contains(_appPermissionException) ||
                 rec.error.toString().contains(_appWorkException))) return;
@@ -253,7 +252,7 @@ class Application<C extends Client> {
     window.onPopState.listen((p) {
       if (p.state != null) winmanager.run(p.state);
     });
-    final subpath = window.location.pathname.replaceFirst(baseurl ?? '/', '');
+    final subpath = window.location.pathname!.replaceFirst(baseurl ?? '/', '');
     if (subpath.isNotEmpty) winmanager.run(subpath);
 
     onLoadEnd();
@@ -280,15 +279,15 @@ class Application<C extends Client> {
   }
 
   void setClient(Client client) {
-    this.client = client;
+    this.client = client as C;
   }
 
   void setMenu(List<MenuElement> data) => menu.setMenu(data);
 
   void addRoute(Route route) => winmanager.registry.addRoute(route);
 
-  T run<T extends Item<Client>>(String key, [List addParams]) =>
-      winmanager.run(key, addParams);
+  T run<T extends Item<Client>>(String key, [List? addParams]) =>
+      winmanager.run(key, addParams) as T;
 
   void error(dynamic o, [String stack = '']) {
     if (o is ServerError) {
@@ -330,8 +329,8 @@ class Application<C extends Client> {
       ..render();
   }
 
-  Future<T> serverCall<T>(String contr, dynamic data,
-      [CLElementBase loading]) async {
+  Future<T?> serverCall<T>(String contr, dynamic data,
+      [CLElementBase? loading]) async {
     final params = (data == null || data is Map) ? data : data.toJson();
     final response =
         await loadExecute(loading, () => _server_call(contr, params));
@@ -361,7 +360,7 @@ class Application<C extends Client> {
   }
 
   Future<void> download(String contr, dynamic data,
-      [CLElementBase loading]) async {
+      [CLElementBase? loading]) async {
     final params = (data == null || data is Map) ? data : data.toJson();
     final response =
         await loadExecute(loading, () => _download_call(contr, params));
@@ -389,9 +388,9 @@ class Application<C extends Client> {
     }
   }
 
-  Future<T> loadExecute<T>(CLElementBase loadElement, Future<T> Function() f,
+  Future<T?> loadExecute<T>(CLElementBase? loadElement, Future<T> Function() f,
       [int delay = 200]) async {
-    T response;
+    T? response;
     try {
       if (loadElement == null) return f();
       final LoadElement loadEl = new LoadElement(loadElement, delay);
@@ -410,7 +409,8 @@ class Application<C extends Client> {
 
   MessageBus get onServerCall => messagebus;
 
-  void disableApp({int zIndex = 900, CLElement<Element> cont, String message}) {
+  void disableApp(
+      {int zIndex = 900, CLElement<Element>? cont, String? message}) {
     disabledNavigation = true;
     final el = document.getElementById('ui-app-disabled');
     if (el != null) {
@@ -450,19 +450,19 @@ class Application<C extends Client> {
       ..classes.add('spinner')
       ..append(new DivElement()..classes.add('double-bounce1'))
       ..append(new DivElement()..classes.add('double-bounce2'));
-    document.body.append(sp);
+    document.body!.append(sp);
   }
 
   void onLoadEnd() {
-    document.getElementById('app-loader').remove();
+    document.getElementById('app-loader')!.remove();
     page.setStyle({'opacity': '1'});
   }
 }
 
 class ServerError {
-  String details;
-  String type;
-  String message;
+  String? details;
+  String? type;
+  String? message;
 
   ServerError(o) {
     details = o['details'];
@@ -470,7 +470,7 @@ class ServerError {
     message = o['message'];
   }
 
-  String get icon {
+  String? get icon {
     if (type == 'error')
       return Icon.error;
     else if (type == 'exception')
@@ -481,7 +481,7 @@ class ServerError {
     return null;
   }
 
-  String get title {
+  String? get title {
     if (type == 'error')
       return intl.Error();
     else if (type == 'exception')

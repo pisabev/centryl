@@ -44,7 +44,7 @@ class Menu {
 
   Button operator [](String key) => getElement(key);
 
-  void initButtons([List arr]) {
+  void initButtons([List? arr]) {
     indexOfElements.forEach((el) => el.setState(false));
     if (arr is List) arr.forEach((name) => this[name].setState(true));
   }

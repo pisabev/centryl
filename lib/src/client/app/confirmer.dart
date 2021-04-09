@@ -1,16 +1,16 @@
 part of app;
 
 class Confirmer extends Dialog {
-  action.Button okDom;
+  late action.Button okDom;
   Function _callback = () async => true;
 
   Confirmer(ap, container) : super(ap, container) {
     okDom = new action.Button()
       ..setTitle(intl.OK())
       ..addClass('important')
-      ..addAction((e) async {
+      ..addAction<Event>((e) async {
         e.stopPropagation();
-        if (await _callback()) win.close();
+        if (await _callback()) win?.close();
       }, 'click');
   }
 
@@ -25,8 +25,8 @@ class Confirmer extends Dialog {
     final cont = new Container()
       ..auto = true
       ..append(container, scrollable: scrollable);
-    win.getContent()..addRow(cont)..addRow(m);
-    win.win.addClass('dialog');
-    win.render(width, height);
+    win!.getContent()..addRow(cont)..addRow(m);
+    win!.win.addClass('dialog');
+    win!.render(width, height);
   }
 }

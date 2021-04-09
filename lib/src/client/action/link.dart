@@ -1,13 +1,13 @@
 part of action;
 
 class Link extends CLElement {
-  CLElement domAction;
+  late CLElement domAction;
 
   Link() : super(new SpanElement()) {
     domAction = new CLElement(new AnchorElement())..appendTo(this);
   }
 
-  void setIcon(String icon, [String pos]) {
+  void setIcon(String icon, [String? pos]) {
     //domAction.setClass(icon + ' icon');
     //if (pos) domAction.setStyle({'backgroundPosition': pos});
   }

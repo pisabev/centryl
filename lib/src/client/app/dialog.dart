@@ -2,9 +2,9 @@ part of app;
 
 class Dialog {
   Application ap;
-  String _icon, _title;
+  late String _icon, _title;
   Container container;
-  Win win;
+  Win? win;
 
   Dialog(this.ap, this.container);
 
@@ -16,8 +16,8 @@ class Dialog {
 
   void render({int width = 400, int height = 300, bool scrollable = true}) {
     win = ap.winmanager.loadBoundWin(title: _title, icon: _icon);
-    win.getContent().append(container, scrollable: scrollable);
-    win.win.addClass('dialog');
-    win.render(width, height);
+    win!.getContent().append(container, scrollable: scrollable);
+    win!.win.addClass('dialog');
+    win!.render(width, height);
   }
 }

@@ -7,8 +7,8 @@ const _padding = 'padding';
 const _margin = 'margin';
 
 class Dimension {
-  num _value;
-  String _unit;
+  late num _value;
+  late String _unit;
 
   /// Set this CSS Dimension to a percentage `value`.
   Dimension.percent(this._value) : _unit = '%';
@@ -70,7 +70,7 @@ class Dimension {
   }
 
   /// Print out the CSS String representation of this value.
-  String toString() =>'$_value$_unit';
+  String toString() => '$_value$_unit';
 
   /// Return a unitless, numerical value of this CSS value.
   num get value => _value;
@@ -87,7 +87,7 @@ abstract class CssRectExt extends CssRect {
     // always dealing with pixels in this method.
     final styles = _element.getComputedStyle();
 
-    var val = 0;
+    num val = 0;
 
     for (final measurement in dimensions) {
       // The border-box and default box model both exclude margin in the regular
@@ -101,9 +101,9 @@ abstract class CssRectExt extends CssRect {
       // The border-box includes padding and border, so remove it if we want
       // just the content itself.
       if (augmentingMeasurement == _content) {
-        val -= new Dimension.css(
-                styles.getPropertyValue('$_padding-$measurement'))
-            .value;
+        val -=
+            new Dimension.css(styles.getPropertyValue('$_padding-$measurement'))
+                .value;
       }
 
       // At this point, we don't wan't to augment with border or margin,
@@ -128,7 +128,6 @@ class _ContentCssRect extends CssRectExt {
   num get width =>
       _element.getBoundingClientRect().width +
       _addOrSubtractToBoxModel(_width, _content);
-
 
   /// Set the height to `newHeight`.
   ///
@@ -172,6 +171,7 @@ class _ContentCssRect extends CssRectExt {
   num get left =>
       _element.getBoundingClientRect().left -
       _addOrSubtractToBoxModel(['left'], _content);
+
   num get top =>
       _element.getBoundingClientRect().top -
       _addOrSubtractToBoxModel(['top'], _content);
@@ -179,9 +179,11 @@ class _ContentCssRect extends CssRectExt {
 
 class _PaddingCssRect extends CssRectExt {
   _PaddingCssRect(element) : super(element);
+
   num get height =>
       _element.getBoundingClientRect().height +
       _addOrSubtractToBoxModel(_height, _padding);
+
   num get width =>
       _element.getBoundingClientRect().width +
       _addOrSubtractToBoxModel(_width, _padding);
@@ -189,6 +191,7 @@ class _PaddingCssRect extends CssRectExt {
   num get left =>
       _element.getBoundingClientRect().left -
       _addOrSubtractToBoxModel(['left'], _padding);
+
   num get top =>
       _element.getBoundingClientRect().top -
       _addOrSubtractToBoxModel(['top'], _padding);
@@ -196,19 +199,23 @@ class _PaddingCssRect extends CssRectExt {
 
 class _BorderCssRect extends CssRectExt {
   _BorderCssRect(element) : super(element);
+
   num get height => _element.getBoundingClientRect().height;
+
   num get width => _element.getBoundingClientRect().width;
 
   num get left => _element.getBoundingClientRect().left;
+
   num get top => _element.getBoundingClientRect().top;
 }
 
 class _MarginCssRect extends CssRectExt {
-
   _MarginCssRect(_element) : super(_element);
+
   num get height =>
       _element.getBoundingClientRect().height +
       _addOrSubtractToBoxModel(_height, _margin);
+
   num get width =>
       _element.getBoundingClientRect().width +
       _addOrSubtractToBoxModel(_width, _margin);
@@ -216,6 +223,7 @@ class _MarginCssRect extends CssRectExt {
   num get left =>
       _element.getBoundingClientRect().left -
       _addOrSubtractToBoxModel(['left'], _margin);
+
   num get top =>
       _element.getBoundingClientRect().top -
       _addOrSubtractToBoxModel(['top'], _margin);

@@ -1,7 +1,7 @@
 part of app;
 
 class ClientApp {
-  FutureOr<void> Function(Application ap) init;
+  FutureOr<void> Function(Application ap)? init;
 }
 
 class Client {
@@ -28,15 +28,16 @@ class Client {
 
   String get picture => data['client']['picture'];
 
-  Map get permissions => data['client']['permissions'];
+  Map? get permissions => data['client']['permissions'];
 
-  bool checkPermission(String groupScopeAccess) {
-    if (permissions == null || permissions.isEmpty || groupScopeAccess == null)
+  bool checkPermission(String? groupScopeAccess) {
+    if (permissions == null || permissions!.isEmpty || groupScopeAccess == null)
       return true;
     final parts = groupScopeAccess.split(':');
-    if (parts.length > 2 && permissions.containsKey(parts[0]) &&
-        permissions[parts[0]].containsKey(parts[1]))
-      return permissions[parts[0]][parts[1]][parts[2]] ?? false;
+    if (parts.length > 2 &&
+        permissions!.containsKey(parts[0]) &&
+        permissions![parts[0]].containsKey(parts[1]))
+      return permissions![parts[0]][parts[1]][parts[2]] ?? false;
     return false;
   }
 

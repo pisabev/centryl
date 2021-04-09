@@ -9,9 +9,9 @@ class Registry {
     _actions[route.getRoute()] = route;
   }
 
-  Route getRoute(String key) {
-    final keyPattern = _actions.keys
-        .firstWhere((k) => Route.match(new RegExp(k), key), orElse: () => null);
+  Route? getRoute(String key) {
+    final keyPattern =
+        _actions.keys.firstWhereOrNull((k) => Route.match(new RegExp(k), key));
     if (keyPattern == null) return null;
     return _actions[keyPattern];
   }
@@ -20,10 +20,10 @@ class Registry {
     _cache[key] = value;
   }
 
-  Item get(String key) => _cache[key];
+  Item? get(String key) => _cache[key];
 
   void remove(Object value) {
-    String key;
+    String? key;
     _cache.forEach((k, v) {
       if (v == value) key = k;
     });

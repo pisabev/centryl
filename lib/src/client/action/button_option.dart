@@ -1,13 +1,13 @@
 part of action;
 
 class ButtonOption extends Button {
-  Button buttonDefault;
-  Button buttonOption;
-  CLElement domList;
-  utils.UISlider slider;
-  CLElement _scrollContainer;
-  utils.CLscroll _scroll;
-  String customClass;
+  Button? buttonDefault;
+  late Button buttonOption;
+  late CLElement domList;
+  late utils.UISlider slider;
+  late CLElement _scrollContainer;
+  late utils.CLscroll _scroll;
+  String? customClass;
 
   ButtonOption({this.customClass}) : super();
 
@@ -15,16 +15,15 @@ class ButtonOption extends Button {
     inner = new CLElement(new SpanElement()..classes.add('inner'));
     append(inner);
     setClass('ui-button-option');
-    if (customClass != null)
-      addClass(customClass);
+    if (customClass != null) addClass(customClass!);
     buttonOption = new Button()
       ..appendTo(inner)
       ..setIcon(Icon.more_vert)
       ..addClass('ui-option')
-      ..addAction((e) {
+      ..addAction<MouseEvent>((e) {
         e.stopPropagation();
         _showL();
-        CLElement doc;
+        late CLElement doc;
         doc = new CLElement(document.body)
           ..addAction((e) {
             _hideL();
@@ -45,7 +44,7 @@ class ButtonOption extends Button {
 
   void setName(String name) => _name = name;
 
-  String getName() => _name;
+  String? getName() => _name;
 
   void setDefault(Button button) {
     buttonDefault = button..addClass('ui-main');
@@ -55,11 +54,11 @@ class ButtonOption extends Button {
   CLElement addSub(Button button) {
     sub.add(button);
     button
-      ..addAction((e) => e.stopPropagation(), 'mousedown')
+      ..addAction<MouseEvent>((e) => e.stopPropagation(), 'mousedown')
       ..addAction((e) => _hideL(), 'click');
     return new CLElement(new LIElement())
       ..append(button)
-      ..setAttribute('title', button.getTitle())
+      ..setAttribute('title', button.getTitle() ?? '')
       ..appendTo(domList);
   }
 
@@ -70,9 +69,9 @@ class ButtonOption extends Button {
 
   void _hideL() => slider.hide();
 
-  void setIcon(String icon) {}
+  void setIcon(String? icon) {}
 
-  void setTitle(String title) {}
+  void setTitle(String? title) {}
 
   void disable() => setState(false);
 

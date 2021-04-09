@@ -1,18 +1,18 @@
 part of app;
 
 class GadgetController<T> {
-  T result;
+  late T result;
 
-  FutureOr<T> Function(CLElement) init;
-  MessageBusSub feed;
-  FutureOr<void> Function<E>(E v) loadFeed;
-  void Function() update;
+  late FutureOr<T> Function(CLElement) init;
+  MessageBusSub? feed;
+  FutureOr<void> Function<E>(E v)? loadFeed;
+  late void Function() update;
 
-  GadgetController({this.init, this.feed, this.loadFeed}) {
+  GadgetController({required this.init, this.feed, this.loadFeed}) {
     if (feed != null)
-      feed.listen((v) {
+      feed!.listen((v) {
         if (loadFeed != null)
-          loadFeed(v);
+          loadFeed!(v);
         else {
           result = v;
           update();
@@ -27,12 +27,12 @@ class GadgetController<T> {
 }
 
 abstract class GadgetBase<T> extends CLElement<DivElement> {
-  GadgetController<T> contr;
-  String scope;
+  late GadgetController<T> contr;
+  String? scope;
 
-  GadgetBase([GadgetController<T> contr]) : super(new DivElement()) {
+  GadgetBase(GadgetController<T> contr) : super(new DivElement()) {
     createDom();
-    if (contr != null) setController(contr);
+    setController(contr);
   }
 
   void setController(GadgetController<T> controller) =>
@@ -42,15 +42,15 @@ abstract class GadgetBase<T> extends CLElement<DivElement> {
 
   void update();
 
-  Future load() => contr.load(this);
+  Future? load() => contr.load(this);
 }
 
 class CardGadget extends GadgetBase<String> {
   String title;
   String icon;
 
-  CLElement titleDom, contentDom;
-  Element domIcon;
+  late CLElement titleDom, contentDom;
+  late Element domIcon;
 
   CardGadget(this.title, this.icon, GadgetController<String> contr)
       : super(contr);
@@ -72,9 +72,9 @@ class CardGadget extends GadgetBase<String> {
 }
 
 class ChartGadget extends GadgetBase<List<dto.DataContainer>> {
-  String title;
-  chart.Chart ch;
-  CLElement titleDom, contentDom;
+  String? title;
+  late chart.Chart ch;
+  late CLElement titleDom, contentDom;
 
   ChartGadget(this.title, GadgetController<List<dto.DataContainer>> contr)
       : super(contr);
@@ -99,9 +99,9 @@ class ChartGadget extends GadgetBase<List<dto.DataContainer>> {
 }
 
 class PieGadget extends GadgetBase<List<dto.DataSet>> {
-  String title;
-  chart.Pie ch;
-  CLElement titleDom, contentDom;
+  String? title;
+  late chart.Pie ch;
+  late CLElement titleDom, contentDom;
 
   PieGadget(this.title, GadgetController<List<dto.DataSet>> contr)
       : super(contr);
@@ -126,9 +126,9 @@ class PieGadget extends GadgetBase<List<dto.DataSet>> {
 }
 
 class BarGadget extends GadgetBase<List<dto.DataSet>> {
-  String title;
-  chart.Bar bar;
-  CLElement titleDom, contentDom;
+  String? title;
+  late chart.Bar bar;
+  late CLElement titleDom, contentDom;
 
   BarGadget(this.title, GadgetController<List<dto.DataSet>> contr)
       : super(contr);
@@ -166,12 +166,11 @@ class IconContainer extends Container {
 }
 
 class GadgetContainer extends Container {
-  Application ap;
   List<GadgetBase> gadgets = [];
 
   GadgetContainer() : super();
 
-  void addGadget(GadgetBase gadget, int size, [String clas]) {
+  void addGadget(GadgetBase gadget, int size, [String? clas]) {
     gadgets.add(gadget);
     final cont = new Container()
       ..addClass('size$size')
@@ -182,7 +181,7 @@ class GadgetContainer extends Container {
   }
 
   void load() => gadgets.forEach((g) {
-        if (g.scope == null || ap.client.checkPermission(g.scope))
+        if (g.scope == null)
           g.load();
         else
           g.remove();

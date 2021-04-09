@@ -116,8 +116,8 @@ class Calendar {
 
   static List<DateTime> _getRange(DateTime d, DateTime n) => [d, n];
 
-  static DateTime parse(String date) {
-    DateTime d;
+  static DateTime? parse(String date) {
+    DateTime? d;
     try {
       d = DateTime.parse(date);
       if (d.isUtc) d = d.toLocal();
@@ -132,8 +132,8 @@ class Calendar {
     return d;
   }
 
-  static DateTime parseWithTime(String date) {
-    DateTime d;
+  static DateTime? parseWithTime(String date) {
+    DateTime? d;
     try {
       d = DateTime.parse(date);
       if (d.isUtc) d = d.toLocal();
@@ -152,8 +152,8 @@ class Calendar {
     return d;
   }
 
-  static DateTime parseWithTimeFull(String date) {
-    DateTime d;
+  static DateTime? parseWithTimeFull(String date) {
+    DateTime? d;
     try {
       d = DateTime.parse(date);
       if (d.isUtc) d = d.toLocal();
@@ -168,8 +168,8 @@ class Calendar {
     return d;
   }
 
-  static DateTime parseYear(String date) {
-    DateTime d;
+  static DateTime? parseYear(String date) {
+    DateTime? d;
     try {
       d = new DateFormat('yyyy').parse(date);
     } catch (e) {
@@ -178,8 +178,8 @@ class Calendar {
     return d;
   }
 
-  static DateTime parseYearMonth(String date) {
-    DateTime d;
+  static DateTime? parseYearMonth(String date) {
+    DateTime? d;
     try {
       d = new DateFormat('yyyy-MM').parse(date);
     } catch (e) {
@@ -191,29 +191,29 @@ class Calendar {
   static DateTime fromDateAndMinutes(DateTime date, int minutes) =>
       new DateTime(date.year, date.month, date.day, 0, minutes).toUtc();
 
-  static String string(DateTime date) {
+  static String string(DateTime? date) {
     if (date == null) return '';
     return new DateFormat('dd/MM/yyyy').format(date);
   }
 
-  static String stringWithTime(DateTime date) {
+  static String stringWithTime(DateTime? date) {
     if (date == null) return '';
     return new DateFormat('dd/MM/yyyy HH:mm').format(date);
   }
 
-  static String stringWithTimeFull(DateTime date) {
+  static String stringWithTimeFull(DateTime? date) {
     if (date == null) return '';
     return new DateFormat('dd/MM/yyyy HH:mm:ss').format(date);
   }
 
   static String getTime(DateTime date) => new DateFormat('HH:mm').format(date);
 
-  static List<DateTime> getDateRange([DateTime d]) {
+  static List<DateTime> getDateRange([DateTime? d]) {
     d ??= new DateTime.now();
     return _getRange(d, d);
   }
 
-  static List<DateTime> getMonthRange([DateTime d]) {
+  static List<DateTime> getMonthRange([DateTime? d]) {
     d ??= new DateTime.now();
     return _getRange(
         new DateTime(d.year, d.month, 1),
@@ -221,44 +221,44 @@ class Calendar {
             d.year, d.month, new DateTime(d.year, d.month + 1, 0).day));
   }
 
-  static List<DateTime> getYearRange([DateTime d]) {
+  static List<DateTime> getYearRange([DateTime? d]) {
     d ??= new DateTime.now();
     return _getRange(new DateTime(d.year, 0, 1), new DateTime(d.year, 11, 31));
   }
 
-  static List<DateTime> getWeeksBackRange([int diff = 1, DateTime d]) {
+  static List<DateTime> getWeeksBackRange([int diff = 1, DateTime? d]) {
     d ??= new DateTime.now();
     return _getRange(d.subtract(new Duration(days: diff * 7)), d);
   }
 
-  static List<DateTime> getMonthsBackRange([int diff = 1, DateTime d]) {
+  static List<DateTime> getMonthsBackRange([int diff = 1, DateTime? d]) {
     d ??= new DateTime.now();
     return _getRange(d.subtract(new Duration(days: diff * 30)), d);
   }
 
-  static List<DateTime> getYearsBackRange([int diff = 1, DateTime d]) {
+  static List<DateTime> getYearsBackRange([int diff = 1, DateTime? d]) {
     d ??= new DateTime.now();
     return _getRange(d.subtract(new Duration(days: diff * 365)), d);
   }
 
-  static List<DateTime> getTodayRange([DateTime d]) {
+  static List<DateTime> getTodayRange([DateTime? d]) {
     d ??= new DateTime.now();
     return _getRange(d, d);
   }
 
-  static List<DateTime> getTomorrowRange([DateTime d]) {
+  static List<DateTime> getTomorrowRange([DateTime? d]) {
     d ??= new DateTime.now();
     final d1 = new DateTime(d.year, d.month, d.day + 1);
     return _getRange(d1, d1);
   }
 
-  static List<DateTime> getYesterdayRange([DateTime d]) {
+  static List<DateTime> getYesterdayRange([DateTime? d]) {
     d ??= new DateTime.now();
     d = d.subtract(const Duration(days: 1));
     return _getRange(d, d);
   }
 
-  static List<DateTime> getThisWeekRange([DateTime n]) {
+  static List<DateTime> getThisWeekRange([DateTime? n]) {
     n ??= new DateTime.now();
     var diff = n.weekday - 1;
     diff = (diff < 0) ? 6 : diff;
@@ -266,7 +266,7 @@ class Calendar {
     return _getRange(d, n);
   }
 
-  static List<DateTime> getLastWeekRange([DateTime d]) {
+  static List<DateTime> getLastWeekRange([DateTime? d]) {
     d ??= new DateTime.now();
     var n = cloneDate(d);
     n = n.subtract(new Duration(days: n.weekday));
@@ -274,13 +274,13 @@ class Calendar {
     return _getRange(d, n);
   }
 
-  static List<DateTime> getThisMonthRange([DateTime n]) {
+  static List<DateTime> getThisMonthRange([DateTime? n]) {
     n ??= new DateTime.now();
     final d = new DateTime(n.year, n.month, 1);
     return _getRange(d, n);
   }
 
-  static List<DateTime> getLastMonthRange([DateTime h]) {
+  static List<DateTime> getLastMonthRange([DateTime? h]) {
     h ??= new DateTime.now();
     var n = new DateTime(h.year, h.month, 1);
     n = n.subtract(const Duration(days: 1));
@@ -288,13 +288,13 @@ class Calendar {
     return _getRange(d, n);
   }
 
-  static List<DateTime> getThisYearRange([DateTime n]) {
+  static List<DateTime> getThisYearRange([DateTime? n]) {
     n ??= new DateTime.now();
     final d = new DateTime(n.year, 1, 1);
     return _getRange(d, n);
   }
 
-  static List<DateTime> getLastYearRange([DateTime h]) {
+  static List<DateTime> getLastYearRange([DateTime? h]) {
     h ??= new DateTime.now();
     final d = new DateTime(h.year - 1, 1, 1);
     final n = new DateTime(h.year - 1, 12, 31);
