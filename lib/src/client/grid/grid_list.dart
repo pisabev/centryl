@@ -214,7 +214,7 @@ class GridList<T> extends GridBase<T> {
   }
 
   void rowRemove(html.TableRowElement row, [bool show = false]) {
-    super.rowRemove(row);
+    super.rowRemove(row, show);
     renderer.rows.remove(row);
     map.forEach((k, gc) => gc
       ..aggregator?.remove(getCell(row, k))
