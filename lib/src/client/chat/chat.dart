@@ -4,18 +4,18 @@ class Chat {
   app.Application ap;
   CLElement container;
   ChatController controller;
-  Container dom;
+  late Container dom;
 
-  RoomListContext roomListContext;
-  RoomContext roomContext;
-  PeerManager peerManager;
+  late RoomListContext roomListContext;
+  late RoomContext roomContext;
+  late PeerManager peerManager;
 
   int unread = 0;
 
-  SpanElement count;
+  late SpanElement count;
 
-  static int me_user_id;
-  static String baseurl;
+  static late int me_user_id;
+  static late String baseurl;
 
   bool _focused = false;
 

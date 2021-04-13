@@ -2,15 +2,14 @@ part of app;
 
 class Menu extends CLElement {
   Application ap;
-  CLElement container;
-  CLElement control;
-  MenuElementRendererBase renderer;
+  late CLElement container;
+  late CLElement control;
+  late MenuElementRendererBase renderer;
 
   List<MenuElement> mainElements = [];
+  List<MenuElement> hidden = [];
 
   bool active = false;
-
-  List<MenuElement> hidden = [];
 
   Menu(this.ap) : super(new DivElement()) {
     addClass('ui-main-menu');
@@ -32,7 +31,7 @@ class Menu extends CLElement {
     }
   }
 
-  void closeMenu([Event e]) {
+  void closeMenu([Event? e]) {
     mainElements.forEach((me) {
       me.forEachChilds(renderer.closeSub, inclCurrent: true);
     });
@@ -66,7 +65,7 @@ class Menu extends CLElement {
     if ((element.action == null && element.children.isEmpty) ||
         (element.scope != null && !ap.client.checkPermission(element.scope))) {
       if (element.parent != null)
-        element.parent.children.remove(element);
+        element.parent!.children.remove(element);
       else
         element.remove();
     }
@@ -78,10 +77,10 @@ class Menu extends CLElement {
       if ((el.scope == null || ap.client.checkPermission(el.scope)) &&
           el.desktop)
         icons.add(new DeskIcon(ap,
-            title: el.title,
-            icon: el.icon,
-            subTitle: el.description,
-            action: el.action));
+            title: el.title ?? '',
+            icon: el.icon ?? '',
+            subTitle: el.description ?? '',
+            action: el.action ?? (ap) {}));
     });
     return icons;
   }
@@ -90,30 +89,30 @@ class Menu extends CLElement {
 class MenuElement extends CLElement {
   static int _key = 1;
 
-  String title, icon, key, scope, description;
+  late String? key;
+  String? title, icon, scope, description;
   bool desktop = false;
-  Function(Application) action;
+  Function(Application)? action;
 
   List<MenuElement> children = [];
   static final Map<String, MenuElement> _index = {};
   static int _max_level = 0;
 
-  Menu menu;
+  late Menu menu;
 
-  MenuElement parent;
+  MenuElement? parent;
 
-  CLElement domInner;
+  late CLElement domInner;
 
-  CLElement cont;
-
-  CLElement tip;
-  Timer timer;
+  CLElement? cont;
+  CLElement? tip;
+  Timer? timer;
 
   bool disable = false;
 
   int level = 0;
 
-  num height;
+  num height = 0;
 
   MenuElement() : super(new Element.li()) {
     domInner = new CLElement(new AnchorElement())..appendTo(this);
@@ -121,7 +120,7 @@ class MenuElement extends CLElement {
 
   void _init(Menu m) {
     key ??= '${_key++}__';
-    _index[key] = this;
+    _index[key!] = this;
     menu = m;
     createDom();
     menu.renderer.init(this);
@@ -133,13 +132,13 @@ class MenuElement extends CLElement {
     final spanTitle = new SpanElement()..text = title;
     domInner.append(spanTitle);
     if (icon != null) {
-      final ic = new Icon(icon);
+      final ic = new Icon(icon!);
       domInner.dom.insertBefore(ic.dom, spanTitle);
     }
   }
 
   void setLevel() {
-    if (parent != null) level = parent.level + 1;
+    if (parent != null) level = parent!.level + 1;
     _max_level = math.max(_max_level, level);
     children.forEach((ch) => ch.setLevel());
   }
@@ -150,7 +149,7 @@ class MenuElement extends CLElement {
     return child;
   }
 
-  static MenuElement findElement(String ref) {
+  static MenuElement? findElement(String ref) {
     if (_index[ref] != null) return _index[ref];
     return null;
   }
@@ -199,15 +198,16 @@ class MenuElementRenderer extends MenuElementRendererBase {
 
   @override
   void init(MenuElement element) {
-    element.domInner.addAction((e) {
+    element.domInner.addAction<Event>((e) {
       if (ap.disabledNavigation) return;
-      e.stopPropagation();
-      e.preventDefault();
+      e
+        ..stopPropagation()
+        ..preventDefault();
       if (element.disable) return;
       if (element.action is Function) {
         if (element.menu.ap.settings.menuHideOnAction)
           element.menu.ap.menuHide();
-        element.action(ap);
+        element.action!(ap);
         element.menu.closeMenu();
         element.menu.active = false;
       } else {
@@ -221,7 +221,7 @@ class MenuElementRenderer extends MenuElementRendererBase {
           }
         }
       }
-      StreamSubscription document_click;
+      late StreamSubscription document_click;
       document_click = document.onClick.listen((e) {
         element.menu.active = false;
         element.menu.closeMenu();
@@ -236,22 +236,22 @@ class MenuElementRenderer extends MenuElementRendererBase {
           element
             ..tip = (new CLElement(new DivElement())
               ..addClass('ui-data-tip right-tip')
-              ..setAttribute('data-tips', element.title)
+              ..setAttribute('data-tips', element.title ?? '')
               ..setStyle({
                 'top': '${rect.top + 13}px',
                 'left': '${rect.left + rect.width}px'
               })
               ..appendTo(document.body))
             ..timer = new Timer(const Duration(milliseconds: 100),
-                () => element.tip.addClass('show'));
+                () => element.tip!.addClass('show'));
         }
       }, 'mouseover');
     void _remove(e) {
       if (!element.menu.active &&
           element.timer != null &&
           element.tip != null) {
-        element.timer.cancel();
-        element.tip.remove();
+        element.timer!.cancel();
+        element.tip!.remove();
       }
     }
 
@@ -268,7 +268,7 @@ class MenuElementRenderer extends MenuElementRendererBase {
     if (element.cont == null) {
       element.cont = new CLElement(new Element.ul())..setClass('ui-sub-menu');
       element.children.forEach((child) {
-        element.cont.append(child);
+        element.cont!.append(child);
         if (child.children.isNotEmpty)
           child.domInner.append(new SpanElement()
             ..classes.add('sub')
@@ -280,44 +280,44 @@ class MenuElementRenderer extends MenuElementRendererBase {
       _appendSub(element);
     }
     _fixHeight(element);
-    element.cont.addClass('show');
+    element.cont?.addClass('show');
   }
 
   @override
   void closeSub(MenuElement element) {
     if (element.cont != null) {
-      element.cont.removeClass('show');
-      element.cont.remove();
+      element.cont!.removeClass('show');
+      element.cont!.remove();
     }
     element.removeClass('selected');
   }
 
   void _appendSub(MenuElement element) {
     element.menu.ap.page.dom.insertBefore(
-        element.cont.dom,
+        element.cont!.dom,
         (element.parent != null)
-            ? element.parent.cont.dom
+            ? element.parent!.cont!.dom
             : element.menu.ap.page.dom.lastChild);
   }
 
   void _posCont(MenuElement element) {
     final pos = element.getRectangle();
-    final height =
-        element.children.fold(0, (height, child) => height + child.getHeight());
+    final height = element.children
+        .fold(0, (height, child) => height ?? 0 + child.getHeight());
     final left = pos.left + pos.width;
-    element.cont.setStyle(
+    element.cont!.setStyle(
         {'top': '${pos.top}px', 'left': '${left}px', 'height': '${height}px'});
   }
 
   void _fixHeight(MenuElement element) {
     final pos = element.getRectangle();
-    final reach = pos.top + element.cont.getHeight();
+    final reach = pos.top + element.cont!.getHeight();
     final diff = reach -
         new CLElement(element.menu.ap.page).getHeight() +
-        document.body.scrollTop;
+        document.body!.scrollTop;
     var top = pos.top;
     if (diff > 0) top -= diff;
-    element.cont.setStyle({'top': '${top + document.body.scrollTop}px'});
+    element.cont!.setStyle({'top': '${top + document.body!.scrollTop}px'});
   }
 }
 
@@ -326,14 +326,15 @@ class MenuElementRenderer2 extends MenuElementRendererBase {
 
   @override
   void init(MenuElement element) {
-    element.domInner.addAction((e) {
-      e.stopPropagation();
-      e.preventDefault();
+    element.domInner.addAction<Event>((e) {
+      e
+        ..stopPropagation()
+        ..preventDefault();
       if (element.disable) return;
       if (element.action is Function) {
         if (element.menu.ap.settings.menuHideOnAction)
           element.menu.ap.menuHide();
-        element.action(ap);
+        element.action!(ap);
       } else {
         element.menu.active = true;
         showSub(element);
@@ -345,22 +346,22 @@ class MenuElementRenderer2 extends MenuElementRendererBase {
         element
           ..tip = (new CLElement(new DivElement())
             ..addClass('ui-data-tip right-tip')
-            ..setAttribute('data-tips', element.title)
+            ..setAttribute('data-tips', element.title ?? '')
             ..setStyle({
               'top': '${rect.top + 13}px',
               'left': '${rect.left + rect.width}px'
             })
             ..appendTo(document.body))
           ..timer = new Timer(const Duration(milliseconds: 100),
-              () => element.tip.addClass('show'));
+              () => element.tip!.addClass('show'));
       }
     }, 'mouseover');
     void _remove(e) {
       if (!element.menu.active &&
           element.timer != null &&
           element.tip != null) {
-        element.timer.cancel();
-        element.tip.remove();
+        element.timer!.cancel();
+        element.tip!.remove();
       }
     }
 
@@ -379,7 +380,7 @@ class MenuElementRenderer2 extends MenuElementRendererBase {
     element.forEachParents((e) => e.addClass('selected'), inclCurrent: true);
     if (element.cont == null) {
       element.cont = new CLElement(new Element.ul())..setClass('ui-sub-inner');
-      element.children.forEach((child) => element.cont.append(child));
+      element.children.forEach((child) => element.cont!.append(child));
       element
         ..append(element.cont)
         ..height = element.children
@@ -388,8 +389,8 @@ class MenuElementRenderer2 extends MenuElementRendererBase {
     //await new Future.delayed(new Duration(milliseconds:400));
     var h = 0;
     element.forEachParents((e) {
-      e.cont.setStyle({
-        'height': '${(h == 0 ? 0 : e.cont.getHeight()) + element.height}px'
+      e.cont!.setStyle({
+        'height': '${(h == 0 ? 0 : e.cont!.getHeight()) + element.height}px'
       });
       h++;
     }, inclCurrent: true);
@@ -400,9 +401,9 @@ class MenuElementRenderer2 extends MenuElementRendererBase {
       if (el.level == level && el.existClass('selected')) {
         el.forEachChilds(closeSub, inclCurrent: true);
         if (el.parent != null) {
-          var h = 0;
+          num h = 0;
           el.forEachParents((e) {
-            e.cont.setStyle({'height': '${e.height + h}px'});
+            e.cont!.setStyle({'height': '${e.height + h}px'});
             if (e.existClass('selected')) h += e.height;
           });
         }
@@ -424,7 +425,11 @@ class DeskIcon extends Container {
   final String subTitle;
   void Function(Application) action;
 
-  DeskIcon(this.ap, {this.icon, this.title, this.subTitle, this.action})
+  DeskIcon(this.ap,
+      {required this.icon,
+      required this.title,
+      required this.subTitle,
+      required this.action})
       : super(new DivElement()) {
     createDom();
     addAction((e) => action(ap));

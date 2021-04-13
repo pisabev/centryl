@@ -124,10 +124,10 @@ class Application<C extends Client> {
       winmanager.initWinLayouts();
   }
 
-  void storagePut(String key, Map value) =>
+  void storagePut(String key, Map<String, dynamic>? value) =>
       window.localStorage[key] = json.encode(value);
 
-  Map? storageFetch(String key) {
+  Map<String, dynamic>? storageFetch(String key) {
     try {
       return json.decode(window.localStorage[key]!);
     } catch (e) {}

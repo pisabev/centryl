@@ -166,6 +166,7 @@ class IconContainer extends Container {
 }
 
 class GadgetContainer extends Container {
+  late Application ap;
   List<GadgetBase> gadgets = [];
 
   GadgetContainer() : super();
@@ -181,7 +182,7 @@ class GadgetContainer extends Container {
   }
 
   void load() => gadgets.forEach((g) {
-        if (g.scope == null)
+        if (g.scope == null || ap.client.checkPermission(g.scope))
           g.load();
         else
           g.remove();

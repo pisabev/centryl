@@ -8,16 +8,16 @@ class NotificationMessage {
 
   static final Map<String, Function(NotificationMessage)> _decorator = {};
 
-  int id;
+  int? id;
   bool persist = true;
-  String event;
-  String text;
-  String icon;
-  DateTime date;
-  bool read;
-  String priority;
-  Function action;
-  Function (forms.Text) textFunction;
+  String? event;
+  String? text;
+  String? icon;
+  DateTime? date;
+  late bool read;
+  late String priority;
+  Function? action;
+  Function(forms.Text)? textFunction;
 
   NotificationMessage([this.priority = info]);
 
@@ -27,10 +27,10 @@ class NotificationMessage {
       ..text = n['text']
       ..id = n['id']
       ..icon = n['icon']
-      ..read = n['read']
+      ..read = n['read'] ?? false
       ..priority = n['priority'] ?? info
-      ..date = utils.Calendar.parseWithTimeFull(n['date']).toLocal();
-    if (_decorator[not.event] != null) _decorator[not.event](not);
+      ..date = utils.Calendar.parseWithTimeFull(n['date'])?.toLocal();
+    if (_decorator[not.event] != null) _decorator[not.event]!(not);
     return not;
   }
 

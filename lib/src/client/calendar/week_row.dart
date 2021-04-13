@@ -4,7 +4,7 @@ class WeekRow extends MonthRow {
   WeekRow(dates, calendar) : super(dates, calendar);
 
   List<Event> _intersectEvents(List<Event> events) {
-    if (events.isEmpty) return null;
+    if (events.isEmpty) return [];
     final inter = <Event>[];
     final range_first = dates.first;
     final range_last = dates.last;
@@ -24,10 +24,10 @@ class WeekRow extends MonthRow {
 
   void createDom() {
     addClass('cal-row week');
-    tableMain = new CLElement(new TableElement())
+    tableMain = new CLElement(new html.TableElement())
       ..appendTo(this)
       ..addClass('cal-back week');
-    tableGrid = new CLElement(new TableElement())
+    tableGrid = new CLElement(new html.TableElement())
       ..appendTo(this)
       ..addClass('cal-grid week');
     tbodyMain = new CLElement(tableMain.dom.createTBody())..appendTo(tableMain);
@@ -40,7 +40,7 @@ class WeekRow extends MonthRow {
       if (dates[i].compareTo(calendar.now) == 0) {
         cell
           ..addClass('now')
-          ..append(new SpanElement());
+          ..append(new html.SpanElement());
       }
       if (calendar.filters.isNotEmpty) cell.addClass('filter');
       cells.add(cell);

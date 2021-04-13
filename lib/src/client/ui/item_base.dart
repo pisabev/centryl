@@ -13,11 +13,11 @@ abstract class ItemBase<C extends cl_app.Client> {
 
   dynamic _id;
 
-  UrlPattern contr_get, contr_save, contr_del;
+  UrlPattern? contr_get, contr_save, contr_del;
 
   Map data_send = {};
-  dynamic data_response;
-  cl_util.Observer observer;
+  dynamic? data_response;
+  late cl_util.Observer observer;
 
   ItemBase(this.ap, [dynamic id]) {
     setId(id);
@@ -28,24 +28,24 @@ abstract class ItemBase<C extends cl_app.Client> {
 
   dynamic getId() => _id;
 
-  Future get([cl.CLElementBase loading]) async {
-    if (_id != null) {
+  Future get([cl.CLElementBase? loading]) async {
+    if (_id != null && contr_get != null) {
       await ap.loadExecute(loading, () async {
         if (await observer.execHooksAsync(get_before)) {
           data_response =
-              await ap.serverCall(contr_get.reverse([]), {'id': _id});
+              await ap.serverCall(contr_get!.reverse([]), {'id': _id});
           await observer.execHooksAsync(get_after);
         }
       });
     }
   }
 
-  Future del([cl.CLElementBase loading]) async {
-    if (_id != null) {
+  Future del([cl.CLElementBase? loading]) async {
+    if (_id != null && contr_del != null) {
       await ap.loadExecute(loading, () async {
         if (await observer.execHooksAsync(del_before)) {
           data_response =
-              await ap.serverCall(contr_del.reverse([]), {'id': _id});
+              await ap.serverCall(contr_del!.reverse([]), {'id': _id});
           await observer.execHooksAsync(change_after);
           await observer.execHooksAsync(del_after);
         }
@@ -53,10 +53,11 @@ abstract class ItemBase<C extends cl_app.Client> {
     }
   }
 
-  Future save([cl.CLElementBase loading]) async {
+  Future save([cl.CLElementBase? loading]) async {
+    if (contr_save == null) return;
     await ap.loadExecute(loading, () async {
       if (await observer.execHooksAsync(save_before)) {
-        data_response = await ap.serverCall(contr_save.reverse([]), data_send);
+        data_response = await ap.serverCall(contr_save!.reverse([]), data_send);
         await observer.execHooksAsync(change_after);
         await observer.execHooksAsync(save_after);
       }

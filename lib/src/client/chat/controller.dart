@@ -37,26 +37,26 @@ class ChatController {
 
   Stream<Room> get onCallHangup => notifierCallHangup.stream;
 
-  FutureOr<List<Message>> Function(Room) loadRoomMessages;
-  FutureOr<List<Message>> Function(Room) loadRoomMessagesNew;
-  FutureOr<int> Function() loadUnread;
-  FutureOr<List<Room>> Function() loadRooms;
-  FutureOr<List<Room>> Function(dto.ChatSearchDTO) loadUsers;
-  FutureOr<bool> Function(Message) persistMessage;
-  FutureOr<bool> Function(Message) markMessageAsSeen;
-  FutureOr<bool> Function(Message) messageUpdate;
-  FutureOr<bool> Function(Room) messageType;
-  FutureOr<Room> Function(Room) createRoom;
-  FutureOr<bool> Function(Room) addRoomMember;
-  FutureOr<bool> Function(Room) deleteRoom;
-  FutureOr Function(Room) showRoom;
-  FutureOr Function(Room) closeRoom;
-  FutureOr Function() closeChat;
+  FutureOr<List<Message>> Function(Room)? loadRoomMessages;
+  FutureOr<List<Message>> Function(Room)? loadRoomMessagesNew;
+  FutureOr<int> Function()? loadUnread;
+  FutureOr<List<Room>> Function()? loadRooms;
+  FutureOr<List<Room>> Function(dto.ChatSearchDTO)? loadUsers;
+  FutureOr<bool> Function(Message)? persistMessage;
+  FutureOr<bool> Function(Message)? markMessageAsSeen;
+  FutureOr<bool> Function(Message)? messageUpdate;
+  FutureOr<bool> Function(Room)? messageType;
+  FutureOr<Room> Function(Room)? createRoom;
+  FutureOr<bool> Function(Room)? addRoomMember;
+  FutureOr<bool> Function(Room)? deleteRoom;
+  FutureOr Function(Room)? showRoom;
+  FutureOr Function(Room)? closeRoom;
+  FutureOr Function()? closeChat;
 
-  FutureOr Function(dto.OfferRequest) sendOffer;
-  FutureOr Function(dto.IceCandidate) sendIce;
-  FutureOr Function(Room) callStart;
-  FutureOr Function(Room) callAnswer;
-  FutureOr Function(Room) callHangup;
-  FutureOr Function(Room) _doCall;
+  FutureOr Function(dto.OfferRequest)? sendOffer;
+  FutureOr Function(dto.IceCandidate)? sendIce;
+  FutureOr Function(Room)? callStart;
+  FutureOr Function(Room)? callAnswer;
+  FutureOr Function(Room)? callHangup;
+  FutureOr Function(Room)? _doCall;
 }

@@ -228,8 +228,8 @@ class GridList<T> extends GridBase<T> {
     final m = {};
     getRowMap(row).forEach((k, dynamic dc) {
       if (dc is RowDataCell) {
-        if (map.containsKey(k) && map[k] != null && map[k].send)
-          m[k] = dc?.getValue();
+        if (map.containsKey(k) && map[k] != null && map[k]!.send)
+          m[k] = dc.getValue();
       } else
         m[k] = dc;
     });

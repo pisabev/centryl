@@ -96,11 +96,11 @@ class WinManager<C extends Client> {
 
   WinManager(this.app) : registry = new Registry();
 
-  Item<C> run(String key, [List? addParams]) {
+  Item<C>? run(String key, [List? addParams]) {
     final obj = registry.get(key);
     if (obj != null) {
-      if (obj.wapi != null) refreshWinTabs(obj.wapi.win);
-      return obj;
+      if (obj.wapi != null) refreshWinTabs(obj.wapi!.win);
+      return obj as Item<C>;
     }
 
     final r = registry.getRoute(key);
@@ -130,7 +130,7 @@ class WinManager<C extends Client> {
         return true;
       })
       ..addHook(Win.hookMinimize, (_) {
-        app.tabs.getTab(win).inactivate();
+        app.tabs.getTab(win)?.inactivate();
         checkBackground();
         return true;
       })
@@ -152,7 +152,7 @@ class WinManager<C extends Client> {
         if (win.type != WinType.bound) {
           app.tabs.setTab(win, tab);
           win.win.addAction((e) => refreshWinTabs(win), 'mousedown');
-          tab.addAction((e) {
+          tab.addAction<Event>((e) {
             e.preventDefault();
             if (app.disabledNavigation) return;
             if (tab.isActive) {
@@ -194,7 +194,7 @@ class WinManager<C extends Client> {
   void checkBackground() {
     for (final w in _cacheWins) {
       if (w.visible) {
-        app.tabs.getTab(w).activate();
+        app.tabs.getTab(w)?.activate();
         w.activate();
         break;
       }
@@ -206,18 +206,18 @@ class WinManager<C extends Client> {
     if (!has) app.gadgetsContainer.setStyle({'opacity': '1'});
   }
 
-  Win loadBoundWin({required String title, String icon}) =>
+  Win loadBoundWin({required String title, String? icon}) =>
       loadWindow(title: title, icon: icon, type: WinType.bound);
 
   void setItem(Win w, _WinC item) => _map_items[w.hashCode.toString()] = item;
 
-  _WinC getItem(Win w) => _map_items[w.hashCode.toString()];
+  _WinC? getItem(Win w) => _map_items[w.hashCode.toString()];
 
-  void refreshWinTabs(Win w) {
+  void refreshWinTabs(Win? w) {
     final win = indexResolver(w);
     if (win != null) {
       app.gadgetsContainer.setStyle({'opacity': '0.2'});
-      app.desktop.scroll.enabled = false;
+      app.desktop.scroll?.enabled = false;
       if (win.type != WinType.bound) {
         _cacheWins.forEach((w) => app.tabs.getTab(w)?.inactivate());
         app.tabs.getTab(win)?.activate();
@@ -230,7 +230,7 @@ class WinManager<C extends Client> {
       win.observer.execHooks(Win.hookFocus);
     } else {
       app.gadgetsContainer.setStyle({'opacity': '1'});
-      app.desktop.scroll.enabled = true;
+      app.desktop.scroll?.enabled = true;
     }
   }
 
@@ -256,7 +256,7 @@ class WinManager<C extends Client> {
     for (var i = 0; i < _cacheWins.length; i++) _cacheWins[i].close();
   }
 
-  Win indexResolver(Win win) {
+  Win? indexResolver(Win? win) {
     if (win != null) win.setZIndex(zIndexWin + _cacheWins.length + 1);
 
     final sorter = [];
@@ -267,10 +267,9 @@ class WinManager<C extends Client> {
     });
     sorter.sort();
     int start = zIndexWin;
-    sorter.forEach((v) => map[v].setZIndex(++start));
+    sorter.forEach((v) => map[v]?.setZIndex(++start));
 
-    final lastB = _cacheWins.lastWhere((w) => w.type == WinType.bound,
-        orElse: () => null);
+    final lastB = _cacheWins.lastWhereOrNull((w) => w.type == WinType.bound);
     if (lastB != null)
       app.disableApp(zIndex: lastB._zIndex - 1);
     else

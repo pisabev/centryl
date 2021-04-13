@@ -70,7 +70,7 @@ class LocalView {
     if (media.videoId != null) selectVideo.setValue(media.videoId);
     if (media.audioId != null) selectAudio.setValue(media.audioId);
     final previewLocal = new CLElement<VideoElement>(new VideoElement());
-    void setPreviewStream(MediaStream str) {
+    void setPreviewStream(MediaStream? str) {
       previewLocal.dom
         ..autoplay = true
         ..muted = true
@@ -162,7 +162,7 @@ class LocalView {
     return stream.getAudioTracks().cast<MediaStreamTrack>();
   }
 
-  void _setStream(MediaStream stream) {
+  void _setStream(MediaStream? stream) {
     closeStream();
     _localStream = stream;
     _localStreamContr.add(_localStream);

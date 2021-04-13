@@ -1,40 +1,40 @@
 part of calendar;
 
 abstract class EventCalendar<E extends Event> {
-  Container dom, nav, body;
-  CLElement<TableElement> head;
-  CLElement domMonth;
+  late Container dom, nav, body;
+  CLElement<html.TableElement>? head;
+  late CLElement domMonth;
 
-  utils.CLscroll _scroll;
+  utils.CLscroll? _scroll;
 
   List<E> events = [];
 
   List<Filter> filters = [];
 
-  DateTime now, cur;
+  late DateTime now, cur;
 
-  action.Button contrLeft, contrRight;
+  late action.Button contrLeft, contrRight;
 
-  CalendarHelper calendarHelper;
+  late CalendarHelper calendarHelper;
 
-  action.ButtonGroup button;
+  late action.ButtonGroup button;
 
-  MonthContainer montCont;
-  DayContainer dayCont;
+  late MonthContainer montCont;
+  DayContainer? dayCont;
 
-  DateTime curRangeStart, _curRangeEnd;
+  late DateTime curRangeStart, _curRangeEnd;
 
   bool _weeklyMode = false;
   bool noMonth = false;
 
-  num hourRowHeight;
-  num hourSectionHeight;
-  num _pixelPerMinute;
+  num hourRowHeight = 0;
+  late num hourSectionHeight;
+  late num _pixelPerMinute;
   int hourGridMinutes = 30;
 
-  num _zoom;
+  num? _zoom;
 
-  Function _currentView;
+  late Function _currentView;
 
   EventCalendar(CLElement container) {
     dom = new Container()
@@ -56,8 +56,8 @@ abstract class EventCalendar<E extends Event> {
       ..addAction((e) {
         final scr = new utils.UISlider(calendarHelper, helper, appendDom: true)
           ..show();
-        CLElement doc;
-        doc = new CLElement(document.body)
+        late CLElement doc;
+        doc = new CLElement(html.document.body)
           ..addAction((e) {
             scr.hide();
             doc.removeAction('mouseup.select');
@@ -69,7 +69,7 @@ abstract class EventCalendar<E extends Event> {
       ..setTitle(intl.Today())
       ..addAction((e) {
         cur = new DateTime.now();
-        button.current.dom.click();
+        button.current?.dom.click();
         calendarHelper
           ..cur = cur
           ..set();
@@ -96,7 +96,7 @@ abstract class EventCalendar<E extends Event> {
         ..addAction((e) => setViewDay()))
       ..setCurrent(1);
 
-    domMonth = new CLElement(new ParagraphElement())..appendTo(nav);
+    domMonth = new CLElement(new html.ParagraphElement())..appendTo(nav);
 
     button.appendTo(nav);
   }
@@ -139,14 +139,14 @@ abstract class EventCalendar<E extends Event> {
   Future loadEvents(DateTime start, DateTime end);
 
   void renderEvents() {
-    montCont?.rows?.forEach((r) {
+    montCont?.rows.forEach((r) {
       r
         ..setFilters(filters)
         ..setEvents(events)
         ..render();
     });
     if (dayCont != null) {
-      dayCont.cols.forEach((dc) {
+      dayCont!.cols.forEach((dc) {
         dc
           ..setFilters(filters)
           ..setEvents(events)
@@ -157,7 +157,7 @@ abstract class EventCalendar<E extends Event> {
 
   void scale(num zoom) {
     _zoom = zoom;
-    hourRowHeight = null;
+    hourRowHeight = 0;
     _currentView();
   }
 
@@ -252,10 +252,10 @@ abstract class EventCalendar<E extends Event> {
       if (dates.any((date) => date.month == cur.month)) month_rows.add(dates);
     });
 
-    final height =
-        ((new CLElement(body.dom).getHeightComputed() - head.getHeight()) /
-                month_rows.length)
-            .ceil();
+    final height = ((new CLElement(body.dom).getHeightComputed() -
+                (head?.getHeight() ?? 0)) /
+            month_rows.length)
+        .ceil();
     month_rows.forEach((row) {
       final el = new MonthRow(row, this)
         ..appendTo(body)
@@ -278,11 +278,12 @@ abstract class EventCalendar<E extends Event> {
     _setTitle(start_date, end_date);
     _prepareViewMonth();
 
-    final rows = [], cells = [];
+    final rows = <MonthRow>[], cells = <MonthCell>[];
     cur = end_date;
     final month_rows = _weekSlices(start_date, end_date);
     final height =
-        ((body.dom.offsetHeight - head.getHeight()) / month_rows.length).ceil();
+        ((body.dom.offsetHeight - (head?.getHeight() ?? 0)) / month_rows.length)
+            .ceil();
     month_rows.forEach((row) {
       final el = new MonthRow(row, this)
         ..appendTo(body)
@@ -297,7 +298,7 @@ abstract class EventCalendar<E extends Event> {
     dayCont = null;
   }
 
-  void _setViewDays(DateTime start_date, [DateTime end_date]) {
+  void _setViewDays(DateTime start_date, [DateTime? end_date]) {
     end_date ??= start_date;
 
     curRangeStart = start_date;
@@ -317,38 +318,40 @@ abstract class EventCalendar<E extends Event> {
       dates.add(next_date);
       next_date = next_date.add(const Duration(days: 1));
     }
-    var scrollTop = _scroll?.containerEl?.scrollTop;
+    var scrollTop = _scroll?.containerEl.scrollTop;
     body.removeChilds();
 
     if (!noMonth) {
-      head = new CLElement(new TableElement())
+      head = new CLElement(new html.TableElement())
         ..setClass('week-head')
         ..appendTo(body);
     }
 
-    final weekDom = new CLElement(new DivElement())
+    final weekDom = new CLElement(new html.DivElement())
       ..setClass('week-cont')
       ..appendTo(body);
-    final table_scroll = new CLElement<TableElement>(new TableElement())
-      ..setClass('week-scroll')
-      ..appendTo(weekDom);
+    final table_scroll =
+        new CLElement<html.TableElement>(new html.TableElement())
+          ..setClass('week-scroll')
+          ..appendTo(weekDom);
 
-    CLElement<TableSectionElement> tbody_top;
+    late CLElement<html.TableSectionElement> tbody_top;
     if (head != null) {
-      new CLElement(head.dom.createTHead()).appendTo(head);
-      tbody_top = new CLElement<TableSectionElement>(head.dom.createTBody())
-        ..appendTo(head);
+      new CLElement(head!.dom.createTHead()).appendTo(head);
+      tbody_top =
+          new CLElement<html.TableSectionElement>(head!.dom.createTBody())
+            ..appendTo(head);
     }
 
     new CLElement(table_scroll.dom.createTHead()).appendTo(table_scroll);
     final tbody =
-        new CLElement<TableSectionElement>(table_scroll.dom.createTBody())
+        new CLElement<html.TableSectionElement>(table_scroll.dom.createTBody())
           ..appendTo(table_scroll);
 
-    TableRowElement row;
+    html.TableRowElement? row;
     if (!noMonth) {
       row = tbody_top.dom.insertRow(-1);
-      final first = (new Element.th() as TableCellElement)
+      final first = (new html.Element.th() as html.TableCellElement)
         ..className = 'first'
         ..rowSpan = 2;
       row.append(first);
@@ -357,28 +360,29 @@ abstract class EventCalendar<E extends Event> {
     final row_scroll_first = tbody.dom.insertRow(-1);
     final row_scroll = tbody.dom.insertRow(-1);
 
-    final first_scroll = new TableCellElement()..className = 'first_scroll';
-    final first_scroll2 = new TableCellElement()
+    final first_scroll = new html.TableCellElement()
+      ..className = 'first_scroll';
+    final first_scroll2 = new html.TableCellElement()
       ..className = 'first_scroll2'
       ..colSpan = dates.length;
 
     row_scroll_first..append(first_scroll)..append(first_scroll2);
 
-    final hour = new Element.td()..className = 'first';
-    final dayDom = new CLElement(new DivElement())..setClass('day');
+    final hour = new html.Element.td()..className = 'first';
+    final dayDom = new CLElement(new html.DivElement())..setClass('day');
     row_scroll.append(hour);
     first_scroll2.append(dayDom.dom);
 
     final hour_rows = <HourRow>[];
     for (var i = 0; i < 24; i++) {
-      final t = new CLElement(new DivElement())
+      final t = new CLElement(new html.DivElement())
         ..setClass('hour')
         ..dom.text = '$i:00';
       hour.append(t.dom);
 
-      if (hourRowHeight == null || hourRowHeight == 0) {
+      if (hourRowHeight == 0) {
         hourRowHeight = t.getHeightComputed();
-        if (_zoom != null) hourRowHeight *= _zoom;
+        if (_zoom != null) hourRowHeight *= _zoom!;
       }
 
       if (_zoom != null) t.setHeight(new Dimension.px(hourRowHeight));
@@ -395,16 +399,17 @@ abstract class EventCalendar<E extends Event> {
     _pixelPerMinute = 60 / hourRowHeight;
 
     if (!_weeklyMode && !noMonth) {
-      final mark = new CLElement(new DivElement())..setClass('hour-mark');
+      final mark = new CLElement(new html.DivElement())..setClass('hour-mark');
       hour.append(mark.dom);
       mark.setStyle({
         'top': '${timeToPixels(new DateTime.now()) - mark.getHeight() / 2}px'
       });
 
-      final row_top_events = head.dom.insertRow(-1);
-      final cell_top_events = new TableCellElement()..colSpan = dates.length;
+      final row_top_events = head!.dom.insertRow(-1);
+      final cell_top_events = new html.TableCellElement()
+        ..colSpan = dates.length;
       row_top_events.append(cell_top_events);
-      new CLElement(new DivElement())
+      new CLElement(new html.DivElement())
         ..appendTo(body)
         ..setClass('closing');
 
@@ -421,10 +426,10 @@ abstract class EventCalendar<E extends Event> {
       ..cols = []
       ..setDragable(dayDom);
     for (var day = 0; day < dates.length; day++) {
-      final cell = new Element.th();
+      final cell = new html.Element.th();
       row?.append(cell);
       final dc = new DayCol(dates[day], this);
-      dayCont.cols.add(dc..appendTo(row_scroll));
+      dayCont?.cols.add(dc..appendTo(row_scroll));
       if (!_weeklyMode)
         cell.text = '${utils.Calendar.getDayStringShort(dates[day].weekday)}'
             ' ${dates[day].month}/${dates[day].day}';
@@ -435,23 +440,24 @@ abstract class EventCalendar<E extends Event> {
     }
 
     _scroll = new utils.CLscroll(weekDom.dom);
-    if (dayCont.cols.length == 1 && dayCont.cols.first.existClass('now'))
+    if (dayCont?.cols.length == 1 && dayCont!.cols.first.existClass('now'))
       scrollTop = timeToPixels(new DateTime.now());
-    if (scrollTop != null) _scroll.containerEl.scrollTop = scrollTop;
+    if (scrollTop != null) _scroll?.containerEl.scrollTop = scrollTop;
   }
 
   void _prepareViewMonth() {
     body.removeChilds();
-    head = new CLElement(new TableElement())
+    head = new CLElement(new html.TableElement())
       ..setClass('cal-head')
       ..appendTo(body);
-    final thead = new CLElement<TableSectionElement>(head.dom.createTHead())
-      ..appendTo(head);
-    new CLElement(head.dom.createTBody()).appendTo(head);
+    final thead =
+        new CLElement<html.TableSectionElement>(head!.dom.createTHead())
+          ..appendTo(head);
+    new CLElement(head!.dom.createTBody()).appendTo(head);
 
     final row = thead.dom.insertRow(-1);
     for (var day = 0; day < 7; day++) {
-      final cell = new Element.th();
+      final cell = new html.Element.th();
       row.append(cell);
       cell
         ..text = utils.Calendar.getDayStringShortByNum(day)
@@ -461,7 +467,7 @@ abstract class EventCalendar<E extends Event> {
     montCont = new MonthContainer(body, this);
   }
 
-  List<List<DateTime>> _weekSlices(DateTime start, [DateTime end]) {
+  List<List<DateTime>> _weekSlices(DateTime start, [DateTime? end]) {
     DateTime _firstDate(DateTime date) => new DateTime(date.year, date.month,
         date.day - (date.weekday - utils.Calendar.weekDayFirst()));
 
@@ -485,37 +491,35 @@ abstract class EventCalendar<E extends Event> {
 
   void _setContr(DateTime start, DateTime end, callback) {
     final step = utils.Calendar.UTCDifference(start, end).inDays.abs() + 1;
-    if (contrLeft != null)
-      contrLeft
-        ..removeActionsAll()
-        ..addAction((e) async {
-          start = new DateTime(start.year, start.month, start.day - step);
-          end = new DateTime(end.year, end.month, end.day - step);
-          callback(start, end);
-          curRangeStart = start;
-          curRangeEnd = end;
-          await loadEvents(curRangeStart, curRangeEnd);
-          calendarHelper.setRange(end, start, end);
-          renderEvents();
-          cur = end;
-        }, 'click');
-    if (contrRight != null)
-      contrRight
-        ..removeActionsAll()
-        ..addAction((e) async {
-          start = new DateTime(start.year, start.month, start.day + step);
-          end = new DateTime(end.year, end.month, end.day + step);
-          callback(start, end);
-          curRangeStart = start;
-          curRangeEnd = end;
-          await loadEvents(curRangeStart, curRangeEnd);
-          calendarHelper.setRange(end, start, end);
-          renderEvents();
-          cur = end;
-        }, 'click');
+    contrLeft
+      ..removeActionsAll()
+      ..addAction((e) async {
+        start = new DateTime(start.year, start.month, start.day - step);
+        end = new DateTime(end.year, end.month, end.day - step);
+        callback(start, end);
+        curRangeStart = start;
+        curRangeEnd = end;
+        await loadEvents(curRangeStart, curRangeEnd);
+        calendarHelper.setRange(end, start, end);
+        renderEvents();
+        cur = end;
+      }, 'click');
+    contrRight
+      ..removeActionsAll()
+      ..addAction((e) async {
+        start = new DateTime(start.year, start.month, start.day + step);
+        end = new DateTime(end.year, end.month, end.day + step);
+        callback(start, end);
+        curRangeStart = start;
+        curRangeEnd = end;
+        await loadEvents(curRangeStart, curRangeEnd);
+        calendarHelper.setRange(end, start, end);
+        renderEvents();
+        cur = end;
+      }, 'click');
   }
 
-  void _setTitle(DateTime start, [DateTime end]) {
+  void _setTitle(DateTime start, [DateTime? end]) {
     if (end == null) {
       domMonth.setHtml(
           '${utils.Calendar.getMonthString(start.month)} ${start.year}');
@@ -564,13 +568,11 @@ abstract class EventCalendar<E extends Event> {
       date.millisecond,
       date.microsecond);
 
-  void changed() {
-    calendarHelper?.set();
-  }
+  void changed() => calendarHelper.set();
 
   Future refresh() async {
-    montCont?.rows?.forEach((r) => r.clean());
-    if (dayCont != null) dayCont.cols.forEach((d) => d.clean());
+    montCont.rows.forEach((r) => r.clean());
+    if (dayCont != null) dayCont!.cols.forEach((d) => d.clean());
     await loadEvents(curRangeStart, curRangeEnd);
     _currentView();
   }

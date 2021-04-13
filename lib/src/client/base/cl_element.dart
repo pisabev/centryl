@@ -5,9 +5,9 @@ typedef EventFunction<E extends Event> = void Function(E e);
 
 abstract class CLElementBase<E extends Element> {
   late E dom;
-  Map<String, Map<String, List<Function(Event)>>> _events = {};
+  Map<String, Map<String, List<EventFunction>>> _events = {};
   bool state = true;
-  static Expando<Map<String, Map<String, List<Function(Event)>>>> exp =
+  static Expando<Map<String, Map<String, List<EventFunction>>>> exp =
       new Expando();
 
   void setState(bool state) => this.state = state;
@@ -77,7 +77,7 @@ abstract class CLElementBase<E extends Element> {
 
   num getHeight() => borderEdge.height;
 
-  num? getHeightComputed() => getStyleNum('height');
+  num getHeightComputed() => getStyleNum('height');
 
   num getHeightInner() => paddingEdge.height;
 
@@ -127,8 +127,8 @@ abstract class CLElementBase<E extends Element> {
   String getStyle(String style) =>
       dom.getComputedStyle().getPropertyValue(style);
 
-  num? getStyleNum(String style) =>
-      num.tryParse(getStyle(style).replaceAll('px', ''));
+  num getStyleNum(String style) =>
+      num.tryParse(getStyle(style).replaceAll('px', '')) ?? 0;
 
   void setHeight(Dimension dim) {
     dom.style.height = dim.toString();

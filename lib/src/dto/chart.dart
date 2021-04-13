@@ -2,8 +2,8 @@ part of dto;
 
 @DTOSerializable()
 class DataContainer {
-  String label;
-  String clas;
+  String? label;
+  String? clas;
   List<DataSet> set = [];
 
   DataContainer();

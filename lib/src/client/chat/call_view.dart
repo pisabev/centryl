@@ -2,13 +2,13 @@ part of chat;
 
 class CallView {
   app.Application ap;
-  app.Win win;
-  Container contTop, contInner, contBottom;
-  CLElement<VideoElement> videoRemote;
-  action.Button hangup;
-  final void Function() onHangup;
+  late app.Win win;
+  late Container contTop, contInner, contBottom;
+  late CLElement<VideoElement> videoRemote;
+  late action.Button hangup;
+  final void Function()? onHangup;
   Room room;
-  LocalView localView;
+  late LocalView localView;
 
   CallView(this.ap, this.room, {this.onHangup}) {
     localView = new LocalView(ap);
@@ -16,16 +16,16 @@ class CallView {
   }
 
   void analyzer() {
-    return;
-    final c = new AudioContext();
-    final mic = c.createMediaStreamSource(videoRemote.dom.srcObject);
-    final analyzer = c.createAnalyser();
-    mic.connectNode(analyzer);
-    final data = new Uint8List(100);
-    new Timer.periodic(const Duration(seconds: 1), (_) {
-      analyzer.getByteFrequencyData(data);
-      print(data);
-    });
+    // return;
+    // final c = new AudioContext();
+    // final mic = c.createMediaStreamSource(videoRemote.dom.srcObject);
+    // final analyzer = c.createAnalyser();
+    // mic.connectNode(analyzer);
+    // final data = new Uint8List(100);
+    // new Timer.periodic(const Duration(seconds: 1), (_) {
+    //   analyzer.getByteFrequencyData(data);
+    //   print(data);
+    // });
   }
 
   void createDom() {
@@ -40,7 +40,7 @@ class CallView {
       ..setIcon(Icon.call_end)
       ..addClass('warning')
       ..addAction((e) {
-        if (onHangup is Function) onHangup();
+        if (onHangup is Function) onHangup!();
       });
     final cont = new Container()..addClass('ui-video');
     contTop = new Container()..addClass('top');

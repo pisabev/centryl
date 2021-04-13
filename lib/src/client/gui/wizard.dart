@@ -1,11 +1,11 @@
 part of gui;
 
 class WizardElement extends CLElement {
-  CLElement titleDom;
-  CLElement contentDom;
-  Wizard _parent;
+  late CLElement titleDom;
+  late CLElement contentDom;
+  late Wizard _parent;
 
-  FutureOr<bool> Function() validate;
+  FutureOr<bool> Function()? validate;
 
   WizardElement() : super(new LIElement()) {
     createDom();
@@ -80,16 +80,21 @@ class Wizard extends Container {
   }
 
   bool isCurrentStep(WizardElement tab) => tab.existClass('current');
+
   void currentStep(WizardElement tab) => tab.current();
+
   void enableStep(WizardElement tab) => tab.enable();
+
   void disableStep(WizardElement tab) => tab.disable();
+
   void hideStep(WizardElement tab) => tab.hide();
+
   void showStep(WizardElement tab) => tab.show();
 
-  WizardElement getCurrentStep() =>
-      views.firstWhere((e) => e.existClass('current'), orElse: () => null);
+  WizardElement? getCurrentStep() =>
+      views.firstWhereOrNull((e) => e.existClass('current'));
 
-  WizardElement prev() {
+  WizardElement? prev() {
     final current = getCurrentStep();
     if (current != null) {
       final curIndex = views.indexOf(current);

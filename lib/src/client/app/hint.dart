@@ -2,9 +2,9 @@ part of app;
 
 class Bubble extends CLElement {
   CLElement cont;
-  utils.Boxing boxing;
+  late utils.Boxing boxing;
   static int _id = 0;
-  StreamSubscription _subscr;
+  StreamSubscription? _subscr;
   bool _visible = false;
   bool countZIndex;
 
@@ -35,17 +35,17 @@ class Bubble extends CLElement {
   void _showHint() {
     if (_visible) return;
     _visible = true;
-    document.body.querySelectorAll('a.ui-hint-bubble').forEach((el) {
+    document.body!.querySelectorAll('a.ui-hint-bubble').forEach((el) {
       new CLElement(el)
         ..setStyle({'left': 'initial', 'top': 'initial'})
         ..removeClass('top-right bottom-right top-left bottom-left show')
         ..removeClass('show')
         ..remove();
     });
-    if (document.body.querySelector('#bubble$_id') == null) return;
+    if (document.body!.querySelector('#bubble$_id') == null) return;
 
     final ref = cont.getMutableRectangle();
-    final body = document.body.getBoundingClientRect();
+    final body = document.body!.getBoundingClientRect();
     appendTo(document.body);
     final r = getRectangle();
 
@@ -81,9 +81,9 @@ class Bubble extends CLElement {
     window.addEventListener('scroll', _close, true);
   }
 
-  String _findZIndex() {
-    String zIndex;
-    var parent = cont.dom;
+  String? _findZIndex() {
+    String? zIndex;
+    Element? parent = cont.dom;
     while (parent != null && zIndex == null) {
       if (parent.style.zIndex.isNotEmpty) zIndex = parent.style.zIndex;
       parent = parent.parent;
@@ -101,12 +101,12 @@ class Bubble extends CLElement {
 
 class Hint extends CLElement {
   String key;
-  Future<String> Function(String) loadData;
+  Future<String?> Function(String) loadData;
   int time = 300;
-  String data;
-  Timer _timerShow, _timerClose;
+  String? data;
+  Timer? _timerShow, _timerClose;
   final List<Function> _tests = [];
-  CLElement hintDom;
+  late CLElement hintDom;
 
   Hint(this.key, this.loadData) : super(new AnchorElement()) {
     setHtml('?');
@@ -123,25 +123,25 @@ class Hint extends CLElement {
       ..addAction(_startClose, 'mouseout');
   }
 
-  void renderData(String data) {
-    hintDom.setHtml(data);
+  void renderData(String? data) {
+    hintDom.setHtml(data ?? '');
   }
 
   void _startShow(e) {
-    if (data == null) loadData(key)?.then(renderData);
+    if (data == null) loadData(key).then(renderData);
     _timerShow = new Timer(new Duration(milliseconds: time), () => showHint(e));
   }
 
-  void _stopShow(e) => _timerShow.cancel();
+  void _stopShow(e) => _timerShow?.cancel();
 
   void _startClose(e) =>
       _timerClose = new Timer(new Duration(milliseconds: time), _closeHint);
 
-  void _stopClose(e) => _timerClose.cancel();
+  void _stopClose(e) => _timerClose?.cancel();
 
   void showHint(MouseEvent e) {
     final ref = getMutableRectangle();
-    final body = document.body.getBoundingClientRect();
+    final body = document.body!.getBoundingClientRect();
     hintDom.appendTo(document.body);
     final r = hintDom.getRectangle();
 
@@ -219,9 +219,9 @@ class Hint extends CLElement {
 class BubbleVisualizer {
   bool _closed = true;
 
-  BubbleVisualizer(CLElement cont, FutureOr<DivElement> Function() execute,
-      {String type = 'message', String clas}) {
-    Bubble bubble;
+  BubbleVisualizer(CLElement cont, FutureOr<DivElement?> Function() execute,
+      {String type = 'message', String? clas}) {
+    Bubble? bubble;
     cont
       ..addAction<MouseEvent>((event) async {
         if (!utils.eventWithinSource(event, cont.dom)) return;
@@ -232,7 +232,7 @@ class BubbleVisualizer {
         bubble = new Bubble(cont, type: type)
           ..dom.append(c)
           ..showBubble();
-        if (clas != null) bubble.addClass(clas);
+        if (clas != null) bubble!.addClass(clas);
       }, 'mouseover')
       ..addAction<MouseEvent>((event) {
         if (utils.eventWithinSource(event, cont.dom)) {
@@ -245,7 +245,7 @@ class BubbleVisualizer {
 
 class HintManager {
   Future<String> Function(String) loadHint;
-  String position;
+  String? position;
 
   HintManager(this.loadHint, [this.position]);
 

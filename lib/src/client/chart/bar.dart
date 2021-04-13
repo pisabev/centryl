@@ -4,8 +4,8 @@ class Bar {
   CLElement container;
   num width = 0;
   num height = 0;
-  SvgSvgElement svg;
-  GElement graph, legend;
+  late SvgSvgElement svg;
+  late GElement graph, legend;
 
   num bar_height = 0;
   num bar_offset = 0;
@@ -36,7 +36,7 @@ class Bar {
   num highestX = 0;
   num gridRatioX = 1;
 
-  List<dto.DataSet> data;
+  late List<dto.DataSet> data;
   Map label_map = {};
 
   Bar(this.container) {
@@ -99,7 +99,7 @@ class Bar {
     if (gridCountX > 0) gridOffsetX = graphWidth / gridCountX;
   }
 
-  List<String> _calcTextParts(String label) {
+  List<String> _calcTextParts(String? label) {
     List<String> text_parts =
         (label != null && label.isNotEmpty) ? label.split(' ') : [];
     final text_parts_orig = new List.from(text_parts);

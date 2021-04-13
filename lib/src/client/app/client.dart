@@ -1,7 +1,7 @@
 part of app;
 
 class ClientApp {
-  FutureOr<void> Function(Application ap)? init;
+  late FutureOr<void> Function(Application ap) init;
 }
 
 class Client {

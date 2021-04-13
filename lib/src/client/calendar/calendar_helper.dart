@@ -1,32 +1,32 @@
 part of calendar;
 
 class CalendarHelper extends CLElement {
-  DateTime cur;
+  late DateTime cur;
 
   EventCalendar calendar;
 
-  CLElement<TableSectionElement> domTbody;
-  CLElement<Element> domMonth;
+  late CLElement<html.TableSectionElement> domTbody;
+  late CLElement<html.Element> domMonth;
 
-  CalendarHelperDrag drag;
+  late CalendarHelperDrag drag;
 
-  DateTime rangeStart;
-  DateTime rangeEnd;
+  DateTime? rangeStart;
+  DateTime? rangeEnd;
 
-  CalendarHelper(this.calendar) : super(new DivElement()) {
+  CalendarHelper(this.calendar) : super(new html.DivElement()) {
     setClass('ui-calendar-helper');
     cur = new DateTime.now();
     createDom();
   }
 
   void createDom() {
-    final nav = new CLElement(new DivElement())
+    final nav = new CLElement(new html.DivElement())
       ..setClass('cal-nav')
       ..appendTo(this);
 
     new action.Button()
       ..setIcon(Icon.chevron_left)
-      ..addAction((e) {
+      ..addAction<html.Event>((e) {
         e.stopPropagation();
         cur = new DateTime(cur.year, cur.month - 1);
         set();
@@ -34,19 +34,21 @@ class CalendarHelper extends CLElement {
       ..appendTo(nav);
     new action.Button()
       ..setIcon(Icon.chevron_right)
-      ..addAction((e) {
+      ..addAction<html.Event>((e) {
         e.stopPropagation();
         cur = new DateTime(cur.year, cur.month + 1);
         set();
       }, 'mouseup')
       ..appendTo(nav);
-    final label_month = new CLElement(new ParagraphElement())..appendTo(nav);
+    final label_month = new CLElement(new html.ParagraphElement())
+      ..appendTo(nav);
 
-    final table = new CLElement<TableElement>(new TableElement())
+    final table = new CLElement<html.TableElement>(new html.TableElement())
       ..appendTo(this);
-    final thead = new CLElement<TableSectionElement>(table.dom.createTHead())
-          ..appendTo(table),
-        tbody = new CLElement<TableSectionElement>(table.dom.createTBody())
+    final thead =
+            new CLElement<html.TableSectionElement>(table.dom.createTHead())
+              ..appendTo(table),
+        tbody = new CLElement<html.TableSectionElement>(table.dom.createTBody())
           ..appendTo(table);
 
     final row = thead.dom.insertRow(-1);
@@ -66,7 +68,7 @@ class CalendarHelper extends CLElement {
     final offset =
         new DateTime(cur.year, cur.month).weekday - utils.Calendar.offset();
     var k = -1;
-    TableRowElement row;
+    late html.TableRowElement row;
     final rows = new List.generate(6, (_) => <CalendarHelperCell>[]);
     for (var i = 0; i < 42; i++) {
       row = (i % 7 == 0) ? domTbody.dom.insertRow(-1) : row;
@@ -74,7 +76,7 @@ class CalendarHelper extends CLElement {
       final c = row.insertCell(-1)
         ..className = utils.Calendar.isWeekend(i % 7) ? 'weekend' : '';
       final cell = new CalendarHelperCell(
-          new SpanElement(), new DateTime(cur.year, cur.month, i - offset))
+          new html.SpanElement(), new DateTime(cur.year, cur.month, i - offset))
         ..appendTo(c);
       if (cell.date.month != cur.month) cell.addClass('other');
       if (checkDateForEvents(cell.date)) c.className = 'events';
@@ -86,10 +88,10 @@ class CalendarHelper extends CLElement {
       ..calendar = calendar
       ..setDraggable();
     if (rangeStart != null && rangeEnd != null)
-      drag.setRange(rangeStart, rangeEnd);
+      drag.setRange(rangeStart!, rangeEnd!);
   }
 
-  void setRange(DateTime cur_view, [DateTime start, DateTime end]) {
+  void setRange(DateTime cur_view, [DateTime? start, DateTime? end]) {
     cur = cur_view;
     rangeStart = start;
     rangeEnd = end;

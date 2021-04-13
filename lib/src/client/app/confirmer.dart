@@ -18,7 +18,7 @@ class Confirmer extends Dialog {
 
   @override
   void render({int width = 400, int height = 300, bool scrollable = true}) {
-    win = ap.winmanager.loadBoundWin(title: _title, icon: _icon);
+    win = ap.winmanager.loadBoundWin(title: _title ?? '', icon: _icon);
     final m = new Container();
     final menu = new action.Menu(m)..add(okDom);
     menu.container..addClass('center')..addClass('dialog');

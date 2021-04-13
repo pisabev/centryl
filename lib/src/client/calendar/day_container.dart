@@ -1,16 +1,16 @@
 part of calendar;
 
 class DayContainer {
-  List<HourRow> hourRows;
-  List<DayCol> cols;
+  late List<HourRow> hourRows;
+  late List<DayCol> cols;
 
-  List<DayRectContainter> rects;
+  late List<DayRectContainter> rects;
 
-  Event eventSel;
+  Event? eventSel;
 
   EventCalendar calendar;
 
-  DateTime startDate, endDate, clickDate;
+  DateTime? startDate, endDate, clickDate;
 
   Expando<List> doms = new Expando();
   List<CLElement> dm = [];
@@ -20,44 +20,45 @@ class DayContainer {
   void moveSet(Event event, int x, int y) {
     eventSel = event;
     clickDate = getDateByCoords(x, y);
-    startDate = eventSel.start;
-    endDate = eventSel.end;
+    startDate = eventSel!.start;
+    endDate = eventSel!.end;
     //doms[event].forEach((dom) => dom.hide());
-    _drawRects(eventSel.start, eventSel.end);
+    _drawRects(eventSel!.start, eventSel!.end);
   }
 
   void move(int x, int y) {
     final cur = getDateByCoords(x, y);
-    if (cur == null) return;
-    final diff = cur.difference(clickDate);
-    doms[eventSel].forEach((dom) => dom.hide());
-    _drawRects(eventSel.start.add(diff), eventSel.end.add(diff));
+    if (cur == null || clickDate == null) return;
+    final diff = cur.difference(clickDate!);
+    doms[eventSel!]!.forEach((dom) => dom.hide());
+    _drawRects(eventSel!.start.add(diff), eventSel!.end.add(diff));
   }
 
   void resizeSet(Event event) {
     eventSel = event;
-    startDate = eventSel.start;
-    endDate = eventSel.end;
-    doms[event].forEach((dom) => dom.hide());
-    _drawRects(eventSel.start, eventSel.end);
+    startDate = eventSel!.start;
+    endDate = eventSel!.end;
+    doms[event]!.forEach((dom) => dom.hide());
+    _drawRects(eventSel!.start, eventSel!.end);
   }
 
   void resize(int x, int y) {
     final stretch_date = getDateByCoords(x, y);
-    _drawRects(eventSel.start, stretch_date);
+    if (eventSel != null && stretch_date != null)
+      _drawRects(eventSel!.start, stretch_date);
   }
 
-  Future release(MouseEvent e) async {
+  Future release(html.MouseEvent e) async {
     if (startDate == null ||
         endDate == null ||
-        startDate.compareTo(endDate) > 0) return;
+        startDate!.compareTo(endDate!) > 0) return;
     if (eventSel != null) {
-      eventSel
-        ..start = startDate
-        ..end = endDate;
-      if (eventSel.changed()) await calendar.persistEvent(eventSel);
+      eventSel!
+        ..start = startDate!
+        ..end = endDate!;
+      if (eventSel!.changed()) await calendar.persistEvent(eventSel!);
     } else
-      calendar.createEvent(startDate, endDate, false);
+      calendar.createEvent(startDate!, endDate!, false);
     //calendar.removeEvent(eventSel);
     dm.forEach((d) => d.remove());
     dm = [];
@@ -73,10 +74,11 @@ class DayContainer {
   }
 
   void setDragable(CLElement dc) {
-    DateTime date1;
-    DateTime date2;
-    dc.addAction<MouseEvent>((e) {
-      final date = getDateByCoords(e.client.x, e.client.y);
+    DateTime? date1;
+    DateTime? date2;
+    dc.addAction<html.MouseEvent>((e) {
+      final date = getDateByCoords(e.client.x.toInt(), e.client.y.toInt());
+      if (date == null) return;
       if (calendar.filters.isNotEmpty &&
           !cols.any((d) => d.fCol.inRange(date, date))) return;
       startDate = date;
@@ -84,17 +86,18 @@ class DayContainer {
       release(e);
     }, 'dblclick');
     new utils.Drag(dc)
-      ..start((e) => date1 = getDateByCoords(e.client.x, e.client.y))
+      ..start((e) =>
+          date1 = getDateByCoords(e.client.x.toInt(), e.client.y.toInt()))
       ..on((e) {
-        date2 = getDateByCoords(e.client.x, e.client.y);
+        date2 = getDateByCoords(e.client.x.toInt(), e.client.y.toInt());
         if (date1 != null && date2 != null)
-          _drawRects(utils.Calendar.min(date1, date2),
-              utils.Calendar.max(date1, date2));
+          _drawRects(utils.Calendar.min(date1!, date2!),
+              utils.Calendar.max(date1!, date2!));
       })
       ..end(release);
   }
 
-  void _drawRects(DateTime start, DateTime end) {
+  void _drawRects(DateTime? start, DateTime? end) {
     if (start == null ||
         end == null ||
         start.compareTo(end) > 0 ||
@@ -107,30 +110,26 @@ class DayContainer {
     dm.forEach((d) => d.remove());
     dm = [];
     rects.forEach((rect) {
-      if (rect != null) {
-        final drag_cont = rect.day.dayDrag;
-        final t = drag_cont.getRectangle();
-        final rectangle = rect.rect
-          ..top -= t.top
-          ..left = 0;
-        final e = new CLElement(new DivElement())
-          ..setClass('day-event')
-          ..setRectangle(rectangle)
-          ..appendTo(drag_cont);
-        dm.add(e);
-      }
+      final drag_cont = rect.day.dayDrag;
+      final t = drag_cont.getRectangle();
+      final rectangle = rect.rect
+        ..top -= t.top
+        ..left = 0;
+      final e = new CLElement(new html.DivElement())
+        ..setClass('day-event')
+        ..setRectangle(rectangle)
+        ..appendTo(drag_cont);
+      dm.add(e);
     });
   }
 
-  HourRow getHourByCoords(int x, int y) => hourRows.firstWhere(
-      (row) => row.getRectangle().containsPoint(new math.Point(x, y)),
-      orElse: () => null);
+  HourRow? getHourByCoords(int x, int y) => hourRows.firstWhereOrNull(
+      (row) => row.getRectangle().containsPoint(new math.Point(x, y)));
 
-  DayCol getDayByCoords(int x, int y) => cols.firstWhere(
-      (col) => col.getRectangle().containsPoint(new math.Point(x, y)),
-      orElse: () => null);
+  DayCol? getDayByCoords(int x, int y) => cols.firstWhereOrNull(
+      (col) => col.getRectangle().containsPoint(new math.Point(x, y)));
 
-  HourRow getHourRowByDate(DateTime date) {
+  HourRow? getHourRowByDate(DateTime date) {
     var hour = date.hour;
     var minute = date.minute;
     if (date.minute > 60 - calendar.hourGridMinutes) {
@@ -139,15 +138,14 @@ class DayContainer {
     } else if (date.minute > 0) {
       minute = calendar.hourGridMinutes;
     }
-    return hourRows.firstWhere(
-        (row) => row.hour == hour && row.minutes == minute,
-        orElse: () => null);
+    return hourRows
+        .firstWhereOrNull((row) => row.hour == hour && row.minutes == minute);
   }
 
-  DayCol getDayColByDate(DateTime date) => cols
-      .firstWhere((day) => day.date.day == date.day, orElse: () => null);
+  DayCol? getDayColByDate(DateTime date) =>
+      cols.firstWhereOrNull((day) => day.date.day == date.day);
 
-  DateTime getDateByCoords(int x, int y) {
+  DateTime? getDateByCoords(int x, int y) {
     final row = getHourByCoords(x, y);
     final day = getDayByCoords(x, y);
     if (row == null || day == null) return null;
@@ -168,11 +166,11 @@ class DayContainer {
     } else {
       final r = getHourRowByDate(date_start);
       final d = getDayColByDate(date_start);
-      if (r == null || d == null) return [null];
+      if (r == null || d == null) return [];
       final rect = r.getRectangle().intersection(d.getRectangle());
       final offset_date = new DateTime(
           d.date.year, d.date.month, d.date.day, r.hour, r.minutes);
-      final top = rect.top -
+      final top = rect!.top -
           (offset_date.difference(date_start).inMinutes /
                   calendar._pixelPerMinute)
               .ceil();
@@ -190,7 +188,7 @@ class DayContainer {
 }
 
 class DayRectContainter {
-  math.MutableRectangle rect;
-  DayCol day;
-  HourRow row;
+  late math.MutableRectangle rect;
+  late DayCol day;
+  late HourRow row;
 }

@@ -1,8 +1,8 @@
 part of ui;
 
 class ItemBuilderContainerBase extends cl.Container {
-  cl.Container contMenu;
-  cl.Container contInner;
+  late cl.Container contMenu;
+  late cl.Container contInner;
 
   ItemBuilderContainerBase() {
     createDom();
@@ -20,7 +20,7 @@ class ItemBuilderContainerBase extends cl.Container {
 }
 
 class ItemBuilderContainer extends ItemBuilderContainerBase {
-  covariant cl_gui.TabContainer contInner;
+  covariant late cl_gui.TabContainer contInner;
   bool listenForChange = false;
 
   void createDom() {
@@ -49,8 +49,8 @@ class ItemBuilderContainer extends ItemBuilderContainerBase {
 }
 
 class _LayoutContainerOp extends ItemBuilderContainer {
-  cl.Container contMenu, contTop, contTopLeft, contTopRight;
-  cl_gui.TabContainer contInner;
+  late cl.Container contMenu, contTop, contTopLeft, contTopRight;
+  late cl_gui.TabContainer contInner;
 
   void createDom() {
     contTop = new cl.Container();
@@ -69,14 +69,12 @@ class _LayoutContainerOp extends ItemBuilderContainer {
 
 abstract class ItemBuilderBase<C extends cl_app.Client> extends ItemBase<C>
     implements cl_app.Item<C> {
-  @Deprecated('Use WinMeta instead')
-  Map w;
-  cl_app.WinMeta meta;
-  cl_app.WinApp<C> wapi;
+  late cl_app.WinMeta meta;
+  late cl_app.WinApp<C> wapi;
 
-  ItemBuilderContainerBase layout;
+  late ItemBuilderContainerBase layout;
   final StreamController<bool> _contr = new StreamController.broadcast();
-  cl_action.Menu menu;
+  late cl_action.Menu menu;
 
   bool _listenForChange = false;
   bool isDirty = false;
@@ -94,7 +92,7 @@ abstract class ItemBuilderBase<C extends cl_app.Client> extends ItemBase<C>
       setUI();
       form.onLoadStart.listen((e) {
         setMenuState(false);
-        StreamSubscription _loadEnd;
+        late StreamSubscription _loadEnd;
         _loadEnd = form.onLoadEnd.listen((e) {
           if (isDirty) setMenuState(true);
           _loadEnd.cancel();
@@ -146,32 +144,19 @@ abstract class ItemBuilderBase<C extends cl_app.Client> extends ItemBase<C>
   Future setDefaults();
 
   Future<void> _setTitle() async {
-    if (meta != null) {
-      if (meta.title != null)
-        wapi?.setTitle(meta.getTitle(getId()));
-      else
-        wapi?.setTitle(await getTitle());
-    }
+    if (meta.title != null)
+      wapi.setTitle(meta.getTitle(getId()));
+    else
+      wapi.setTitle(await getTitle());
   }
 
   void initLayout() {
     createLayout();
     wapi = new cl_app.WinApp(ap);
-    if (w != null) {
-      wapi.load(
-          meta = new cl_app.WinMeta()
-            ..title = w['title'](_id)
-            ..width = w['width']
-            ..height = w['height']
-            ..icon = w['icon'],
-          this);
-    } else {
-      wapi.load(meta, this);
-    }
+    wapi.load(meta, this);
     menu = new cl_action.Menu(layout.contMenu..addClass('shadowed'));
     wapi.win.getContent().append(layout, scrollable: true);
     wapi.render();
-
     final action =
         new cl_util.KeyAction(cl_util.KeyAction.CTRL_S, () => saveIt(false));
     wapi.win.addKeyAction(action);
@@ -219,7 +204,7 @@ abstract class ItemBuilderBase<C extends cl_app.Client> extends ItemBase<C>
         _contr.add(true);
       });
 
-  FutureOr<String> getTitle() => null;
+  FutureOr<String> getTitle() => '';
 
   void setHooks() {
     addHook(ItemBase.get_after, (_) async {
@@ -231,7 +216,7 @@ abstract class ItemBuilderBase<C extends cl_app.Client> extends ItemBase<C>
       await _setTitle();
       if (form.isLoading) {
         final completer = new Completer<bool>();
-        StreamSubscription listen;
+        late StreamSubscription listen;
         listen = form.onLoadEnd.listen((e) {
           completer.complete(true);
           listen.cancel();
@@ -257,23 +242,20 @@ abstract class ItemBuilderBase<C extends cl_app.Client> extends ItemBase<C>
       close(__close_set);
       return true;
     });
-    if (wapi != null) {
-      wapi.win.observer
-        ..addHook(
-            'close',
-            (_) =>
-                isDirty ? ask(intl.Close_warning(), wapi.win.close) : !isDirty,
-            true)
-        ..addHook('close', (_) {
-          ap.preventRefresh = false;
-          return true;
-        });
-    }
+    wapi.win.observer
+      ..addHook(
+          'close',
+          (_) => isDirty ? ask(intl.Close_warning(), wapi.win.close) : !isDirty,
+          true)
+      ..addHook('close', (_) {
+        ap.preventRefresh = false;
+        return true;
+      });
   }
 
-  Future get([cl.CLElementBase loading]) => super.get(loading ?? layout);
+  Future get([cl.CLElementBase? loading]) => super.get(loading ?? layout);
 
-  Future save([cl.CLElementBase loading]) => super.save(loading ?? layout);
+  Future save([cl.CLElementBase? loading]) => super.save(loading ?? layout);
 
   bool ask(String message, Function call) {
     if (__answer) {
@@ -340,7 +322,7 @@ abstract class ItemBuilderBase<C extends cl_app.Client> extends ItemBase<C>
       setId(null);
     if (way) {
       resetListeners();
-      wapi?.close();
+      wapi.close();
     } else {
       get();
     }
@@ -366,7 +348,7 @@ abstract class ItemBuilderBase<C extends cl_app.Client> extends ItemBase<C>
 }
 
 abstract class ItemBuilder<C extends cl_app.Client> extends ItemBuilderBase<C> {
-  covariant ItemBuilderContainer layout;
+  covariant late ItemBuilderContainer layout;
 
   ItemBuilder(ap, [id]) : super(ap, id);
 
@@ -385,7 +367,7 @@ abstract class ItemBuilder<C extends cl_app.Client> extends ItemBuilderBase<C> {
 }
 
 abstract class ItemOperation<C extends cl_app.Client> extends ItemBuilder<C> {
-  covariant _LayoutContainerOp layout;
+  covariant late _LayoutContainerOp layout;
 
   ItemOperation(ap, [id]) : super(ap, id);
 

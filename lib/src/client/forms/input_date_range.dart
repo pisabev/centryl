@@ -77,7 +77,7 @@ class InputDateRange extends Input<List> {
 
   bool hasValue() => getValue().any((e) => e != null);
 
-  List<DateTime> getValue_() => super.getValue();
+  List<DateTime?> getValue_() => super.getValue();
 
   void setValue(List value) {
     super.setValue(value);

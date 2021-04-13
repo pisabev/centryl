@@ -92,7 +92,7 @@ class Form<T extends Data> extends Data<Map> {
       _indexOfElements.toList().forEach((el) => remove(el.element.getName()));
 
   Map<String, dynamic> getValue() {
-    if (!_send) return null;
+    if (!_send) return {};
     final o = <String, dynamic>{};
     for (var i = 0; i < _indexOfElements.length; i++) {
       final el = _indexOfElements[i];

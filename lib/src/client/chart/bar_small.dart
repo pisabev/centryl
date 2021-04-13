@@ -1,8 +1,8 @@
 part of chart;
 
 class BarSmall extends CLElement {
-  DivElement bar;
-  SpanElement text;
+  late DivElement bar;
+  late SpanElement text;
   num width;
 
   BarSmall(this.width) : super(new DivElement()) {

@@ -1,20 +1,20 @@
 part of calendar;
 
 class CalendarHelperDrag {
-  EventCalendar calendar;
+  late EventCalendar calendar;
 
   List<List<CalendarHelperCell>> rows;
 
+  CalendarHelperCell? startCell;
+
+  StreamSubscription? _documentUp;
+
+  Function? _currentSectionView;
+
+  DateTime? _dateStart;
+  DateTime? _dateEnd;
+
   CalendarHelperDrag(this.rows);
-
-  CalendarHelperCell startCell;
-
-  StreamSubscription _documentUp;
-
-  Function _currentSectionView;
-
-  DateTime _dateStart;
-  DateTime _dateEnd;
 
   void setDraggable() {
     rows.forEach((row) {
@@ -25,7 +25,7 @@ class CalendarHelperDrag {
           ..addAction((e) => render(), 'mouseup');
       });
     });
-    _documentUp ??= document.onMouseUp.listen((e) {
+    _documentUp ??= html.document.onMouseUp.listen((e) {
       startCell = null;
     });
   }
@@ -42,7 +42,7 @@ class CalendarHelperDrag {
 
   void fillRange(CalendarHelperCell start, CalendarHelperCell end,
       [bool full_row = false]) {
-    CalendarHelperCell first, last;
+    late CalendarHelperCell first, last;
     rows.forEach((row) {
       row.forEach((cell) {
         if (full_row) {
@@ -85,20 +85,20 @@ class CalendarHelperDrag {
 
   void over(CalendarHelperCell cell) {
     if (startCell == null) return;
-    if (cell.date.isAfter(startCell.date))
+    if (cell.date.isAfter(startCell!.date))
       fillRange(
-          startCell, cell, cell.date.difference(startCell.date).inDays > 6);
+          startCell!, cell, cell.date.difference(startCell!.date).inDays > 6);
     else
       fillRange(
-          cell, startCell, startCell.date.difference(cell.date).inDays > 6);
+          cell, startCell!, startCell!.date.difference(cell.date).inDays > 6);
   }
 
   Future<void> render([bool load = true]) async {
     calendar
-      ..curRangeStart = _dateStart
-      ..curRangeEnd = _dateEnd
+      ..curRangeStart = _dateStart!
+      ..curRangeEnd = _dateEnd!
       .._currentView = () => render(false);
-    _currentSectionView();
+    _currentSectionView!();
     if (load)
       await calendar.loadEvents(calendar.curRangeStart, calendar.curRangeEnd);
     calendar.renderEvents();

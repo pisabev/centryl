@@ -1,8 +1,8 @@
 part of ui;
 
 class LayoutContainerWizard extends cl.Container {
-  cl_gui.Wizard contInner;
-  cl.Container contMenu;
+  late cl_gui.Wizard contInner;
+  late cl.Container contMenu;
 
   LayoutContainerWizard() : super() {
     contInner = new cl_gui.Wizard();
@@ -14,21 +14,18 @@ class LayoutContainerWizard extends cl.Container {
 }
 
 abstract class ItemWizard extends ItemBase implements cl_app.Item {
-  cl_app.WinApp wapi;
-  cl_app.WinMeta meta;
+  late cl_app.WinApp wapi;
+  late cl_app.WinMeta meta;
 
-  LayoutContainerWizard layout;
-  cl_action.Menu menu;
+  late LayoutContainerWizard layout;
+  late cl_action.Menu menu;
 
-  StreamSubscription _formLoad;
-  StreamSubscription _valueChange;
+  StreamSubscription? _formLoad;
+  StreamSubscription? _valueChange;
 
   bool listenForChange = false;
 
   cl_form.Form form = new cl_form.Form();
-
-  static const bool __close_set = false;
-  static const bool __answer = false;
 
   ItemWizard(ap, [id]) : super(ap, id) {
     initLayout();
@@ -126,7 +123,7 @@ abstract class ItemWizard extends ItemBase implements cl_app.Item {
     });
   }
 
-  Future get([cl.CLElementBase loading]) => super.get(loading ?? layout);
+  Future get([cl.CLElementBase? loading]) => super.get(loading ?? layout);
 
   cl_gui.WizardElement createStep(String title, dynamic element) {
     final te = layout.contInner.createStep(title);
@@ -153,10 +150,12 @@ abstract class ItemWizard extends ItemBase implements cl_app.Item {
     data_send = {'id': _id, 'data': form.getValue()};
   }
 
-  void setMenuState(bool way, [cl_gui.WizardElement currentElement]) {
+  Future<void> setMenuState(bool way,
+      [cl_gui.WizardElement? currentElement]) async {
     currentElement ??= layout.contInner.getCurrentStep();
     var valid = false;
-    if (currentElement.validate != null) valid = currentElement.validate();
+    if (currentElement!.validate != null)
+      valid = await currentElement.validate!();
     menu
       ..setState('back', false)
       ..setState('continue', false)
@@ -174,11 +173,11 @@ abstract class ItemWizard extends ItemBase implements cl_app.Item {
   void resetListeners() {
     listenForChange = false;
     if (_formLoad != null) {
-      _formLoad.cancel();
+      _formLoad!.cancel();
       _formLoad = null;
     }
     if (_valueChange != null) {
-      _valueChange.cancel();
+      _valueChange!.cancel();
       _valueChange = null;
     }
   }
