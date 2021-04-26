@@ -1,8 +1,8 @@
 part of forms;
 
 mixin Lang<E extends DataElement<dynamic, html.Element>> {
-  CLElement domInner;
-  CLElement<html.ImageElement> flag;
+  late CLElement domInner;
+  late CLElement<html.ImageElement> flag;
   List<E> langs = [];
   DataElement Function() builder;
   DataElement self;

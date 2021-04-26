@@ -116,8 +116,9 @@ class Calendar {
 
   static List<DateTime> _getRange(DateTime d, DateTime n) => [d, n];
 
-  static DateTime? parse(String date) {
+  static DateTime? parse(String? date) {
     DateTime? d;
+    if (date == null) return null;
     try {
       d = DateTime.parse(date);
       if (d.isUtc) d = d.toLocal();

@@ -1,8 +1,6 @@
 part of forms;
 
 class ColorChoose extends DataElement<int, html.DivElement> {
-  List colors;
-
   ColorChoose() : super() {
     dom = new html.DivElement();
     setClass('ui-field-color-choose');
@@ -16,7 +14,7 @@ class ColorChoose extends DataElement<int, html.DivElement> {
     }
   }
 
-  void _click(int num) {
+  void _click(int? num) {
     dom.children.forEach((el) {
       new CLElement(el).removeClass('selected');
     });
@@ -24,7 +22,7 @@ class ColorChoose extends DataElement<int, html.DivElement> {
       new CLElement(dom.children[num - 1]).addClass('selected');
   }
 
-  void setValue(int value) {
+  void setValue(int? value) {
     super.setValue(value);
     _click(value);
   }

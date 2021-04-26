@@ -236,7 +236,7 @@ abstract class CLElementBase<E extends Element> {
     dom.innerHtml = html;
   }
 
-  void setText(String text) {
+  void setText(String? text) {
     dom.text = text;
   }
 }

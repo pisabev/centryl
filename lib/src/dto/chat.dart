@@ -2,7 +2,7 @@ part of dto;
 
 @DTOSerializable()
 class ChatSearchDTO {
-  String search;
+  late String search;
 
   ChatSearchDTO();
 
@@ -18,14 +18,14 @@ class Message {
   static int typeMessage = 0;
   static int typeFile = 1;
 
-  int id;
-  int type;
-  Member member;
-  List<Member> seen;
-  int room_id;
-  String context;
-  String content;
-  DateTime timestamp;
+  int? id;
+  late int type;
+  late Member member;
+  late int room_id;
+  String? context;
+  late DateTime timestamp;
+  List<Member>? seen;
+  String? content;
 
   Message();
 
@@ -38,10 +38,10 @@ class Message {
 
 @DTOSerializable()
 class Member {
-  int user_id;
-  String name;
-  String picture;
-  bool status;
+  late int user_id;
+  String? name;
+  String? picture;
+  bool? status;
 
   Member();
 
@@ -54,12 +54,12 @@ class Member {
 
 @DTOSerializable()
 class Room {
-  int room_id;
-  String context;
-  List<Member> members;
-  int lsm_id;
-  int unseen;
-  int messages;
+  int? room_id;
+  late List<Member> members;
+  String? context;
+  int? lsm_id;
+  int? unseen;
+  int? messages;
 
   Room();
 

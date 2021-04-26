@@ -5,34 +5,34 @@ class InputType {
 }
 
 class InputTypeInt extends InputType {
-  final List<int> range;
-  final int step;
+  final List<int?>? range;
+  final int? step;
 
   InputTypeInt({this.range, this.step});
 }
 
 class InputTypeString extends InputType {
-  final List<int> length;
+  final List<int?>? length;
 
   InputTypeString({this.length});
 }
 
 class InputTypeDouble extends InputType {
-  final List<num> range;
-  final num step;
+  final List<num?>? range;
+  final num? step;
 
   InputTypeDouble({this.range, this.step});
 }
 
 class InputTypeDate extends InputType {
-  final List<DateTime> range;
-  final bool inclusive;
+  final List<DateTime>? range;
+  final bool? inclusive;
 
   InputTypeDate({this.range, this.inclusive = false});
 }
 
 class InputTypeDateTime extends InputType {
-  final List<DateTime> range;
+  final List<DateTime?>? range;
   final bool inclusive;
 
   InputTypeDateTime({this.range, this.inclusive = false});
@@ -49,7 +49,7 @@ mixin Validator {
   static const String DATETIME = 'datetime';
   static const String DATERANGE = 'daterange';
 
-  _InputTypeBase input_type;
+  _InputTypeBase? input_type;
 
   utils.Observer observer = new utils.Observer();
 
@@ -115,7 +115,7 @@ mixin Validator {
     addValidationOnInput(input_type.validateInput);
   }
 
-  void addValidationOnInput(utils.ObserverFunction<html.Event> func) =>
+  void addValidationOnInput(utils.ObserverFunction<html.KeyboardEvent> func) =>
       observer.addHook('input', func);
 
   void addValidationOnValue<T>(utils.ObserverFunction<T> func) =>

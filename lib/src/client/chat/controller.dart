@@ -46,7 +46,7 @@ class ChatController {
   FutureOr<bool> Function(Message)? markMessageAsSeen;
   FutureOr<bool> Function(Message)? messageUpdate;
   FutureOr<bool> Function(Room)? messageType;
-  FutureOr<Room> Function(Room)? createRoom;
+  FutureOr<Room?> Function(Room)? createRoom;
   FutureOr<bool> Function(Room)? addRoomMember;
   FutureOr<bool> Function(Room)? deleteRoom;
   FutureOr Function(Room)? showRoom;

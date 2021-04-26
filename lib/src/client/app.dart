@@ -5,9 +5,9 @@ import 'dart:convert';
 import 'dart:html' hide Dimension;
 import 'dart:math' as math;
 
+import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
-import 'package:collection/collection.dart';
 
 import '../../intl/client.dart' as intl;
 import '../dto.dart' as dto;

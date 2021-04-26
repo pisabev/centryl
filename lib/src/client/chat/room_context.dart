@@ -4,31 +4,31 @@ class RoomContext extends Container {
   app.Application ap;
   ChatController controller;
   bool focused = false;
-  LoadElement _loader;
+  LoadElement? _loader;
 
-  Container messageTopCont;
-  Container messageInnerCont;
-  Container messageBottomCont;
-  Container mBottomTop;
-  Container mBottomBottom;
-  Container mBottomEmoticons;
-  Container listMDom;
-  Container typeDom;
+  late Container messageTopCont;
+  late Container messageInnerCont;
+  late Container messageBottomCont;
+  late Container mBottomTop;
+  late Container mBottomBottom;
+  late Container mBottomEmoticons;
+  late Container listMDom;
+  late Container typeDom;
 
-  CLElement mTitle;
-  CLElement mProfile;
-  form.TextArea mInput;
-  action.Button back;
-  action.Button send;
+  late CLElement mTitle;
+  late CLElement mProfile;
+  late form.TextArea mInput;
+  late action.Button back;
+  late action.Button send;
 
-  num _initMHeight;
-  Room activeRoom;
+  late num _initMHeight;
+  Room? activeRoom;
   List<Message> messages = [];
-  Timer _timer;
-  Message lastMessage;
+  Timer? _timer;
+  Message? lastMessage;
   List<Member> typers = [];
   final typeDelay = const Duration(seconds: 4);
-  Function _typing;
+  late Function _typing;
 
   RoomContext(this.ap, this.controller) : super() {
     _typing = utils.throttle(_sendType, typeDelay);
@@ -37,17 +37,16 @@ class RoomContext extends Container {
       ..onNotifyMessage.listen((r) async {
         if (!focused) return;
         if (activeRoom != null &&
-            activeRoom.sameAs(r) &&
+            activeRoom!.sameAs(r) &&
             controller.loadRoomMessagesNew != null) {
-          final messages = await controller.loadRoomMessagesNew(activeRoom);
+          final messages = await controller.loadRoomMessagesNew!(activeRoom!);
           renderMessages(messages);
         }
       })
       ..onNotifyMessageUpdate.listen((m) async {
         if (!focused) return;
-        if (activeRoom != null && activeRoom.room_id == m.room_id) {
-          final mes =
-              messages.firstWhere((mes) => mes.id == m.id, orElse: () => null);
+        if (activeRoom != null && activeRoom!.room_id == m.room_id) {
+          final mes = messages.firstWhereOrNull((mes) => mes.id == m.id);
           if (mes != null) {
             if (m.content == null) {
               mes.dom.remove();
@@ -63,9 +62,8 @@ class RoomContext extends Container {
       })
       ..onNotifyMessageSeen.listen((m) {
         if (!focused) return;
-        if (activeRoom != null && activeRoom.room_id == m.room_id) {
-          final mes =
-              messages.firstWhere((mes) => mes.id == m.id, orElse: () => null);
+        if (activeRoom != null && activeRoom!.room_id == m.room_id) {
+          final mes = messages.firstWhereOrNull((mes) => mes.id == m.id);
           if (mes != null)
             m.seen?.forEach((member) =>
                 (!member.isMe && member.user_id != mes.member.user_id)
@@ -75,10 +73,9 @@ class RoomContext extends Container {
       })
       ..onNotifyType.listen((r) {
         if (!focused) return;
-        if (activeRoom != null && activeRoom.sameAs(r)) {
-          final exist = typers.firstWhere(
-              (element) => element.user_id == r.members.first.user_id,
-              orElse: () => null);
+        if (activeRoom != null && activeRoom!.sameAs(r)) {
+          final exist = typers.firstWhereOrNull(
+              (element) => element.user_id == r.members.first.user_id);
           if (exist != null) return;
           typers.add(r.members.first);
           initTyping();
@@ -92,9 +89,9 @@ class RoomContext extends Container {
   }
 
   void _sendType() {
-    if (controller.messageType != null) {
-      final me = activeRoom.members.where((m) => m.isMe).toList();
-      if (me.isNotEmpty) controller.messageType(activeRoom..members = me);
+    if (controller.messageType != null && activeRoom != null) {
+      final me = activeRoom!.members.where((m) => m.isMe).toList();
+      if (me.isNotEmpty) controller.messageType!(activeRoom!..members = me);
     }
   }
 
@@ -190,7 +187,7 @@ class RoomContext extends Container {
       final call = new action.Button()
         ..setIcon(Icon.call)
         ..setTip(intl.Call())
-        ..addAction((e) => controller._doCall(activeRoom))
+        ..addAction((e) => controller._doCall!(activeRoom!))
         ..addClass('attention');
       mBottomBottom.append(call);
     }
@@ -222,7 +219,7 @@ class RoomContext extends Container {
     }
   }
 
-  void closeRoom() => controller.closeRoom(activeRoom);
+  void closeRoom() => controller.closeRoom!(activeRoom!);
 
   Future renderRoom(Room room) async {
     mProfile.removeChilds();
@@ -230,13 +227,13 @@ class RoomContext extends Container {
       if (!m.isMe) m.renderProfile(mProfile);
     });
     mTitle.setText(room.getTitle());
-    if (activeRoom == null || !activeRoom.sameAs(room)) {
+    if (activeRoom == null || !activeRoom!.sameAs(room)) {
       if (controller.loadRoomMessages == null) return;
       activeRoom = room;
       lastMessage = null;
       messages = [];
       listMDom.removeChilds();
-      renderMessages(await controller.loadRoomMessages(room));
+      renderMessages(await controller.loadRoomMessages!(room));
     }
   }
 
@@ -245,22 +242,22 @@ class RoomContext extends Container {
     for (var i = messages.length - 1; i >= 0; i--) {
       final m = messages[i];
       var renderImage = true;
-      if (lastMessage != null && m.member.user_id == lastMessage.member.user_id)
-        renderImage = false;
+      if (lastMessage != null &&
+          m.member.user_id == lastMessage!.member.user_id) renderImage = false;
       _renderMessage(m, renderImage: renderImage);
     }
-    if (activeRoom.lsm_id < messages.first.id &&
+    if (activeRoom!.lsm_id < messages.first.id! &&
         controller.markMessageAsSeen != null) {
-      activeRoom
-        ..lsm_id = messages.first.id
+      activeRoom!
+        ..lsm_id = messages.first.id!
         ..setUnseen(0);
-      controller.markMessageAsSeen(messages.first);
+      controller.markMessageAsSeen!(messages.first);
     }
     listMDom.append(typeDom);
     _scrollMessageBottom();
   }
 
-  void _renderMessage(Message message, {bool renderImage}) {
+  void _renderMessage(Message message, {bool renderImage = true}) {
     if (messages.any((m) => m.id == message.id)) return;
     typers.removeWhere((m) => m.user_id == message.member.user_id);
     initTyping();
@@ -272,9 +269,9 @@ class RoomContext extends Container {
 
   Message buildMessage(int type, String content) => new Message(
       id: null,
-      room_id: activeRoom.room_id,
+      room_id: activeRoom!.room_id!,
       type: type,
-      context: activeRoom.context,
+      context: activeRoom!.context,
       member: new Member(
           user_id: ap.client.userId,
           name: ap.client.name,
@@ -283,7 +280,7 @@ class RoomContext extends Container {
       timestamp: new DateTime.now());
 
   void sendMessage([_]) {
-    mInput.field.setStyle({'overflow': null});
+    mInput.field.setStyle({'overflow': ''});
     messageBottomCont.dom.style.height = null;
     mBottomEmoticons.removeClass('show');
     resizeForEmoticons();
@@ -292,7 +289,7 @@ class RoomContext extends Container {
     mInput.setValue(null);
     messageBottomCont.setHeight(new Dimension.px(_initMHeight));
     if (controller.persistMessage != null)
-      controller.persistMessage(buildMessage(0, content));
+      controller.persistMessage!(buildMessage(0, content));
   }
 
   bool _onFileLoadStart(String fileName) {
@@ -304,13 +301,13 @@ class RoomContext extends Container {
   bool _onFileLoadEnd(String fileName) {
     _loader?.remove();
     if (controller.persistMessage != null)
-      controller.persistMessage(buildMessage(1, fileName));
+      controller.persistMessage!(buildMessage(1, fileName));
     return true;
   }
 
-  void _scrollMessageBottom({int by}) {
-    messageInnerCont.scroll.containerEl.scrollTop = by != null
-        ? messageInnerCont.scroll.containerEl.scrollTop + by
-        : messageInnerCont.scroll.containerEl.scrollHeight;
+  void _scrollMessageBottom({int? by}) {
+    messageInnerCont.scroll!.containerEl.scrollTop = by != null
+        ? messageInnerCont.scroll!.containerEl.scrollTop + by
+        : messageInnerCont.scroll!.containerEl.scrollHeight;
   }
 }

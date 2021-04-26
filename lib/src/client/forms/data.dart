@@ -16,9 +16,9 @@ class Data<T> {
   bool _required = false;
   bool _valid = true;
   List<DataWarning> _warnings = [];
-  String _context;
-  String _name;
-  T _value;
+  String? _context;
+  String? _name;
+  T? _value;
 
   void stop() {
     _send = false;
@@ -28,17 +28,17 @@ class Data<T> {
     _name = name;
   }
 
-  String getName() => _name;
+  String? getName() => _name;
 
   void setContext(String context) {
     _context = context;
   }
 
-  String getContext() => _context;
+  String? getContext() => _context;
 
-  bool compareValue(T value) => _value != value;
+  bool compareValue(T? value) => _value != value;
 
-  void setValue(T value) {
+  void setValue(T? value) {
     final changed = compareValue(value);
     _value = value;
     if (_send && changed) {
@@ -47,7 +47,7 @@ class Data<T> {
     }
   }
 
-  T getValue() => _value;
+  T? getValue() => _value;
 
   void setRequired(bool required) {
     final changed = _required != required;
@@ -93,7 +93,7 @@ class Data<T> {
 
   FutureOr<String> getRepresentation() => '${_value ?? ''}';
 
-  FutureOr<html.Element> getRepresentationElement() => null;
+  FutureOr<html.Element?> getRepresentationElement() => null;
 
   void blur() {}
 

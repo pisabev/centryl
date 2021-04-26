@@ -24,7 +24,7 @@ class CheckList extends DataElement<List, html.DivElement> with DataLoader {
     cleanOptions();
     if (l is List) {
       final table = new html.TableElement();
-      html.TableRowElement row;
+      late html.TableRowElement row;
       var i = 0;
       l.forEach((v) {
         if (i % cols == 0) row = table.addRow();
@@ -49,8 +49,7 @@ class CheckList extends DataElement<List, html.DivElement> with DataLoader {
     final value = getValue();
     if (value != null) {
       value.forEach((v) {
-        final el =
-            list.firstWhere((el) => el.getName() == v, orElse: () => null);
+        final el = list.firstWhereOrNull((el) => el.getName() == v);
         if (el != null) el.setValue(true);
       });
     }

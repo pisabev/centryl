@@ -3,37 +3,37 @@ part of chat;
 class Message {
   static int typeMessage = 0;
   static int typeFile = 1;
-  ChatController controller;
+  late ChatController controller;
 
-  int id;
+  int? id;
   int type;
   Member member;
-  List<Member> seen;
+  List<Member>? seen;
   int room_id;
-  String context;
-  String content;
+  String? context;
+  String? content;
   DateTime timestamp;
 
-  CLElement dom;
-  CLElement messageDom;
-  CLElement timestampDom;
-  CLElement contBottom;
+  late CLElement dom;
+  late CLElement messageDom;
+  late CLElement timestampDom;
+  late CLElement contBottom;
 
   Message(
-      {this.id,
-      this.type,
-      this.member,
-      this.seen,
-      this.room_id,
-      this.context,
+      {required this.type,
+      required this.member,
+      required this.room_id,
+      required this.context,
+      required this.timestamp,
+      this.id,
       this.content,
-      this.timestamp});
+      this.seen});
 
   factory Message.fromDto(dto.Message d) => new Message(
       id: d.id,
       type: d.type,
       member: new Member.fromDto(d.member),
-      seen: d.seen?.map<Member>((m) => new Member.fromDto(m))?.toList(),
+      seen: d.seen?.map<Member>((m) => new Member.fromDto(m)).toList(),
       room_id: d.room_id,
       context: d.context,
       content: d.content,
@@ -73,8 +73,8 @@ class Message {
                 return;
               }
               content =
-                  messageDom.dom.text.isEmpty ? null : messageDom.dom.text;
-              controller.messageUpdate(this);
+                  messageDom.dom.text!.isEmpty ? null : messageDom.dom.text!;
+              controller.messageUpdate!(this);
             }, 'blur');
           });
         contB.append(edit);
@@ -84,7 +84,7 @@ class Message {
           ..addClass('light')
           ..addAction((e) {
             content = null;
-            controller.messageUpdate(this);
+            controller.messageUpdate!(this);
           });
         contB.append(delete);
       }
@@ -95,7 +95,7 @@ class Message {
         ? m.renderProfileSmall(contBottom)
         : null);
     dom..append(contTop..append(contP)..append(contM))..append(contBottom);
-    return dom;
+    return dom as Container;
   }
 
   void _renderMessageContent() {
@@ -120,7 +120,7 @@ class Message {
     ..id = id
     ..type = type
     ..member = member.toDto()
-    ..seen = seen?.map((e) => e.toDto())?.toList()
+    ..seen = seen?.map((e) => e.toDto()).toList()
     ..room_id = room_id
     ..context = context
     ..content = content

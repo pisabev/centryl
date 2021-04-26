@@ -3,10 +3,10 @@ part of chat;
 class PeerConnection {
   int userId;
   int targetUserId;
-  final ChatController controller;
+  late final ChatController controller;
   final StreamController<MediaStream> _contrRemoteStream =
       new StreamController.broadcast();
-  RtcPeerConnection _conn;
+  late RtcPeerConnection _conn;
 
   PeerConnection(this.controller, this.userId, this.targetUserId) {
     _createConnection();
@@ -29,14 +29,14 @@ class PeerConnection {
         {'urls': 'stun:stun.stunprotocol.org'}
       ]
     })
-      ..onTrack.listen((e) => _contrRemoteStream.add(e.streams[0]))
+      ..onTrack.listen((e) => _contrRemoteStream.add(e.streams![0]))
       ..onIceCandidate.listen((e) {
         if (e.candidate is RtcIceCandidate) {
           final o = new dto.IceCandidate()
             ..from = userId
             ..to = targetUserId
-            ..candidate = _rtcIceCandidateToMap(e.candidate);
-          controller.sendIce(o);
+            ..candidate = _rtcIceCandidateToMap(e.candidate!);
+          controller.sendIce!(o);
         }
       })
       ..onNegotiationNeeded.listen((e) async {
@@ -47,10 +47,10 @@ class PeerConnection {
             ..to = targetUserId
             ..description = _rtcSessionDescriptionToMap(offer);
           await _conn.setLocalDescription(o.description);
-          controller.sendOffer(o);
+          controller.sendOffer!(o);
         } catch (e) {
           throw Exception('Unable to PeerConnection:'
-              'RtcPeerConnection.onNegotiationNeeded: ${e.message}');
+              'RtcPeerConnection.onNegotiationNeeded: $e');
         }
       })
       ..onSignalingStateChange.listen((e) {
@@ -79,9 +79,9 @@ class PeerConnection {
         ..isAnswer = true
         ..description = _rtcSessionDescriptionToMap(answer);
       await _conn.setLocalDescription(o.description);
-      controller.sendOffer(o);
+      controller.sendOffer!(o);
     } catch (e) {
-      throw Exception('Unable to PeerConnection:handleOffer: ${e.message}');
+      throw Exception('Unable to PeerConnection:handleOffer: $e');
     }
   }
 
@@ -90,7 +90,7 @@ class PeerConnection {
       await _conn.setRemoteDescription(offer.description);
     } catch (e) {
       throw Exception(
-          'Unable to PeerConnection:handleOfferAnswer: ${e.message}');
+          'Unable to PeerConnection:handleOfferAnswer: $e');
     }
   }
 
@@ -100,7 +100,7 @@ class PeerConnection {
           allowInterop(() {}), allowInterop((_) {}));
     } catch (e) {
       throw Exception(
-          'Unable to PeerConnection:handleNewICECandidateMsg: ${e.message}');
+          'Unable to PeerConnection:handleNewICECandidateMsg: $e');
     }
   }
 

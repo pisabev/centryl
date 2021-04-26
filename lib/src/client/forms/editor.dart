@@ -5,7 +5,7 @@ class MyUriPolicy implements html.UriPolicy {
 }
 
 class EditorOption {
-  final String icon;
+  final String? icon;
   final String title;
   final dynamic action;
 

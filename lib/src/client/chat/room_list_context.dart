@@ -5,21 +5,20 @@ class RoomListContext extends Container {
   ChatController controller;
   bool focused = false;
 
-  Container roomTopCont;
-  Container roomInnerCont;
+  late Container roomTopCont;
+  late Container roomInnerCont;
 
-  Container listRDom;
+  late Container listRDom;
 
-  form.Input sInput;
+  late form.Input sInput;
 
-  List<Room> rooms;
+  List<Room>? rooms;
 
   RoomListContext(this.ap, this.controller) : super() {
     createDom();
     controller.onNotifyMessage.listen((r) async {
       if (!focused) return;
-      final changed =
-          rooms.firstWhere((room) => room.sameAs(r), orElse: () => null);
+      final changed = rooms?.firstWhereOrNull((room) => room.sameAs(r));
       if (changed != null) changed.setUnseen(r.unseen);
     });
     controller.onNotifyRoom.listen((r) {
@@ -42,16 +41,16 @@ class RoomListContext extends Container {
     listRDom = new Container()..addClass('room-list');
     roomInnerCont.append(listRDom, scrollable: true);
 
-    action.Button clear;
+    action.Button? clear;
     sInput = new form.Input()
       ..setPlaceHolder(intl.Search_people())
       ..setPrefixElement(new CLElement(new Icon(Icon.search).dom))
       ..addAction((e) {
-        loadUsers(sInput.field.dom.value);
-        if (sInput.field.dom.value.isNotEmpty)
-          clear.show();
+        loadUsers(sInput.field.dom.value!);
+        if (sInput.field.dom.value!.isNotEmpty)
+          clear?.show();
         else
-          clear.hide();
+          clear?.hide();
       }, 'keyup');
     roomTopCont
       ..append(sInput)
@@ -60,7 +59,7 @@ class RoomListContext extends Container {
         ..addClass('light')
         ..hide()
         ..addAction((e) {
-          clear.hide();
+          clear?.hide();
           sInput.setValue(null);
           load();
         }));
@@ -68,18 +67,18 @@ class RoomListContext extends Container {
 
   Future load() async {
     if (controller.loadRooms == null) return;
-    rooms = await controller.loadRooms();
+    rooms = await controller.loadRooms!();
     listRDom.removeChilds();
-    rooms.forEach(renderRoom);
+    rooms!.forEach(renderRoom);
   }
 
   Future loadUsers(String search) async {
     if (search.isEmpty) return load();
     if (controller.loadUsers == null) return;
     rooms =
-        await controller.loadUsers(new dto.ChatSearchDTO()..search = search);
+        await controller.loadUsers!(new dto.ChatSearchDTO()..search = search);
     listRDom.removeChilds();
-    rooms.forEach(renderRoom);
+    rooms?.forEach(renderRoom);
   }
 
   void renderRoom(Room room) {

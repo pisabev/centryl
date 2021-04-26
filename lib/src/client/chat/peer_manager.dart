@@ -5,9 +5,9 @@ class PeerManager {
   final ChatController controller;
   int userId;
   List<PeerConnection> connections = [];
-  CallView callView;
-  CallStartView callStartView;
-  StreamSubscription _sub;
+  CallView? callView;
+  CallStartView? callStartView;
+  StreamSubscription? _sub;
 
   PeerManager(this.ap, this.controller, this.userId) {
     controller.onNotifyOffer.listen((offer) {
@@ -17,7 +17,7 @@ class PeerManager {
         conn.handleOfferAnswer(offer);
       else {
         conn.handleOffer(offer);
-        if (callStartView != null) initCallView(callStartView.room);
+        if (callStartView != null) initCallView(callStartView!.room);
       }
     });
     controller.onNotifyIce.listen((ice) {
@@ -31,7 +31,7 @@ class PeerManager {
     controller.onCallStart.listen((room) {
       initCallStartView(room,
           caller: false,
-          onAnswer: () => controller.callAnswer(room)).answer.enable();
+          onAnswer: () => controller.callAnswer!(room)).answer.enable();
     });
     controller.onCallHangup.listen((room) {
       if (callStartView != null) closeCallStartView();
@@ -40,35 +40,33 @@ class PeerManager {
   }
 
   void removeConnection(int targetUserId) {
-    final exist = connections.firstWhere(
-        (c) => c.userId == userId && c.targetUserId == targetUserId,
-        orElse: () => null);
+    final exist = connections.firstWhereOrNull(
+        (c) => c.userId == userId && c.targetUserId == targetUserId);
     if (exist == null) return;
     exist._conn.close();
     connections.remove(exist);
   }
 
   PeerConnection getConnection(int targetUserId) {
-    final exist = connections.firstWhere(
-        (c) => c.userId == userId && c.targetUserId == targetUserId,
-        orElse: () => null);
+    final exist = connections.firstWhereOrNull(
+        (c) => c.userId == userId && c.targetUserId == targetUserId);
     if (exist != null) return exist;
     final con = new PeerConnection(controller, userId, targetUserId);
     con.onRemoteStream.listen((stream) {
-      callView.videoRemote.dom
+      callView!.videoRemote.dom
         ..autoplay = true
         ..srcObject = stream;
-      callView.analyzer();
+      callView!.analyzer();
     });
     connections.add(con);
     return con;
   }
 
   CallStartView initCallStartView(Room room,
-          {bool caller = true, void Function() onAnswer}) =>
+          {bool caller = true, void Function()? onAnswer}) =>
       callStartView = new CallStartView(ap, room, onHangup: () {
         closeCallStartView();
-        controller.callHangup(room);
+        controller.callHangup!(room);
       }, onAnswer: onAnswer, caller: caller);
 
   void initCallView(Room room) {
@@ -78,29 +76,29 @@ class PeerManager {
     getConnection(room.members.firstWhere((r) => !r.isMe).user_id);
     callView = new CallView(ap, room, onHangup: () {
       closeCallView();
-      controller.callHangup(room);
+      controller.callHangup!(room);
     });
-    _sub = callView.localView.onLocalStreamChange
+    _sub = callView!.localView.onLocalStreamChange
         .listen((s) => connections.forEach((c) => c.setLocalStream(s)));
   }
 
   void closeCallStartView() {
     if (callStartView == null) return;
-    callStartView.close();
+    callStartView!.close();
     callStartView = null;
   }
 
   void closeCallView() {
     if (callView == null) return;
     _sub?.cancel();
-    removeConnection(callView.room.members.firstWhere((r) => !r.isMe).user_id);
-    callView.close();
+    removeConnection(callView!.room.members.firstWhere((r) => !r.isMe).user_id);
+    callView!.close();
     callView = null;
   }
 
   Future<void> doCall(Room room) async {
-    controller.closeChat();
+    controller.closeChat!();
     initCallStartView(room);
-    controller.callStart(room);
+    controller.callStart!(room);
   }
 }

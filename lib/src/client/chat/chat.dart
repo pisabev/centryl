@@ -6,8 +6,8 @@ class Chat {
   ChatController controller;
   late Container dom;
 
-  late RoomListContext roomListContext;
-  late RoomContext roomContext;
+  RoomListContext roomListContext;
+  RoomContext roomContext;
   late PeerManager peerManager;
 
   int unread = 0;
@@ -36,7 +36,7 @@ class Chat {
       ..closeChat = (() => ap.asideHide())
       ..closeRoom = (room) {
         renderList();
-        if (room.context != null) renderChat();
+        renderChat();
       };
 
     controller.onNotifyMessage.listen((event) => init());
@@ -68,8 +68,8 @@ class Chat {
     ..addAction((e) {
       renderChat();
       if (roomContext.activeRoom != null &&
-          roomContext.activeRoom.context == null)
-        renderRoom(roomContext.activeRoom);
+          roomContext.activeRoom?.context == null)
+        renderRoom(roomContext.activeRoom!);
       else
         renderList();
     })
@@ -77,7 +77,7 @@ class Chat {
     ..setTip(intl.Messages(), 'bottom');
 
   Future<void> init() async {
-    if (controller.loadUnread != null) unread = await controller.loadUnread();
+    if (controller.loadUnread != null) unread = await controller.loadUnread!();
     showUnread();
   }
 
@@ -121,6 +121,6 @@ class Chat {
 
   bool isRoomVisible(int roomId) {
     if (!focused || !roomContext.focused) return false;
-    return roomContext.activeRoom.room_id == roomId;
+    return roomContext.activeRoom!.room_id == roomId;
   }
 }

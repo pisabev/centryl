@@ -2,9 +2,9 @@ part of forms;
 
 class Check<T> extends DataElement<T, html.SpanElement> {
   final String _type;
-  html.LabelElement label;
-  CLElement textLabel;
-  html.CheckboxInputElement field;
+  late html.LabelElement label;
+  CLElement? textLabel;
+  late html.CheckboxInputElement field;
 
   Check([this._type = 'int']) : super() {
     dom = new html.SpanElement();
@@ -26,22 +26,21 @@ class Check<T> extends DataElement<T, html.SpanElement> {
         ..addAction(onClick, 'click');
       append(textLabel);
     }
-    textLabel
+    textLabel!
       ..removeChilds()
       ..append(new html.SpanElement()..text = lbl);
   }
 
   void onClick(_) {
     field.focus();
-    if (!field.disabled)
-      setValue(getValueInverse());
+    if (!field.disabled!) setValue(getValueInverse());
   }
 
   void setChecked(bool checked) => field.checked = checked;
 
-  bool isChecked() => field.checked;
+  bool isChecked() => field.checked!;
 
-  void toggle() => field.checked = !field.checked;
+  void toggle() => field.checked = !field.checked!;
 
   void setValue(dynamic value) {
     final old = getValue();
@@ -54,14 +53,14 @@ class Check<T> extends DataElement<T, html.SpanElement> {
     if (getValue() != old) contrValue.add(this);
   }
 
-  int _getIntValue() => (field.checked) ? 1 : 0;
+  int _getIntValue() => (field.checked!) ? 1 : 0;
 
-  bool _getBoolValue() => field.checked;
+  bool _getBoolValue() => field.checked!;
 
-  T getValue() => _type == 'int' ? _getIntValue() : _getBoolValue();
+  T getValue() => (_type == 'int' ? _getIntValue() : _getBoolValue()) as T;
 
   T getValueInverse() =>
-      _type == 'int' ? (_getIntValue() == 1 ? 0 : 1) : !_getBoolValue();
+      (_type == 'int' ? (_getIntValue() == 1 ? 0 : 1) : !_getBoolValue()) as T;
 
   void focus() {}
 
