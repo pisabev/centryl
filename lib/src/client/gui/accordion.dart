@@ -1,8 +1,8 @@
 part of gui;
 
 abstract class AccordionNode extends CLElement {
-  CLElement titleDom;
-  CLElement contentDom;
+  late CLElement titleDom;
+  late CLElement contentDom;
 
   final StreamController<AccordionNode> _contrOpen =
       new StreamController.broadcast();
@@ -39,7 +39,7 @@ class _AccordionNode extends AccordionNode {
   }
 
   void keyNavigate(Event e) {
-    if (KeyValidator.isKeyUp(e)) {
+    if (KeyValidator.isKeyUp(e as KeyboardEvent)) {
       getPrevElement().titleDom.dom.focus();
     } else if (KeyValidator.isKeyDown(e)) {
       getNextElement().titleDom.dom.focus();

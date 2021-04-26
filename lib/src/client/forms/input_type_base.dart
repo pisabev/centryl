@@ -5,5 +5,5 @@ abstract class _InputTypeBase<T> {
   void set(dynamic v);
   String toString();
   FutureOr<bool> validateValue(T v);
-  FutureOr<bool> validateInput(html.KeyboardEvent e);
+  FutureOr<bool> validateInput(html.Event e);
 }

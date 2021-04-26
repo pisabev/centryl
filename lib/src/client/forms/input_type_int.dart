@@ -18,8 +18,8 @@ class _InputTypeInt implements _InputTypeBase<int> {
 
   FutureOr<bool> validateValue(_) => true;
 
-  FutureOr<bool> validateInput(html.KeyboardEvent e) =>
-      utils.KeyValidator.isNum(e) ||
+  FutureOr<bool> validateInput(html.Event e) =>
+      utils.KeyValidator.isNum(e as html.KeyboardEvent) ||
       utils.KeyValidator.isPlus(e) ||
       utils.KeyValidator.isMinus(e);
 }

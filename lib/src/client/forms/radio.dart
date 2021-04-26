@@ -1,7 +1,7 @@
 part of forms;
 
 class Radio<T> extends DataElement<T, html.SpanElement> {
-  html.RadioButtonInputElement field;
+  late html.RadioButtonInputElement field;
 
   Radio() : super() {
     dom = new html.SpanElement();
@@ -30,7 +30,7 @@ class Radio<T> extends DataElement<T, html.SpanElement> {
     field.name = name;
   }
 
-  void setValue(T value) {
+  void setValue(T? value) {
     super.setValue(value);
     field.value = value.toString();
   }
@@ -38,17 +38,17 @@ class Radio<T> extends DataElement<T, html.SpanElement> {
   void click() => _onClick();
 
   void _onClick([e]) {
-    if (field.disabled) return;
+    if (field.disabled!) return;
     field.focus();
     setChecked();
   }
 
   void setChecked() {
-    if (!field.checked) contrValue.add(this);
+    if (!field.checked!) contrValue.add(this);
     field.checked = true;
   }
 
-  bool get isChecked => field.checked;
+  bool get isChecked => field.checked!;
 
   void focus() => addClass('focus');
 

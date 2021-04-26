@@ -1,9 +1,9 @@
 part of forms;
 
 abstract class Aggregator<T> {
-  T total;
-  html.TableCellElement dom;
-  Selector selector;
+  late T total;
+  late html.TableCellElement dom;
+  Selector? selector;
 
   Aggregator([this.selector]);
 
@@ -53,17 +53,17 @@ class CountAggregator extends Aggregator<num> {
 }
 
 class GridColumn {
-  GridList grid;
+  late GridList grid;
 
   dynamic title = '';
 
-  dynamic width;
+  late dynamic width;
 
-  dynamic minWidth;
+  late dynamic minWidth;
 
-  String key;
+  late String key;
 
-  int cell_index;
+  late int cell_index;
 
   dynamic filter;
 
@@ -73,26 +73,26 @@ class GridColumn {
 
   bool send = true;
 
-  String group;
+  String? group;
 
   RowDataCell Function(
-      GridColumn, html.TableRowElement, html.TableCellElement, dynamic) type;
+      GridColumn, html.TableRowElement, html.TableCellElement, dynamic)? type;
 
-  Aggregator aggregator;
+  Aggregator? aggregator;
 
-  CLElement contDom;
+  late CLElement contDom;
 
-  CLElement orderDom;
+  CLElement? orderDom;
 
-  CLElement filterDom;
+  late CLElement filterDom;
 
-  CLElement currentFilterDom;
+  late CLElement currentFilterDom;
 
-  utils.UISlider slider;
+  late utils.UISlider slider;
 
-  static GridColumn _gc;
+  static GridColumn? _gc;
 
-  html.TableCellElement headerCell, footerCell;
+  late html.TableCellElement headerCell, footerCell;
 
   GridColumn(this.key);
 
@@ -114,7 +114,7 @@ class GridColumn {
     headerCell.append(contDom.dom);
     filterDom = new CLElement(new html.DivElement())
       ..addClass('grid-filter-slide')
-      ..addAction((e) => e.stopPropagation());
+      ..addAction<html.Event>((e) => e.stopPropagation());
     slider =
         new utils.UISlider(filterDom, contDom, appendDom: true, positions: [
       utils.BoxingPosition.bottomRight,
@@ -128,14 +128,14 @@ class GridColumn {
     _setWidth();
   }
 
-  void _setOrder(String way) {
-    if (orderDom != null) orderDom.remove();
+  void _setOrder(String? way) {
+    if (orderDom != null) orderDom!.remove();
 
     orderDom = new CLElement(new html.AnchorElement())
       ..addClass('sort')
       ..appendTo(contDom)
       ..addAction((e) {
-        if (grid.order == null || grid.order?.way == 'DESC') {
+        if (grid.order == null || grid.order!.way == 'DESC') {
           grid.setOrder(new GridOrder(key, 'ASC'));
           _setOrder('ASC');
         } else {
@@ -150,7 +150,7 @@ class GridColumn {
     } else if (way == 'DESC') {
       icon2 = new Icon('');
     }
-    orderDom..append(icon1.dom)..append(icon2.dom);
+    orderDom!..append(icon1.dom)..append(icon2.dom);
   }
 
   void _setWidth() {
@@ -180,19 +180,19 @@ class GridColumn {
 
   void renderAggregator(List<html.TableRowElement> rows) {
     if (aggregator == null) return;
-    aggregator
+    aggregator!
       ..dom = footerCell
       ..render();
-    if (aggregator.selector != null) {
+    if (aggregator!.selector != null) {
       headerCell.classes.add('highlighted');
-      aggregator.selector.init(this, rows);
+      aggregator!.selector!.init(this, rows);
     }
   }
 
   void resetAggregator() => aggregator?.reset();
 
   void filterSetup(DataElement filter) {
-    filter.addAction((e) {
+    filter.addAction<html.KeyboardEvent>((e) {
       if (utils.KeyValidator.isKeyEnter(e)) {
         filterHide();
       }
@@ -217,14 +217,14 @@ class GridColumn {
     }
   }
 
-  void filterClick([html.Event e]) {
-    e.stopPropagation();
+  void filterClick([html.Event? e]) {
+    e?.stopPropagation();
     filterShow();
   }
 
   void filterShow() {
     if (_gc != null) {
-      _gc.filterHide();
+      _gc!.filterHide();
       _gc = null;
     }
     currentFilterDom.hide(useVisibility: true);
@@ -235,16 +235,16 @@ class GridColumn {
     } else
       filter.focus();
     _gc = this;
-    CLElement doc;
+    late CLElement doc;
     doc = new CLElement(html.document.body)
       ..addAction((e) {
-        if (_gc != null) _gc.filterHide();
+        if (_gc != null) _gc!.filterHide();
         doc.removeAction('click.filter');
       }, 'click.filter');
   }
 
-  String _findZIndex() {
-    String zIndex;
+  String? _findZIndex() {
+    String? zIndex;
     var parent = grid.dom.parent;
     while (parent != null && zIndex == null) {
       if (parent.style.zIndex.isNotEmpty) zIndex = parent.style.zIndex;

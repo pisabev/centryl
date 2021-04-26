@@ -5,12 +5,12 @@ class RenderBuffered extends RenderBase {
   int offset = 20;
   int _currentSet = -1;
 
-  CLElement _fixBefore;
-  CLElement _fixAfter;
+  late CLElement _fixBefore;
+  late CLElement _fixAfter;
 
   RenderBuffered();
 
-  void setGrid(GridBase grid) {
+  void setGrid(GridList grid) {
     super.setGrid(grid);
     _fixBefore = new CLElement(grid.dom.createTBody())..addClass('tbody-fix');
     _fixAfter = new CLElement(grid.dom.createTBody())..addClass('tbody-fix');
@@ -34,21 +34,21 @@ class RenderBuffered extends RenderBase {
   void setTbodyWidths([bool auto = false]) {
     if (auto == true) return;
     if (tbodyWidths != null &&
-        tbodyWidths.isNotEmpty &&
+        tbodyWidths!.isNotEmpty &&
         grid.tbody.dom.childNodes.isNotEmpty) {
-      if (_fixBefore.dom.firstChild.childNodes.isEmpty) {
-        for (var i = 0; i < tbodyWidths.length; i++) {
+      if (_fixBefore.dom.firstChild!.childNodes.isEmpty) {
+        for (var i = 0; i < tbodyWidths!.length; i++) {
           final c = new html.TableCellElement()
             ..style.height = '0'
             ..style.padding = '0'
             ..style.margin = '0'
-            ..style.width = '${tbodyWidths[i]}px';
-          _fixBefore.dom.firstChild.append(c);
+            ..style.width = '${tbodyWidths![i]}px';
+          _fixBefore.dom.firstChild!.append(c);
         }
       } else {
         final firstRow = _fixBefore.dom.children.first;
         for (var i = 0; i < firstRow.children.length; i++)
-          firstRow.children[i].style.width = '${tbodyWidths[i]}px';
+          firstRow.children[i].style.width = '${tbodyWidths![i]}px';
       }
     }
   }
@@ -60,8 +60,8 @@ class RenderBuffered extends RenderBase {
     grid.tbody.removeChilds();
     grid.tbody.dom.append(frg);
     grid.map.forEach((k, gc) {
-      if (gc.aggregator != null && gc.aggregator.selector != null)
-        gc.aggregator.selector.section.offset = listStart;
+      if (gc.aggregator != null && gc.aggregator!.selector != null)
+        gc.aggregator!.selector!.section.offset = listStart;
     });
   }
 
@@ -99,5 +99,5 @@ class Render extends RenderBase {
     grid.map.forEach((k, gc) => gc.renderAggregator(gc.grid.tbody.dom.rows));
   }
 
-  void onScroll([int scrollTop, bool render]) {}
+  void onScroll([int? scrollTop, bool? render]) {}
 }

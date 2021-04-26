@@ -18,8 +18,8 @@ class _InputTypeFloat implements _InputTypeBase<num> {
 
   FutureOr<bool> validateValue(_) => true;
 
-  bool validateInput(html.KeyboardEvent e) =>
-      utils.KeyValidator.isNum(e) ||
+  bool validateInput(html.Event e) =>
+      utils.KeyValidator.isNum(e as html.KeyboardEvent) ||
       utils.KeyValidator.isPlus(e) ||
       utils.KeyValidator.isMinus(e) ||
       utils.KeyValidator.isPoint(e) ||

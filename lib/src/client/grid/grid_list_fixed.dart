@@ -1,15 +1,15 @@
 part of forms;
 
 class GridListContainer extends Container {
-  GridList gridList;
+  late GridList gridList;
 
-  Container contHead;
-  Container contBody;
-  Container contFoot;
+  late Container contHead;
+  late Container contBody;
+  late Container contFoot;
 
-  html.Element _focusEl;
+  html.Element? _focusEl;
   var _scrollTop = 0;
-  bool fixedFooter;
+  late bool fixedFooter;
 
   GridListContainer(this.gridList,
       {bool auto = false, this.fixedFooter = false})
@@ -31,13 +31,13 @@ class GridListContainer extends Container {
 
   void fixTable() {
     if (gridList.tbody.dom.children.isEmpty) {
-      if (_focusEl != null) _focusEl.focus();
+      if (_focusEl != null) _focusEl!.focus();
       return;
     }
 
     final width = gridList.dom.offsetWidth;
 
-    CLElement tableInF;
+    late CLElement tableInF;
     if (fixedFooter) {
       tableInF = new CLElement(new html.TableElement())
         ..setClass(gridList.dom.classes.join(' '));
@@ -73,20 +73,20 @@ class GridListContainer extends Container {
     gridList.setWidth(new Dimension.px(width));
 
     // Fix fast bottom scroll on chrome
-    contBody.scroll.containerEl.style.setProperty('overflow-anchor', 'none');
+    contBody.scroll!.containerEl.style.setProperty('overflow-anchor', 'none');
 
-    contBody.scroll.containerEl.onScroll.listen((e) {
+    contBody.scroll!.containerEl.onScroll.listen((e) {
       tableInH.dom.style.marginLeft =
-          '${-contBody.scroll.containerEl.scrollLeft}px';
+          '${-contBody.scroll!.containerEl.scrollLeft}px';
       if (fixedFooter) {
         tableInF.dom.style.marginLeft =
-            '${-contBody.scroll.containerEl.scrollLeft}px';
+            '${-contBody.scroll!.containerEl.scrollLeft}px';
       }
       e.stopPropagation();
       gridList.renderer.onScroll(scrollTop);
     });
 
-    if (_focusEl != null) _focusEl.focus();
+    if (_focusEl != null) _focusEl!.focus();
 
     scrollTop = _scrollTop;
 
@@ -122,10 +122,10 @@ class GridListContainer extends Container {
     _scrollTop = 0;
   }
 
-  int get scrollTop => contBody.scroll?.containerEl?.scrollTop ?? 0;
+  int get scrollTop => contBody.scroll!.containerEl.scrollTop ?? 0;
 
   set scrollTop(int scrollTop) =>
-      contBody.scroll.scrollTo(_scrollTop = scrollTop);
+      contBody.scroll!.scrollTo(_scrollTop = scrollTop);
 
   void initLayout() {
     fixReset();

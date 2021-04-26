@@ -14,16 +14,16 @@ class FileComment extends _FileContainer<FileAttach> {
   DivElement cont = new DivElement()
     ..style.display = 'block';
   form.TextArea<String> ta = new form.TextArea();
-  SpanElement cspan = new SpanElement()
+  late SpanElement cspan = new SpanElement()
     ..style.display = 'block';
-  SpanElement dspan = new SpanElement()
+  late SpanElement dspan = new SpanElement()
     ..style.display = 'block';
 
   String get comment => ta.getValue() ?? '';
   set comment(String c) => ta.setValue(c ?? '');
-  String get creator => cspan.innerHtml;
+  String get creator => cspan.innerHtml!;
   set creator(String c) => cspan.innerHtml = c;
-  String get date => dspan.innerHtml;
+  String get date => dspan.innerHtml!;
   set date(String d) => dspan.innerHtml = d;
 
   FileComment(parent) : super(parent) {

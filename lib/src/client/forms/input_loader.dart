@@ -1,17 +1,17 @@
 part of forms;
 
 class InputLoader<T> extends InputFunction<T> with DataLoader<List<Map>> {
-  CLElement domList;
+  late CLElement domList;
   List list = [];
   final String fieldKey = 'k';
   final String fieldValue = 'v';
   final String fieldList = 'v';
-  Timer _timerLoading;
-  utils.CLscroll _scroll;
-  utils.UISlider _slider;
-  CLElement scrollContainer;
+  Timer? _timerLoading;
+  late utils.CLscroll _scroll;
+  late utils.UISlider _slider;
+  late CLElement scrollContainer;
   int currentIndex = -1;
-  String _lastVisibleValue;
+  late String _lastVisibleValue;
   bool isListVisible = false;
   bool _userAction = false;
   bool _tryValueLater = false;
@@ -47,11 +47,11 @@ class InputLoader<T> extends InputFunction<T> with DataLoader<List<Map>> {
     });
   }
 
-  void _moveIndex(p) {
+  void _moveIndex(int p) {
     if (list.isEmpty || !state) return;
     final cur_indx = currentIndex;
     if (cur_indx >= 0) list[cur_indx][2].removeClass('current');
-    var next_indx = cur_indx + p;
+    int next_indx = cur_indx + p;
     if (next_indx > list.length - 1) next_indx = 0;
     if (next_indx < 0) next_indx = list.length - 1;
     list[next_indx][2].addClass('current');
@@ -63,7 +63,7 @@ class InputLoader<T> extends InputFunction<T> with DataLoader<List<Map>> {
 
   void _navAction(html.Event e) {
     if (!state) return;
-    if (utils.KeyValidator.isKeyDown(e))
+    if (utils.KeyValidator.isKeyDown(e as html.KeyboardEvent))
       _moveIndex(1);
     else if (utils.KeyValidator.isKeyUp(e))
       _moveIndex(-1);
@@ -106,7 +106,7 @@ class InputLoader<T> extends InputFunction<T> with DataLoader<List<Map>> {
     final listv = row[fieldList];
     list.add([value, title, li, row]);
     li
-      ..addAction((e) {
+      ..addAction<html.Event>((e) {
         e.preventDefault();
         setValue([value, title]);
         new Timer(const Duration(milliseconds: 0), focus);
@@ -116,7 +116,7 @@ class InputLoader<T> extends InputFunction<T> with DataLoader<List<Map>> {
     domList.append(li);
   }
 
-  void _setOptions(List<Map> arr) {
+  void _setOptions(List<Map>? arr) {
     list = [];
     currentIndex = -1;
     domList.removeChilds();
@@ -125,7 +125,7 @@ class InputLoader<T> extends InputFunction<T> with DataLoader<List<Map>> {
     if (!_userAction && arr.isEmpty) setValue([null, null]);
   }
 
-  String getSuggestion() => field.dom.value;
+  String getSuggestion() => field.dom.value!;
 
   Future<String> getRepresentation() {
     final completer = new Completer<String>();
@@ -164,8 +164,8 @@ class InputLoader<T> extends InputFunction<T> with DataLoader<List<Map>> {
     void _loadVisiblePart() {
       if (value != List && v != null && t == null) {
         loadStart();
-        _executing = execute().asStream().listen((d) {
-          if (d.length == 1) {
+        _executing = execute!().asStream().listen((d) {
+          if (d != null && d.length == 1) {
             final v = d.first;
             _lastVisibleValue = v[fieldValue];
             setValueDynamic(_lastVisibleValue);
@@ -180,7 +180,7 @@ class InputLoader<T> extends InputFunction<T> with DataLoader<List<Map>> {
     }
 
     if (isLoading) {
-      _cancel().then((_) => _loadVisiblePart());
+      _cancel()?.then((_) => _loadVisiblePart());
     } else {
       _loadVisiblePart();
     }
@@ -203,7 +203,7 @@ class InputLoader<T> extends InputFunction<T> with DataLoader<List<Map>> {
   void _leave(e) {
     _hideList();
     _userAction = false;
-    if (_timerLoading != null && _timerLoading.isActive)
+    if (_timerLoading != null && _timerLoading!.isActive)
       _tryValueLater = true;
     else if (getSuggestion() != _lastVisibleValue) _tryValue();
   }

@@ -43,6 +43,7 @@ class _InputTypeDateRange implements _InputTypeBase<List<DateTime?>> {
 
   FutureOr<bool> validateValue(_) => true;
 
-  bool validateInput(html.KeyboardEvent e) =>
-      utils.KeyValidator.isNum(e) || utils.KeyValidator.isSlash(e);
+  bool validateInput(html.Event e) =>
+      utils.KeyValidator.isNum(e as html.KeyboardEvent) ||
+      utils.KeyValidator.isSlash(e);
 }

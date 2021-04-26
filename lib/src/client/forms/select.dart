@@ -8,7 +8,7 @@ class Select<T> extends _SelectBase<T> {
   factory Select.fromOptions(List options) =>
       new Select()..setOptions(options);
 
-  void setValue(T value) => _setValue(value);
+  void setValue(T? value) => _setValue(value);
 
   void _manageValue(dynamic value) {
     var newIndex = 0;

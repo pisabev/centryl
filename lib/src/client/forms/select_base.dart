@@ -2,17 +2,17 @@ part of forms;
 
 abstract class _SelectBase<T> extends DataElement<T, html.Element>
     with DataLoader<List> {
-  html.SpanElement inner;
-  CLElement domValue;
-  CLElement domList;
+  late html.SpanElement inner;
+  late CLElement domValue;
+  late CLElement domList;
   List list = [];
-  utils.CLscroll _scroll;
-  utils.UISlider _slider;
-  CLElement _scrollContainer;
+  late utils.CLscroll _scroll;
+  late utils.UISlider _slider;
+  late CLElement _scrollContainer;
   int currentIndex = 0;
   bool isListVisible = false;
   bool _defaultValue = true;
-  action.Warning warning;
+  late action.Warning warning;
 
   //StreamSubscription _valueSub;
   //dynamic _value_cached;
@@ -37,10 +37,10 @@ abstract class _SelectBase<T> extends DataElement<T, html.Element>
     setAttribute('tabindex', '0');
     addAction(_onFocus, 'focus');
     addAction(_onBlur, 'blur');
-    addAction((e) {
+    addAction<html.Event>((e){
       e.stopPropagation();
       if (list.isNotEmpty && state) showList();
-      CLElement doc;
+      late CLElement doc;
       doc = new CLElement(html.document.body)
         ..addAction((e) {
           hideList();
@@ -52,7 +52,7 @@ abstract class _SelectBase<T> extends DataElement<T, html.Element>
       final v = getValue();
       setOptions(data ?? [], false);
       if (list.isNotEmpty) {
-        if (_testAgainstList(v))
+        if (v != null && _testAgainstList(v))
           _setValue(v);
         else if (_defaultValue)
           _setValue(list.first[0]);
@@ -73,7 +73,7 @@ abstract class _SelectBase<T> extends DataElement<T, html.Element>
 
   bool _testAgainstList(T v);
 
-  void _setValue(T value) {
+  void _setValue(T? value) {
     // Loading data
     super.setValue(value);
     if (list.isEmpty && execute is Function) {
@@ -87,7 +87,7 @@ abstract class _SelectBase<T> extends DataElement<T, html.Element>
   void _manageValue(dynamic value);
 
   /// Responds to key arrows and sets the currentIndex
-  void _moveIndex(p) {
+  void _moveIndex(int p) {
     if (list.isEmpty || !state || isLoading) return;
     final cur_indx = currentIndex;
     list[cur_indx][1].removeClass('current');
@@ -103,7 +103,7 @@ abstract class _SelectBase<T> extends DataElement<T, html.Element>
     }
   }
 
-  void navAction(html.Event e) {
+  void navAction(html.KeyboardEvent e) {
     if (utils.KeyValidator.isKeyDown(e)) {
       e.preventDefault();
       _moveIndex(1);
@@ -137,9 +137,10 @@ abstract class _SelectBase<T> extends DataElement<T, html.Element>
 
   CLElement addOption(dynamic value, dynamic title, [bool initValue = true]) {
     final li = new CLElement(new html.LIElement())
-      ..addAction((e) {
-        e.stopPropagation();
-        e.preventDefault();
+      ..addAction<html.Event>((e) {
+        e
+          ..stopPropagation()
+          ..preventDefault();
         hideList();
         _setValue(value);
       }, 'mousedown')
@@ -195,7 +196,7 @@ abstract class _SelectBase<T> extends DataElement<T, html.Element>
 
   void setShadowValue() => domValue.setText(getText());
 
-  void showList([CLElementBase relativeTo]) {
+  void showList([CLElementBase? relativeTo]) {
     isListVisible = true;
     _slider.el.dom.classes
       ..removeWhere((c) => c.startsWith('size-'))
@@ -226,17 +227,17 @@ abstract class _SelectBase<T> extends DataElement<T, html.Element>
     _slider.hide();
   }
 
-  void setWarning(DataWarning wrn, {bool show = true}) {
+  void setWarning(DataWarning? wrn, {bool show = true}) {
     if (wrn == null) return;
     super.setWarning(wrn);
     warning.init(getWarnings(), showAuto: show);
   }
 
-  void showWarnings([Duration duration]) {
+  void showWarnings([Duration? duration]) {
     warning.show(duration);
   }
 
-  void removeWarning(String wrnKey) {
+  void removeWarning(String? wrnKey) {
     if (wrnKey == null) return;
     super.removeWarning(wrnKey);
     warning.remove();

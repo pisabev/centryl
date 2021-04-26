@@ -9,7 +9,7 @@ class RadioGroup<T> extends Data<T> {
     setName(name);
   }
 
-  void registerElement(Radio r) {
+  void registerElement(Radio<T> r) {
     r
       ..setName('${getName()}|$_counter')
       ..stop();
@@ -17,20 +17,19 @@ class RadioGroup<T> extends Data<T> {
     elements.add(r);
   }
 
-  void setValue(T value) {
+  void setValue(T? value) {
     if (value == null) {
       final oldValue = getValue();
       elements.forEach((el) => el.field.checked = false);
       if (getValue() != oldValue) contrValue.add(this);
       return;
     }
-    final v =
-        elements.firstWhere((e) => e.getValue() == value, orElse: () => null);
+    final v = elements.firstWhereOrNull((e) => e.getValue() == value);
     v?.setChecked();
   }
 
-  T getValue() {
-    final v = elements.firstWhere((e) => e.field.checked, orElse: () => null);
+  T? getValue() {
+    final v = elements.firstWhereOrNull((e) => e.field.checked!);
     return v?.getValue();
   }
 

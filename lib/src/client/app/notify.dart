@@ -197,18 +197,22 @@ class Notify {
         ..addClass('light')
         ..addAction((e) {
           final dates = date.getValue_();
-          final first = dates.first ?? new DateTime.now();
-          final last = dates.last ?? new DateTime.now();
-          date.setValue([first.subtract(last.difference(first)), first]);
+          if (dates != null) {
+            final first = dates.first ?? new DateTime.now();
+            final last = dates.last ?? new DateTime.now();
+            date.setValue([first.subtract(last.difference(first)), first]);
+          }
         }))
       ..append(action.Button()
         ..setIcon(Icon.chevron_right)
         ..addClass('light')
         ..addAction((e) {
           final dates = date.getValue_();
-          final first = dates.first ?? new DateTime.now();
-          final last = dates.last ?? new DateTime.now();
-          date.setValue([last, last.add(last.difference(first))]);
+          if (dates != null) {
+            final first = dates.first ?? new DateTime.now();
+            final last = dates.last ?? new DateTime.now();
+            date.setValue([last, last.add(last.difference(first))]);
+          }
         }))
       ..append(action.Button()
         ..setIcon(Icon.search)
@@ -236,8 +240,8 @@ class Notify {
     range.last = range.last.add(const Duration(days: 1));
     date
       ..onValueChanged.listen((_) {
-        final start = date.getValue_().first;
-        final end = date.getValue_().last;
+        final start = date.getValue_()?.first;
+        final end = date.getValue_()?.last;
         if (start == null || end == null) return;
         load_archive(outer, start, end).then((data) {
           inner!.removeChilds();

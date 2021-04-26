@@ -17,7 +17,9 @@ class InputDateTime extends Input {
       ..addClass('clickable')
       ..appendTo(inner);
     picker = new gui.DatePicker(time: true)
-      ..onSet.listen((_) => fieldUpdate(picker.getDate()))
+      ..onSet.listen((_) {
+        if (picker.getDate() != null) fieldUpdate(picker.getDate()!);
+      })
       ..appendTo(this)
       ..addAction<html.Event>((e) => e.stopPropagation(), 'mousedown');
     addAction(showDatePicker, 'dblclick');
@@ -54,6 +56,7 @@ class InputDateTime extends Input {
       math.min(max, int.parse(value)).toString().padLeft(2, '0');
 
   Stream<void> get onPickerOpen => _contrOpen.stream;
+
   Stream<void> get onPickerClose => _contrClose.stream;
 
   void noAction() {

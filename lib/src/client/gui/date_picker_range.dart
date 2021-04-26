@@ -2,10 +2,10 @@ part of gui;
 
 class DatePickerRange extends CLElement {
   //form.InputDate inputFrom, inputTo;
-  form.Select choice;
+  late form.Select choice;
 
-  form.InputDateRange dateRange;
-  DatePicker c1, c2;
+  late form.InputDateRange dateRange;
+  late DatePicker c1, c2;
 
   DatePickerRange(this.dateRange) : super(new DivElement()) {
     setClass('ui-calendar-picker-range');
@@ -60,12 +60,12 @@ class DatePickerRange extends CLElement {
     if (i > 0) set(Calendar.ranges[i - 1]['method']());
   }
 
-  void set(List<DateTime> arr) {
-    DateTime date1;
-    DateTime date2;
-    if (arr is List && arr.isNotEmpty && arr.length == 2) {
-      date1 = arr[0]?.toLocal();
-      date2 = arr[1]?.toLocal();
+  void set(List<DateTime?>? arr) {
+    DateTime? date1;
+    DateTime? date2;
+    if (arr is List && arr!.isNotEmpty && arr.length == 2) {
+      date1 = arr[0]!.toLocal();
+      date2 = arr[1]!.toLocal();
     }
     dateRange.setValue(arr);
     c1.setDate(date1 ?? new DateTime.now());

@@ -6,7 +6,7 @@ class TreeNode {
   dynamic value;
   dynamic data;
   String type;
-  String clas;
+  String? clas;
   bool hasChilds;
 
   TreeNode(

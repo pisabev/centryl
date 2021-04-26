@@ -1,7 +1,7 @@
 part of forms;
 
 class RowEditCell<T extends DataElement> extends RowDataCell<T> {
-  CLElement el;
+  late CLElement el;
   bool _rendering = false;
 
   RowEditCell(GridColumn column, html.TableRowElement row,
@@ -70,11 +70,11 @@ class RowEditCell<T extends DataElement> extends RowDataCell<T> {
         render();
         column.grid.observer.execHooks(GridList.hook_render);
       })
-      ..addAction((e) => e.stopPropagation(), 'mousedown')
-      ..addAction((e) => e.stopPropagation(), 'click');
+      ..addAction<html.Event>((e) => e.stopPropagation(), 'mousedown')
+      ..addAction<html.Event>((e) => e.stopPropagation(), 'click');
   }
 
-  void swap([html.Event e]) {
+  void swap([html.Event? e]) {
     el
       ..removeChilds()
       ..removeClass('edit')
@@ -88,7 +88,7 @@ class RowEditCell<T extends DataElement> extends RowDataCell<T> {
       ..focus()
       ..select()
       ..addAction<html.FocusEvent>((e) {
-        if (object.dom.contains(e.relatedTarget)) return;
+        if (object.dom.contains(e.relatedTarget as html.Node)) return;
         object.removeAction('focusout.swap');
         render();
         el.setAttribute('tabindex', '0'); // Fix for tab + shift

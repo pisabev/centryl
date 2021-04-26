@@ -7,42 +7,42 @@ typedef TreeLoadFunction = Future Function(Tree);
 typedef TreeValueFunction = TreeNode Function(TreeNode);
 
 class TreeBuilder<E extends Tree> extends CLElement {
-  E main, current;
+  E? main, current;
   Map<String, Tree> indexOfObjects = {};
-  List<String> checkObj;
+  List<String>? checkObj;
   bool checkSingle;
   bool startOpen = false;
   Map<String, String> icons = {};
 
-  TreeClickFunction actionClick;
-  TreeDblClickFunction actionDblClick;
-  TreeCheckFunction actionCheck;
-  TreeLoadFunction actionLoad;
-  TreeValueFunction valueTransform = (d) => d;
+  TreeClickFunction? actionClick;
+  TreeDblClickFunction? actionDblClick;
+  TreeCheckFunction? actionCheck;
+  TreeLoadFunction? actionLoad;
+  TreeValueFunction? valueTransform = (d) => d;
 
-  Completer _completer;
+  Completer? _completer;
 
   TreeBuilder(
-      {TreeNode node,
-      Map<String, String> icons,
+      {TreeNode? node,
+      Map<String, String>? icons,
       this.actionClick,
       this.actionDblClick,
       this.actionCheck,
       this.actionLoad,
-      TreeValueFunction valueTransform,
+      TreeValueFunction? valueTransform,
       this.checkSingle = false,
       this.checkObj})
       : super(new DivElement()) {
     this.icons = icons ?? this.icons;
     this.valueTransform = valueTransform ?? this.valueTransform;
-    main = (checkObj != null)
+    main = ((checkObj != null)
         ? ((checkObj is List && !checkSingle)
-            ? new TreeCheck(node)
-            : new TreeChoice(node))
+        ? new TreeCheck(node)
+        : new TreeChoice(node))
         : new Tree(node)
       ..treeBuilder = this
       ..initialize(0, true, '')
-      ..renderObj();
+      ..renderObj()) as E;
   }
 
   String getIcon(Tree item) {
@@ -117,9 +117,9 @@ class TreeBuilder<E extends Tree> extends CLElement {
     if (_completer != null && !_completer.isCompleted) _completer.complete();
   }
 
-  void refreshTree([Tree item]) {
+  void refreshTree([Tree? item]) {
     item = item ?? main;
-    if (item.isLoading) return;
+    if (item!.isLoading) return;
     startOpen = false;
     loadTree(item);
   }

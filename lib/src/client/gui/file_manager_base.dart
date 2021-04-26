@@ -1,14 +1,14 @@
 part of gui;
 
 abstract class FileManagerBase {
-  Application ap;
-  String path;
-  String main;
-  String base;
-  Map<String, String> icons;
-  TreeBuilder tree;
-  CLElement treeDom;
-  Tree current;
+  late Application ap;
+  late String path;
+  late String main;
+  late String base;
+  late Map<String, String> icons;
+  late TreeBuilder tree;
+  late CLElement treeDom;
+  late Tree current;
 
   static const String rfolderList = '/folder/list';
   static const String rfolderAdd = '/folder/add';
@@ -37,10 +37,10 @@ abstract class FileManagerBase {
         actionLoad: (item) async {
           final data = await ap.serverCall<List>(
               call, {'base': base, 'object': item.node.id}, treeDom);
-          tree.renderTree(item, data.cast<Map>());
+          tree.renderTree(item, data!.cast<Map>());
         });
     treeDom.append(tree, scrollable: true);
-    tree.loadTree(tree.main);
+    if (tree.main != null) tree.loadTree(tree.main!);
   }
 
   FutureOr<bool> clickedNode(Tree object);
@@ -108,10 +108,11 @@ abstract class FileManagerBase {
             {
               'base': base,
               'object': current.node.id,
-              'name': '${current.parent.node.id}/${input.getValue()}'
+              'name': '${current.parent?.node.id}/${input.getValue()}'
             },
             treeDom);
-        current.treeBuilder.refreshTree(current.parent);
+        if (current.parent != null)
+          current.treeBuilder.refreshTree(current.parent!);
       }
     }
 
@@ -125,7 +126,8 @@ abstract class FileManagerBase {
         (current.node.type == 'folder') ? rfolderDelete : rfileDelete,
         {'base': base, 'object': current.node.id},
         treeDom);
-    current.treeBuilder.refreshTree(current.parent);
+    if (current.parent != null)
+      current.treeBuilder.refreshTree(current.parent!);
   }
 
   void move(_) {
@@ -138,7 +140,7 @@ abstract class FileManagerBase {
     inner.append(container);
     Future<bool> moveTo(Tree folder) async {
       if (current.node.id != folder.node.id &&
-          current.parent.node.id != folder.node.id)
+          current.parent?.node.id != folder.node.id)
         await ap.serverCall(
             (current.node.type == 'folder') ? rfolderMove : rfileMove,
             {
@@ -159,10 +161,10 @@ abstract class FileManagerBase {
         actionLoad: (item) async {
           final data = await ap.serverCall<List>(
               rfolderList, {'base': base, 'object': item.node.id}, treeDom);
-          tree.renderTree(item, data.cast<Map>());
+          tree.renderTree(item, data!.cast<Map>());
         });
     container.append(tree);
-    tree.loadTree(tree.main);
+    if (tree.main != null) tree.loadTree(tree.main!);
     win.render(300, 350);
   }
 }

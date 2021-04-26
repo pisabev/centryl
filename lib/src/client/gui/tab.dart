@@ -1,10 +1,10 @@
 part of gui;
 
 class TabElement extends Container {
-  CLElement optionDom;
-  CLElement titleDom;
-  TabContainer _parent;
-  Icon icon;
+  late CLElement optionDom;
+  late CLElement titleDom;
+  late TabContainer _parent;
+  Icon? icon;
 
   void createDom() {
     optionDom = new CLElement(new Element.li())..setClass('ui-tab-link');
@@ -19,12 +19,12 @@ class TabElement extends Container {
   void changed() {
     if (icon != null) return;
     icon = new Icon(Icon.save);
-    optionDom.dom.insertBefore(icon.dom, titleDom.dom);
+    optionDom.dom.insertBefore(icon!.dom, titleDom.dom);
   }
 
   void clean() {
     if (icon != null) {
-      icon.dom.remove();
+      icon!.dom.remove();
       icon = null;
     }
   }
@@ -58,8 +58,8 @@ class TabElement extends Container {
 }
 
 class TabContainer extends Container {
-  Container tab_options, tab_content;
-  CLElement options;
+  late Container tab_options, tab_content;
+  late  CLElement options;
   List<TabElement> views = [];
 
   TabContainer() : super() {

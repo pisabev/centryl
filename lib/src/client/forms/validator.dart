@@ -26,7 +26,7 @@ class InputTypeDouble extends InputType {
 
 class InputTypeDate extends InputType {
   final List<DateTime>? range;
-  final bool? inclusive;
+  final bool inclusive;
 
   InputTypeDate({this.range, this.inclusive = false});
 }
@@ -71,48 +71,48 @@ mixin Validator {
     else if (type is InputTypeString) setTypeString(type.length);
   }
 
-  void setTypeInt([List<int> range]) {
-    if (input_type != null) removeValidationsOnInput(input_type.validateInput);
+  void setTypeInt([List<int?>? range]) {
+    if (input_type != null) removeValidationsOnInput(input_type!.validateInput);
     input_type = new _InputTypeInt(range);
-    addValidationOnInput(input_type.validateInput);
+    addValidationOnInput(input_type!.validateInput);
   }
 
-  void setTypeDouble([List<num> range]) {
-    if (input_type != null) removeValidationsOnInput(input_type.validateInput);
+  void setTypeDouble([List<num?>? range]) {
+    if (input_type != null) removeValidationsOnInput(input_type!.validateInput);
     input_type = new _InputTypeFloat(range);
-    addValidationOnInput(input_type.validateInput);
+    addValidationOnInput(input_type!.validateInput);
   }
 
-  void setTypeString([List<int> length]) {
-    if (input_type != null) removeValidationsOnValue(input_type.validateValue);
+  void setTypeString([List<int?>? length]) {
+    if (input_type != null) removeValidationsOnValue(input_type!.validateValue);
     input_type = new _InputTypeString(length);
-    if (length != null) addValidationOnValue(input_type.validateValue);
+    if (length != null) addValidationOnValue(input_type!.validateValue);
   }
 
-  void setTypeDate([List<DateTime> range, bool inclusive = false]) {
+  void setTypeDate([List<DateTime?>? range, bool inclusive = false]) {
     if (input_type != null) {
-      removeValidationsOnInput(input_type.validateInput);
-      removeValidationsOnValue(input_type.validateValue);
+      removeValidationsOnInput(input_type!.validateInput);
+      removeValidationsOnValue(input_type!.validateValue);
     }
     input_type = new _InputTypeDate(range, inclusive);
-    addValidationOnInput(input_type.validateInput);
-    if (range != null) addValidationOnValue(input_type.validateValue);
+    addValidationOnInput(input_type!.validateInput);
+    if (range != null) addValidationOnValue(input_type!.validateValue);
   }
 
-  void setTypeDateTime([List<DateTime> range, bool inclusive = false]) {
+  void setTypeDateTime([List<DateTime?>? range, bool inclusive = false]) {
     if (input_type != null) {
-      removeValidationsOnInput(input_type.validateInput);
-      removeValidationsOnValue(input_type.validateValue);
+      removeValidationsOnInput(input_type!.validateInput);
+      removeValidationsOnValue(input_type!.validateValue);
     }
     input_type = new _InputTypeDateTime(range, inclusive);
-    addValidationOnInput(input_type.validateInput);
-    if (range != null) addValidationOnValue(input_type.validateValue);
+    addValidationOnInput(input_type!.validateInput);
+    if (range != null) addValidationOnValue(input_type!.validateValue);
   }
 
   void setTypeDateRange() {
-    if (input_type != null) removeValidationsOnInput(input_type.validateInput);
+    if (input_type != null) removeValidationsOnInput(input_type!.validateInput);
     input_type = new _InputTypeDateRange();
-    addValidationOnInput(input_type.validateInput);
+    addValidationOnInput(input_type!.validateInput);
   }
 
   void addValidationOnInput(utils.ObserverFunction<html.KeyboardEvent> func) =>
@@ -121,9 +121,9 @@ mixin Validator {
   void addValidationOnValue<T>(utils.ObserverFunction<T> func) =>
       observer.addHook('value', func);
 
-  void removeValidationsOnValue<T>([utils.ObserverFunction<T> func]) =>
+  void removeValidationsOnValue<T>([utils.ObserverFunction<T>? func]) =>
       observer.removeHook('value', func);
 
-  void removeValidationsOnInput([utils.ObserverFunction<html.Event> func]) =>
+  void removeValidationsOnInput([utils.ObserverFunction<html.Event>? func]) =>
       observer.removeHook('input', func);
 }

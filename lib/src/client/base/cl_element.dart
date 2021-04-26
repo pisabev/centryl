@@ -89,7 +89,7 @@ abstract class CLElementBase<E extends Element> {
 
   num getWidth() => borderEdge.width;
 
-  num? getWidthComputed() => getStyleNum('width');
+  num getWidthComputed() => getStyleNum('width');
 
   num getWidthInner() => paddingEdge.width;
 
@@ -137,8 +137,8 @@ abstract class CLElementBase<E extends Element> {
   void setWidth(Dimension dim) {
     dom.style.width = dim.toString();
   }
-
-  void setStyle(Map<String, String> styleMap) {
+///todo
+  void setStyle(Map<String, String?> styleMap) {
     styleMap.forEach(dom.style.setProperty);
   }
 

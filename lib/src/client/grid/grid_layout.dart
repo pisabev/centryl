@@ -2,7 +2,7 @@ part of forms;
 
 class GridLayout extends GridList<Map> {
   Form formInner = new Form();
-  final Form _form;
+  final Form? _form;
   final List<action.Button> _actions = [];
 
   GridLayout([this._form]) : super() {
@@ -62,7 +62,7 @@ class GridLayout extends GridList<Map> {
     if (_form == null) contrValue.add(this);
   }
 
-  void setValue(Map value) => formInner.setValue(value);
+  void setValue(Map? value) => formInner.setValue(value);
 
   Map getValue() => formInner.getValue();
 
@@ -70,7 +70,7 @@ class GridLayout extends GridList<Map> {
     if (el is gui.LabelField) {
       el.elements.forEach(_register);
     } else if (el is Data) {
-      if (_form != null) _form.add(el);
+      if (_form != null) _form!.add(el);
       formInner.add(el);
     } else if (el is action.Button) {
       _actions.add(el);

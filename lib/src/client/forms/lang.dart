@@ -4,8 +4,8 @@ mixin Lang<E extends DataElement<dynamic, html.Element>> {
   late CLElement domInner;
   late CLElement<html.ImageElement> flag;
   List<E> langs = [];
-  DataElement Function() builder;
-  DataElement self;
+  late DataElement Function() builder;
+  late DataElement self;
   Map<String, String> flags = {};
 
   static List<Lang> objects = [];
@@ -20,7 +20,7 @@ mixin Lang<E extends DataElement<dynamic, html.Element>> {
     var i = 0;
     languages.forEach((l) {
       final language_id = l['language_id'];
-      langs.add(builder()
+      langs.add(builder() as E
         ..setName(language_id.toString())
         ..onValueChanged.listen((_) => self.contrValue.add(self))
         ..appendTo(inner));
@@ -50,18 +50,18 @@ mixin Lang<E extends DataElement<dynamic, html.Element>> {
   void showSingleValue(dynamic key) {
     hideAll();
     langs[key].show();
-    flag.dom.src = '${Icon.ICON_FLAG_PATH + flags[key.toString()]}.svg';
+    flag.dom.src = '${Icon.ICON_FLAG_PATH + flags[key.toString()]!}.svg';
   }
 
   dynamic getSingleValue(int key) => langs[key].getValue();
 
   Map getValue() {
     final Map<String, String> value = {};
-    langs.forEach((v) => value[v.getName()] = v.getValue());
+    langs.forEach((v) => value[v.getName()!] = v.getValue());
     return value;
   }
 
-  void setValue(Map valueObj) {
+  void setValue(Map? valueObj) {
     if (valueObj != null)
       langs.forEach((v) => v.setValue(valueObj[v.getName()]));
     else

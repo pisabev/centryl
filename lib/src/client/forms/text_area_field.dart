@@ -1,7 +1,7 @@
 part of forms;
 
 abstract class TextAreaField<T> extends FieldBase<T, html.SpanElement> {
-  covariant CLElement<html.TextAreaElement> field;
+  covariant late CLElement<html.TextAreaElement> field;
 
   TextAreaField() {
     dom = new html.SpanElement();
@@ -18,7 +18,7 @@ abstract class TextAreaField<T> extends FieldBase<T, html.SpanElement> {
       ..addAction(_onFocus, 'focus')
       ..addAction(_onBlur, 'blur')
       ..addAction(_onKeyDown, 'keydown')
-      ..addAction((e) {
+      ..addAction<html.Event>((e) {
         if (!validateInput(e)) e.preventDefault();
       }, 'keypress');
   }
@@ -28,12 +28,12 @@ abstract class TextAreaField<T> extends FieldBase<T, html.SpanElement> {
     final value = getValue();
     final string_value = value == null ? '' : value.toString();
     if (string_value != field.dom.value)
-      setValueDynamic(field.dom.value.isEmpty ? null : field.dom.value);
+      setValueDynamic(field.dom.value!.isEmpty ? null : field.dom.value);
   }
 
   void _onKeyDown(html.KeyboardEvent e) {
     if (e.keyCode == 13)
-      setValueDynamic(field.dom.value.isEmpty ? null : field.dom.value);
+      setValueDynamic(field.dom.value!.isEmpty ? null : field.dom.value);
   }
 
   void setPlaceHolder(String value) {

@@ -47,8 +47,8 @@ class _InputTypeDateTime implements _InputTypeBase<DateTime> {
   bool _checkBefore(DateTime v, DateTime to) =>
       inclusive ? v.isBefore(to) || v.isAtSameMomentAs(to) : v.isBefore(to);
 
-  bool validateInput(html.KeyboardEvent e) =>
-      utils.KeyValidator.isNum(e) ||
+  bool validateInput(html.Event e) =>
+      utils.KeyValidator.isNum(e as html.KeyboardEvent) ||
       utils.KeyValidator.isColon(e) ||
       utils.KeyValidator.isSlash(e);
 }
