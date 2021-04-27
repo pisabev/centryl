@@ -8,7 +8,7 @@ import 'package:centryl/gui.dart' as gui;
 //import 'package:centryl/action.dart' as cl_action;
 
 class ExaminationLayout extends cl.Container {
-  cl.Container contTop,
+  late cl.Container contTop,
       contBottom,
       contMiddle,
       contTopLeft,
@@ -51,8 +51,8 @@ class ExaminationLayout extends cl.Container {
 }
 
 class LayoutContainer extends cl.Container {
-  cl.Container contMenu;
-  cl.Container contBottom;
+  late cl.Container contMenu;
+  late cl.Container contBottom;
 
   LayoutContainer() : super() {
     contMenu = new cl.Container();

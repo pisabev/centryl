@@ -73,7 +73,7 @@ class PeerManager {
     closeCallStartView();
     if (callView != null) return;
     _sub?.cancel();
-    getConnection(room.members.firstWhere((r) => !r.isMe).user_id);
+    getConnection(room.members.firstWhere((r) => !r.isMe).user_id!);
     callView = new CallView(ap, room, onHangup: () {
       closeCallView();
       controller.callHangup!(room);
@@ -91,7 +91,8 @@ class PeerManager {
   void closeCallView() {
     if (callView == null) return;
     _sub?.cancel();
-    removeConnection(callView!.room.members.firstWhere((r) => !r.isMe).user_id);
+    removeConnection(
+        callView!.room.members.firstWhere((r) => !r.isMe).user_id!);
     callView!.close();
     callView = null;
   }

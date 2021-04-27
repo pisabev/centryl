@@ -9,7 +9,7 @@ class Message {
   int type;
   Member member;
   List<Member>? seen;
-  int room_id;
+  int? room_id;
   String? context;
   String? content;
   DateTime timestamp;
@@ -23,21 +23,21 @@ class Message {
       {required this.type,
       required this.member,
       required this.room_id,
-      required this.context,
       required this.timestamp,
+      this.context,
       this.id,
       this.content,
       this.seen});
 
   factory Message.fromDto(dto.Message d) => new Message(
       id: d.id,
-      type: d.type,
-      member: new Member.fromDto(d.member),
+      type: d.type!,
+      member: new Member.fromDto(d.member!),
       seen: d.seen?.map<Member>((m) => new Member.fromDto(m)).toList(),
       room_id: d.room_id,
       context: d.context,
       content: d.content,
-      timestamp: d.timestamp);
+      timestamp: d.timestamp!);
 
   factory Message.fromMap(Map data) =>
       new Message.fromDto(new dto.Message.fromMap(data));

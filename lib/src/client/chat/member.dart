@@ -1,7 +1,7 @@
 part of chat;
 
 class Member {
-  int user_id;
+  int? user_id;
   String? name;
   String? picture;
   bool status;

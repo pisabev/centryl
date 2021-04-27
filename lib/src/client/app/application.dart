@@ -263,7 +263,7 @@ class Application<C extends Client> {
     });
   }
 
-  void setAbout(String icon, String text) {
+  void setAbout(String icon, String? text) {
     fieldLeft.append(new CLElement(new AnchorElement())
       ..setClass('brand')
       ..setStyle({'background-image': 'url($icon)'})

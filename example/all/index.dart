@@ -21,7 +21,7 @@ part 'lib/form.dart';
 
 part 'lib/layout.dart';
 
-cl_app.Application ap;
+late cl_app.Application ap;
 
 class EventCalendar extends calendar.EventCalendar {
   EventCalendar(container) : super(container);

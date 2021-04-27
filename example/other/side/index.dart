@@ -28,15 +28,15 @@ void main() {
 
   final l = new Ap1(ap);
   l.form
-      .getElement<cl_form.GridData>('grid_debit')
+      .getElement<cl_form.GridData>('grid_debit')!
       .rowAdd({'account': 703, 'name': 'Monitor', 'amount': 200.0});
   l.form
-      .getElement<cl_form.GridData>('grid_credit')
+      .getElement<cl_form.GridData>('grid_credit')!
       .rowAdd({'account': 304, 'name': 'Suppliers', 'amount': 200.0});
 }
 
 class LayoutContainer extends Container {
-  Container contMenu,
+  late Container contMenu,
       contTop,
       contTopLeft,
       contTopRight,
@@ -70,7 +70,7 @@ class LayoutContainer extends Container {
 }
 
 class Ap1 extends app.Item {
-  app.Application ap;
+  late app.Application ap;
 
   app.WinMeta meta = new app.WinMeta()
     ..title = 'Test'
@@ -78,7 +78,7 @@ class Ap1 extends app.Item {
     ..width = 1000
     ..height = 800;
 
-  cl_form.Form form;
+  late cl_form.Form form;
 
   Ap1(this.ap) {
     wapi = new app.WinApp(ap)..load(meta, this);

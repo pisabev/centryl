@@ -19,11 +19,11 @@ class Message {
   static int typeFile = 1;
 
   int? id;
-  late int type;
-  late Member member;
-  late int room_id;
+  int? type;
+  Member? member;
+  int? room_id;
   String? context;
-  late DateTime timestamp;
+  DateTime? timestamp;
   List<Member>? seen;
   String? content;
 
@@ -38,7 +38,7 @@ class Message {
 
 @DTOSerializable()
 class Member {
-  late int user_id;
+  int? user_id;
   String? name;
   String? picture;
   bool? status;
