@@ -9,7 +9,7 @@ targets:
           compiler: dartdevc
 builders:
   sass_builder:
-    import: "package:sass_builder/sass_builder.dart"
+    import: "package:cl_builder/sass_builder.dart"
     builder_factories: [ "sassBuilder" ]
     auto_apply: dependents
     build_extensions:
@@ -36,7 +36,7 @@ builders:
     build_to: source
 post_process_builders:
   sass_source_cleanup:
-    import: "package:sass_builder/sass_builder.dart"
+    import: "package:cl_builder/sass_builder.dart"
     builder_factory: "sassSourceCleanup"
     defaults:
       release_options:
