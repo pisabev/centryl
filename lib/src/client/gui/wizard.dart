@@ -37,7 +37,7 @@ class WizardElement extends CLElement {
   void enable() {
     addAction((e) {
       final curStep = _parent.getCurrentStep();
-      final curIndex = curStep._parent.views.indexOf(curStep);
+      final curIndex = curStep!._parent.views.indexOf(curStep);
       final nextIndex = _parent.views.indexOf(this);
       if (curIndex > nextIndex) current();
     });
@@ -106,10 +106,10 @@ class Wizard extends Container {
     return null;
   }
 
-  Future<WizardElement> next({bool validate = true}) async {
+  Future<WizardElement?> next({bool validate = true}) async {
     final current = getCurrentStep();
     if (current != null &&
-        (!validate || current.validate == null || await current.validate())) {
+        (!validate || current.validate == null || await current.validate!())) {
       final curIndex = views.indexOf(current);
       final nextIndex = math.min(views.length - 1, curIndex + 1);
       return views[nextIndex]

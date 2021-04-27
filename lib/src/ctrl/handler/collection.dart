@@ -1,9 +1,9 @@
 part of cl_base.ctrl;
 
 abstract class Collection<E extends Entity, T> extends Base {
-  String group;
+  String? group;
 
-  String scope;
+  String? scope;
 
   Collection(req, [this.group, this.scope]) : super(req);
 
@@ -24,7 +24,7 @@ abstract class Collection<E extends Entity, T> extends Base {
         manager = await new Database().init();
         final cb = await doGet(filter, order, paginator);
         final r = <Map>[];
-        for (final o in cb.collection) r.add(await lister(o));
+        for (final o in cb.collection) r.add(await lister(o as E));
         response({$BaseConsts.total: cb.total, $BaseConsts.result: r});
       });
 

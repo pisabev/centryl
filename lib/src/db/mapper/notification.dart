@@ -4,7 +4,7 @@ class NotificationMapper extends Mapper<Notification, NotificationCollection> {
   String table = entity.Notification.$table;
   dynamic pkey = entity.$Notification.notification_id;
 
-  Future<List<String>> findKeys([String sug]) async {
+  Future<List<String>> findKeys([String? sug]) async {
     final q = Builder()
       ..select(entity.$Notification.key)
       ..from(entity.Notification.$table)

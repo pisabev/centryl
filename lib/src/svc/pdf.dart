@@ -1,12 +1,12 @@
 part of cl_base.svc.server;
 
 class Pdf {
-  static String _executable;
-  String html;
+  static String? _executable;
+  late String html;
 
   Pdf(this.html);
 
-  Future<File> toPdfFile([String filename, String basepath]) async {
+  Future<File> toPdfFile([String? filename, String? basepath]) async {
     basepath ??= '$path/tmp';
     final k = new DateTime.now().microsecondsSinceEpoch;
     filename ??= '$basepath/___temp_$k.pdf';
@@ -25,7 +25,7 @@ class Pdf {
       _executable =
           v.stdout.toString().trim().isNotEmpty ? 'chromium' : 'google-chrome';
     }
-    final res = await Process.run(_executable, args);
+    final res = await Process.run(_executable!, args);
     await file.delete();
     if (res.stderr.toString().trim().isNotEmpty && res.exitCode != 0)
       throw new Exception(res.stderr);

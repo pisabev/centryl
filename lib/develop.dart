@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:centryl/app.dart';
 
-Application<C> initApp<C extends Client>([C client]) =>
+Application<C> initApp<C extends Client>([C? client]) =>
     new Application<C>(settings: new AppSettings()..menuDefaultOpen = false)
       ..setClient(client ??
           new Client({
@@ -13,7 +13,7 @@ Application<C> initApp<C extends Client>([C client]) =>
 abstract class RandomBase<T> {
   RandomBase();
 
-  T generate();
+  T? generate();
 }
 
 class RandomWord implements RandomBase<String> {
@@ -33,7 +33,7 @@ class RandomUniqueWord implements RandomBase<String> {
 
   RandomUniqueWord(this.list);
 
-  String generate() {
+  String? generate() {
     final r = new Random();
     final w = list[r.nextInt(list.length)];
     if (!_set.contains(w)) {
@@ -76,14 +76,14 @@ class RandomInteger implements RandomBase<int> {
 }
 
 class RandomUniqueInteger implements RandomBase<int> {
-  Set _set;
-  final int max;
+  late Set _set;
+  late final int max;
 
-  RandomUniqueInteger(this.max, {Set exclude}) {
+  RandomUniqueInteger(this.max, {Set? exclude}) {
     _set = exclude ?? {};
   }
 
-  int generate() {
+  int? generate() {
     final n = new Random().nextInt(max);
     if (!_set.contains(n)) {
       _set.add(n);

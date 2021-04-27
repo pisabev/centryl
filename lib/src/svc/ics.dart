@@ -1,11 +1,11 @@
 part of cl_base.svc.server;
 
 class VCalendar {
-  String PRODID;
-  String CALSCALE;
-  String VERSION;
+  String? PRODID;
+  String? CALSCALE;
+  String? VERSION;
 
-  List<String> ics_content;
+  late List<String> ics_content;
 
   List<VElement> elements = [];
 
@@ -33,22 +33,22 @@ class VCalendar {
     if (lines_normalized.removeAt(0) != 'BEGIN:VCALENDAR') return;
     if (lines_normalized.removeLast() != 'END:VCALENDAR') return;
 
-    VElement element;
+    VElement? element;
     lines_normalized.forEach((line) {
       if (line.startsWith('END:')) return;
 
       final types = ['BEGIN:VEVENT'];
       if (types.contains(line)) {
         element = new VElement();
-        elements.add(element);
+        elements.add(element!);
       }
 
       final pairs = _readPairs(line);
 
       if (element != null)
-        element.decodePair(pairs[0], pairs[1]);
+        element!.decodePair(pairs![0]!, pairs[1]!);
       else
-        decodePair(pairs[0], pairs[1]);
+        decodePair(pairs![0]!, pairs[1]!);
     });
   }
 
@@ -66,7 +66,7 @@ class VCalendar {
     }
   }
 
-  List<String> _readPairs(String line) {
+  List<String?>? _readPairs(String line) {
     final pattern = new RegExp(r'([^:]+)[:]([\w\W]*)');
     final match = pattern.firstMatch(line);
     if (match != null) return [match[1], match[2]];
@@ -75,19 +75,19 @@ class VCalendar {
 }
 
 class VElement {
-  String TYPE;
+  String? TYPE;
 
-  DateTime DTSTART;
-  DateTime DTEND;
-  DateTime DTSTAMP;
-  DateTime CREATED;
-  String UID;
-  String DESCRIPTION;
-  String URL;
-  String TRANSP;
-  String SUMMARY;
-  String LOCATION;
-  Map RRULE;
+  late DateTime DTSTART;
+  late DateTime DTEND;
+  late DateTime DTSTAMP;
+  DateTime? CREATED;
+  String? UID;
+  String? DESCRIPTION;
+  String? URL;
+  String? TRANSP;
+  String? SUMMARY;
+  String? LOCATION;
+  Map? RRULE;
 
   void decodePair(String key, String value) {
     switch (key) {
@@ -134,38 +134,38 @@ class VElement {
   }
 
   DateTime decodeDate(String value) {
-    DateTime date;
+    late DateTime date;
     final date_pattern = new RegExp(r'^(\d{4})(\d{2})(\d{2})$');
     final match = date_pattern.firstMatch(value);
     if (match != null) {
       date = new DateTime(
-          int.parse(match[1]), int.parse(match[2]), int.parse(match[3]));
+          int.parse(match[1]!), int.parse(match[2]!), int.parse(match[3]!));
     }
     return date;
   }
 
   DateTime decodeDateTime(String value) {
-    DateTime date;
+    late DateTime date;
     final date_pattern =
         new RegExp(r'^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z)?$');
     final match = date_pattern.firstMatch(value);
     if (match != null) {
       if (match[7] == 'Z') {
         date = new DateTime.utc(
-            int.parse(match[1]),
-            int.parse(match[2]),
-            int.parse(match[3]),
-            int.parse(match[4]),
-            int.parse(match[5]),
-            int.parse(match[6]));
+            int.parse(match[1]!),
+            int.parse(match[2]!),
+            int.parse(match[3]!),
+            int.parse(match[4]!),
+            int.parse(match[5]!),
+            int.parse(match[6]!));
       } else {
         date = new DateTime(
-            int.parse(match[1]),
-            int.parse(match[2]),
-            int.parse(match[3]),
-            int.parse(match[4]),
-            int.parse(match[5]),
-            int.parse(match[6]));
+            int.parse(match[1]!),
+            int.parse(match[2]!),
+            int.parse(match[3]!),
+            int.parse(match[4]!),
+            int.parse(match[5]!),
+            int.parse(match[6]!));
       }
     }
     return date;
@@ -187,10 +187,10 @@ class VElement {
   String decode(String value) => value;
 
   Map decodeRrule(String value) {
-    String FREQ;
-    int INTERVAL;
-    int COUNT;
-    DateTime UNTIL;
+    String? FREQ;
+    int? INTERVAL;
+    int? COUNT;
+    DateTime? UNTIL;
 
     value.split(';').forEach((declaration) {
       final parts = declaration.split('=');
@@ -234,12 +234,12 @@ class VElement {
       ..writeln('DTSTART:${DateTimeToString(DTSTART)}')
       ..writeln('DTEND:${DateTimeToString(DTEND)}')
       ..writeln('DTSTAMP:${DateTimeToString(DTSTAMP)}');
-    if (CREATED != null) sb.writeln('CREATED:${DateTimeToString(CREATED)}');
-    if (SUMMARY != null) sb.writeln('${writeBuffer('SUMMARY', SUMMARY)}');
+    if (CREATED != null) sb.writeln('CREATED:${DateTimeToString(CREATED!)}');
+    if (SUMMARY != null) sb.writeln('${writeBuffer('SUMMARY', SUMMARY!)}');
     if (DESCRIPTION != null)
-      sb.writeln('${writeBuffer('DESCRIPTION', DESCRIPTION)}');
-    if (UID != null) sb.writeln('${writeBuffer('UID', UID)}');
-    if (URL != null) sb.writeln('${writeBuffer('URL', URL)}');
+      sb.writeln('${writeBuffer('DESCRIPTION', DESCRIPTION!)}');
+    if (UID != null) sb.writeln('${writeBuffer('UID', UID!)}');
+    if (URL != null) sb.writeln('${writeBuffer('URL', URL!)}');
     sb.writeln('BEGIN:END');
     return sb.toString();
   }

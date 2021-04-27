@@ -1,10 +1,10 @@
 part of gui;
 
 class TreeCheck extends Tree {
-  covariant TreeCheck parent;
+  covariant TreeCheck? parent;
   covariant List<TreeCheck> childs = [];
   bool checked = false;
-  form.Check domInput;
+  late form.Check domInput;
 
   TreeCheck(TreeNode node) : super(node);
 
@@ -16,7 +16,7 @@ class TreeCheck extends Tree {
     domValue = new AnchorElement();
     final icon = folderImage();
     if (icon != null) domValue.append(new Icon(icon).dom);
-    if (node.clas != null) domValue.classes.add(node.clas);
+    if (node.clas != null) domValue.classes.add(node.clas!);
     domValue.append(node.value is String
         ? (new SpanElement()
           ..text = node.value
@@ -24,7 +24,7 @@ class TreeCheck extends Tree {
         : node.value);
     domValue.onClick.listen((e) => clickedFolder());
     if (treeBuilder.actionDblClick != null)
-      domValue.onDoubleClick.listen((e) => treeBuilder.actionDblClick(this));
+      domValue.onDoubleClick.listen((e) => treeBuilder.actionDblClick!(this));
     domInput = getCheck();
     initChecked();
     dom
@@ -38,7 +38,8 @@ class TreeCheck extends Tree {
 
   void initChecked() {
     final checkObj = treeBuilder.checkObj;
-    if (checkObj.contains(node.id) || (parent != null && parent.checked)) {
+    if ((checkObj != null && checkObj.contains(node.id)) ||
+        (parent != null && parent!.checked)) {
       domInput.setChecked(true);
       checked = true;
     }
@@ -51,7 +52,7 @@ class TreeCheck extends Tree {
       removeParentCheck();
       removeCheck();
     }
-    if (treeBuilder.actionCheck != null) treeBuilder.actionCheck(this);
+    if (treeBuilder.actionCheck != null) treeBuilder.actionCheck!(this);
   }
 
   void addCheck() {
@@ -63,9 +64,9 @@ class TreeCheck extends Tree {
 
   void removeParentCheck() {
     if (parent != null) {
-      parent.checked = false;
-      if (parent.isRendered) parent.domInput.setChecked(false);
-      parent.removeParentCheck();
+      parent!.checked = false;
+      if (parent!.isRendered) parent!.domInput.setChecked(false);
+      parent!.removeParentCheck();
     }
   }
 

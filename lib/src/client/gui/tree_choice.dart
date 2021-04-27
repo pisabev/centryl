@@ -1,14 +1,14 @@
 part of gui;
 
 class TreeChoice extends TreeCheck {
-  covariant TreeBuilder<TreeChoice> treeBuilder;
+  covariant late TreeBuilder<TreeChoice> treeBuilder;
 
   TreeChoice(TreeNode node) : super(node);
 
   form.Check getCheck() {
     final input = new form.Check();
     final checkObj = treeBuilder.checkObj;
-    if (checkObj.contains(node.id)) {
+    if (checkObj != null) if (checkObj.contains(node.id)) {
       input.setChecked(true);
       checked = true;
     }
@@ -17,10 +17,10 @@ class TreeChoice extends TreeCheck {
   }
 
   bool checkOperate() {
-    treeBuilder.main.removeCheck();
+    treeBuilder.main!.removeCheck();
     checked = true;
     domInput.setChecked(true);
-    if (treeBuilder.actionCheck != null) treeBuilder.actionCheck(this);
+    if (treeBuilder.actionCheck != null) treeBuilder.actionCheck!(this);
     return true;
   }
 

@@ -1,8 +1,8 @@
 part of cl_base.ctrl;
 
 class Base {
-  dynamic req;
-  Manager manager;
+  late dynamic req;
+  Manager? manager;
 
   Base(this.req);
 
@@ -10,7 +10,7 @@ class Base {
       '', {'type': 'error', 'message': 'Not Found'}, HttpStatus.notFound);
 
   /// Error handler method. Forms detailed Map of the Error.
-  void error(dynamic e, [StackTrace s]) {
+  void error(dynamic e, [StackTrace? s]) {
     final action = req is HttpRequest ? req.requestedUri : req.controller;
     final session = 'Session: ${req?.session?.id}';
     if (e is MapperException) {
@@ -28,7 +28,7 @@ class Base {
       final locale = settings['language'];
       final eo = {
         'type': 'work_exception',
-        'message': Intl.withLocale(locale, e._message)
+        'message': Intl.withLocale(locale, e._message!)
       };
       response(null, eo);
     } else if (e is ResourceNotFoundException) {
@@ -56,12 +56,12 @@ class Base {
     }
   }
 
-  void response(dynamic data, [dynamic status, int code]) =>
+  void response(dynamic data, [dynamic status, int? code]) =>
       responseJson({'status': status, 'data': data}, code);
 
   /// JSON response
-  void responseJson(dynamic data, [int code]) {
-    if (manager != null) manager.close();
+  void responseJson(dynamic data, [int? code]) {
+    if (manager != null) manager!.close();
     if (req is HttpRequest) {
       req.response.headers.contentType = ContentType.json;
       if (code != null) req.response.statusCode = code;
@@ -74,8 +74,8 @@ class Base {
   }
 
   /// HTML response
-  void responseHtml(dynamic data, [int code]) {
-    if (manager != null) manager.close();
+  void responseHtml(dynamic data, [int? code]) {
+    if (manager != null) manager!.close();
     req.response.headers.contentType = ContentType.html;
     if (code != null) req.response.statusCode = code;
     req.response.headers.add('X-Powered-By', version);
@@ -84,8 +84,8 @@ class Base {
   }
 
   /// Response write file using its path and filename.
-  Future<void> responseFile(String path, [String name]) {
-    if (manager != null) manager.close();
+  Future<void> responseFile(String path, [String? name]) {
+    if (manager != null) manager!.close();
     name ??= basename(path);
     req.response.headers.contentType = ContentType.binary;
     req.response.headers
@@ -94,8 +94,8 @@ class Base {
   }
 
   /// Response write file using [List] data and filename.
-  void responseFileBytes(List<int> data, [String name]) {
-    if (manager != null) manager.close();
+  void responseFileBytes(List<int> data, [String? name]) {
+    if (manager != null) manager!.close();
     req.response.headers.contentType = ContentType.binary;
     req.response.headers
         .add('Content-Disposition', 'attachment; filename=$name');
@@ -105,7 +105,7 @@ class Base {
 
   /// Response write file using [List] data as PDF content.
   void responseFileBytesAsPDF(List<int> data) {
-    if (manager != null) manager.close();
+    if (manager != null) manager!.close();
     req.response.headers.contentType = ContentType.binary;
     req.response.headers.add('Content-type', 'application/pdf');
     req.response.add(data);
@@ -113,8 +113,8 @@ class Base {
   }
 
   /// Response write file using [Stream] data and filename.
-  Future responseStream(Stream<List<int>> stream, [String name]) {
-    if (manager != null) manager.close();
+  Future responseStream(Stream<List<int>> stream, [String? name]) {
+    if (manager != null) manager!.close();
     req.response.headers.contentType = ContentType.binary;
     req.response.headers
         .add('Content-Disposition', 'attachment; filename=$name');
@@ -122,14 +122,14 @@ class Base {
   }
 
   /// Parsing post request data.
-  Future<Map> getData() async {
+  Future<Map<String, dynamic>> getData() async {
     if (req is HttpRequest) {
       if (req.method == 'POST')
         return HttpBodyHandler.processRequest(req)
-            .then((body) => body.body as Map)
+            .then((body) => body.body as Map<String, dynamic>)
             .catchError(error);
       else
-        return {};
+        return <String, dynamic>{};
     }
     return req.message;
   }
@@ -143,7 +143,7 @@ class Base {
 
   /// Helper for executing function with scope/group permission.
   Future<void> run(
-      String group, String scope, String access, Future Function() f) async {
+      String? group, String? scope, String? access, Future Function() f) async {
     if (permissionCheck(req.session, group, scope, access)) {
       try {
         final watch = Stopwatch()..start();

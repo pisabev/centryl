@@ -25,7 +25,7 @@ Future<void> main() async {
       {'test': 2, 'test2': 3},
       {'test': 4, 'test2': 5}
     ]);
-    final List<int> f = dc.toCsv();
+    final List<int> f = dc.toCsv()!;
     new File('test/output.csv').writeAsBytesSync(f);
   });
   test('XLS To .xlsx', () async {
@@ -43,7 +43,7 @@ Future<void> main() async {
       {'test': 2, 'test2': 3},
       {'test': 4, 'test2': 5}
     ]);
-    final List<int> f = await dc.toXls();
-    await new File('test/output.xlsx').writeAsBytes(f);
+    final List<int>? f = await dc.toXls();
+    await new File('test/output.xlsx').writeAsBytes(f!);
   });
 }

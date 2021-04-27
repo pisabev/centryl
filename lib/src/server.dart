@@ -23,40 +23,49 @@ import 'mapper.dart';
 import 'path.dart';
 
 part 'svc/csv.dart';
+
 part 'svc/file_sync.dart';
+
 part 'svc/ics.dart';
+
 part 'svc/mail.dart';
+
 part 'svc/manager.dart';
+
 part 'svc/pdf.dart';
+
 part 'svc/service.dart';
+
 part 'svc/sservice.dart';
+
 part 'svc/tree.dart';
+
 part 'svc/xls.dart';
 
 final List<FutureOr<void> Function(Router)> routes = [];
 final List<FutureOr<void> Function(Map)> boot_call = [];
 
-WSRouter _wsrouter;
+late WSRouter _wsrouter;
 const String $meta = 'base_meta';
 
-Meta meta;
+late Meta meta;
 
 String path = '.';
 String baseURL = '/centryl';
 String appTitle = 'Centryl';
 const String version = 'Centryl Framework v2.0';
-Map config;
+late Map config;
 bool anonymousLogin = false;
 
 bool devmode = false;
 final Logger log = new Logger('Base');
 final SNotificator notificator = new SNotificator();
 
-bool Function(Map session, String group, String scope, String access)
+bool Function(Map session, String? group, String? scope, String? access)
     permissionCheck = (session, group, scope, access) => true;
 
-String Function(String group, String scope, String access) permissionMessage =
-    (group, scope, access) => '';
+String Function(String? group, String? scope, String? access)
+    permissionMessage = (group, scope, access) => '';
 
 class Meta {
   final String host;
@@ -105,7 +114,7 @@ void sendEvent(String key, [dynamic value]) {
 Future<void> addNotification(SMessage mes) async {
   await dbWrap<void>((manager) async {
     final not = manager.app.notification.createObject()..key = mes.key;
-    if (mes.value != null) not.value = mes.value;
+    if (mes.value != null) not.value = mes.value!;
     await manager.app.notification.insert(not);
     mes
       ..notification_id = not.notification_id
@@ -114,7 +123,7 @@ Future<void> addNotification(SMessage mes) async {
   });
 }
 
-Future<void> server(String address, int port, [Logger logger]) async {
+Future<void> server(String address, int port, [Logger? logger]) async {
   final server = await HttpServer.bind(address, port);
   final router = new HttpRouter(server, logger);
   _wsrouter = new WSRouter(_contrIn, _contrOut);
@@ -149,9 +158,9 @@ void logHandler() {
             ' ${rec.level.name}]')
         ..write('\n${rec.message}');
       if (rec.error != null) sb.write('\n${rec.error}');
-      String dscr;
+      late String dscr;
       if (rec.stackTrace != null) {
-        dscr = Trace.format(rec.stackTrace, terse: true);
+        dscr = Trace.format(rec.stackTrace!, terse: true);
         sb.write('\n$dscr');
       }
       // ignore: avoid_print
@@ -160,7 +169,7 @@ void logHandler() {
           new LogMessage()
             ..level = rec.level.name
             ..date = rec.time
-            ..title = rec.error?.toString()
+            ..title = rec.error!.toString()
             ..description = dscr,
           rec.message));
       queue.schedule(() =>
@@ -198,7 +207,7 @@ class LogParser {
 
   List<LogMessage> readContent(List<String> lines) {
     final messages = <LogMessage>[];
-    LogMessage cur;
+    late LogMessage cur;
     lines.forEach((line) {
       if (line.startsWith(pattern)) {
         final parts = line.replaceAll('[', '').replaceAll(']', '').split(' ');
@@ -206,7 +215,7 @@ class LogParser {
           ..level = parts.removeLast()
           ..date = DateFormat('MM/dd/yyyy hh:mm:ss').parse(parts.join(' '));
         messages.add(cur);
-      } else if (cur != null) {
+      } else {
         if (cur.type == null && line.startsWith(new RegExp(r'Error|Exception')))
           cur.type = line;
         else

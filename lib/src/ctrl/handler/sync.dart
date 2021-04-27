@@ -5,7 +5,7 @@ class CSync extends Base {
 
   Future index() => run(null, null, null, () async {
         manager = await new Database().init();
-        final c = await manager.app.api_remote.findAll();
+        final c = await manager!.app.api_remote.findAll();
         return response(c.pair());
       });
 }

@@ -1,13 +1,13 @@
 part of cl_base.svc.server;
 
 class SNotificator {
-  StreamController<SMessage> _contr;
-  StreamController<History> _contr_request;
-  StreamController<LogMessage> _contr_log;
+  late StreamController<SMessage> _contr;
+  late StreamController<History> _contr_request;
+  late StreamController<LogMessage> _contr_log;
 
-  Stream<SMessage> onNotification;
-  Stream<History> onRequest;
-  Stream<LogMessage> onLog;
+  late Stream<SMessage> onNotification;
+  late Stream<History> onRequest;
+  late Stream<LogMessage> onLog;
 
   SNotificator() {
     _contr = new StreamController.broadcast();
@@ -26,26 +26,26 @@ class SNotificator {
 }
 
 class SMessage {
-  int notification_id;
-  DateTime date;
-  String key;
-  String value;
+  int? notification_id;
+  DateTime? date;
+  String? key;
+  String? value;
 }
 
 class History {
   String session;
   String controller;
-  int execTime;
+  int? execTime;
 
   History(this.session, this.controller, [this.execTime]);
 }
 
 class LogMessage {
-  DateTime date;
-  String level;
-  String type;
-  String title;
-  String description;
-  String path;
-  String session;
+  DateTime? date;
+  String? level;
+  String? type;
+  String? title;
+  String? description;
+  String? path;
+  String? session;
 }

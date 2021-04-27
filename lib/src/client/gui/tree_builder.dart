@@ -37,15 +37,15 @@ class TreeBuilder<E extends Tree> extends CLElement {
     this.valueTransform = valueTransform ?? this.valueTransform;
     main = ((checkObj != null)
         ? ((checkObj is List && !checkSingle)
-        ? new TreeCheck(node)
-        : new TreeChoice(node))
-        : new Tree(node)
+        ? new TreeCheck(node!)
+        : new TreeChoice(node!))
+        : new Tree(node!)
       ..treeBuilder = this
       ..initialize(0, true, '')
       ..renderObj()) as E;
   }
 
-  String getIcon(Tree item) {
+  String? getIcon(Tree item) {
     if (icons.containsKey(item.node.type)) return icons[item.node.type];
     return null;
   }
@@ -53,17 +53,17 @@ class TreeBuilder<E extends Tree> extends CLElement {
   List getChecked() {
     checkObj = [];
     setChecked(main as TreeCheck);
-    return checkObj;
+    return checkObj!;
   }
 
   void setChecked(TreeCheck folder) {
     if (folder.checked) {
-      checkObj.add(folder.node.id);
+      checkObj!.add(folder.node.id!);
       return;
     }
     for (var i = 0; i < folder.childs.length; i++)
       if (folder.childs[i].checked)
-        checkObj.add(folder.childs[i].node.id);
+        checkObj!.add(folder.childs[i].node.id!);
       else
         setChecked(folder.childs[i]);
   }
@@ -77,18 +77,18 @@ class TreeBuilder<E extends Tree> extends CLElement {
     item
       ..isLoading = true
       ..folderNode();
-    actionLoad(item);
-    return _completer.future;
+    actionLoad!(item);
+    return _completer!.future;
   }
 
-  Tree findByRef(dynamic ref) => indexOfObjects[ref];
+  Tree? findByRef(dynamic ref) => indexOfObjects[ref];
 
   void select(Tree item) {
     item.clickedFolder();
   }
 
   Future<void> smartOpen() async {
-    List<Tree> children = main.childs;
+    List<Tree> children = main!.childs;
     while (children.length == 1) {
       await children.first.openChilds();
       children = children.first.childs;
@@ -105,7 +105,7 @@ class TreeBuilder<E extends Tree> extends CLElement {
         final cur = new TreeNode.fromMap(nodes[i]);
         final pId = cur.parentId ?? 'item';
         final parentFolder = (temp.containsKey(pId)) ? temp[pId] : temp['item'];
-        temp[cur.id] = parentFolder.add(valueTransform(cur));
+        temp[cur.id!] = parentFolder!.add(valueTransform!(cur));
       }
     }
     item
@@ -114,7 +114,7 @@ class TreeBuilder<E extends Tree> extends CLElement {
       ..node.hasChilds = false
       ..isOpen = false
       ..operateNode();
-    if (_completer != null && !_completer.isCompleted) _completer.complete();
+    if (_completer != null && !_completer!.isCompleted) _completer!.complete();
   }
 
   void refreshTree([Tree? item]) {

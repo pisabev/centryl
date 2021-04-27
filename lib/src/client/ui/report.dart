@@ -1,7 +1,7 @@
 part of ui;
 
 class _LayoutContainerReport extends cl.Container {
-  cl.Container contLeft,
+  late cl.Container contLeft,
       contLeftInner,
       contLeftBottom,
       contRight,
@@ -35,19 +35,19 @@ class _LayoutContainerReport extends cl.Container {
 }
 
 abstract class Report<C extends cl_app.Client> implements cl_app.Item<C> {
-  UrlPattern contr_get, contr_print, contr_csv;
+  UrlPattern? contr_get, contr_print, contr_csv;
 
-  cl_app.Application<C> ap;
-  cl_app.WinMeta meta;
-  cl_app.WinApp<C> wapi;
-  _LayoutContainerReport layout;
-  cl_action.Menu menuLeftBottom, menuRightTop, menuRightBottom;
+  late cl_app.Application<C> ap;
+  late cl_app.WinMeta meta;
+  late cl_app.WinApp<C> wapi;
+  late _LayoutContainerReport layout;
+  late cl_action.Menu menuLeftBottom, menuRightTop, menuRightBottom;
 
-  GridList gridReport;
+  late GridList gridReport;
   cl_form.Form form = new cl_form.Form();
   cl_util.Observer observer = new cl_util.Observer();
-  Map params;
-  Map data_response;
+  late Map params;
+  Map? data_response;
 
   Report(this.ap) {
     try {
@@ -119,10 +119,10 @@ abstract class Report<C extends cl_app.Client> implements cl_app.Item<C> {
   }
 
   void printData() => cl_util.printUrl(
-      ap.baseurl + contr_print.reverse([window.btoa(json.encode(params))]),
+      ap.baseurl + contr_print!.reverse([window.btoa(json.encode(params))]),
       layout);
 
-  void csvData() => ap.download(contr_csv.reverse([]), params, layout);
+  void csvData() => ap.download(contr_csv!.reverse([]), params, layout);
 
   void setFilter();
 
@@ -133,18 +133,18 @@ abstract class Report<C extends cl_app.Client> implements cl_app.Item<C> {
     };
   }
 
-  Future getData([cl.CLElementBase loading]) async {
+  Future getData([cl.CLElementBase? loading]) async {
     await ap.loadExecute(loading, () async {
       if (await observer.execHooksAsync(ItemBase.get_before)) {
         data_response =
-        await ap.serverCall<Map>(contr_get.reverse([]), params, layout);
+            await ap.serverCall<Map>(contr_get!.reverse([]), params, layout);
         await observer.execHooksAsync(ItemBase.get_after);
       }
     });
   }
 
   void setGrid(GridList grid) {
-    gridReport?.gridCont?.remove();
+    gridReport.gridCont.remove();
     gridReport = grid;
     layout.contRightInner.addRow(gridReport.gridCont..auto = true);
     gridReport.gridCont.initLayout();
@@ -157,15 +157,15 @@ abstract class Report<C extends cl_app.Client> implements cl_app.Item<C> {
   void setData() {
     gridReport.grid.empty();
     if (data_response == null ||
-        data_response[$BaseConsts.result] == null ||
-        data_response[$BaseConsts.result].isEmpty) {
+        data_response![$BaseConsts.result] == null ||
+        data_response![$BaseConsts.result].isEmpty) {
       gridReport.gridCont.hide();
       return;
     }
     gridReport.gridCont.show();
     menuLeftBottom[$BaseConsts.print]?.enable();
     menuLeftBottom[$BaseConsts.export]?.enable();
-    gridReport.grid.renderIt(data_response[$BaseConsts.result]);
+    gridReport.grid.renderIt(data_response![$BaseConsts.result]);
   }
 
   void addHook(String scope, cl_util.ObserverFunction func,

@@ -3,14 +3,14 @@ part of cl_base.ctrl;
 class Index extends Base {
   Index(req) : super(req);
 
-  Map data;
+  late Map data;
 
   Future<void> index() async {
     if (req.session[sessionKey] == null) return page404();
     final settings = req.session[sessionKey]['settings'] ?? {};
     final theme = settings['theme'] ?? 'main';
 
-    String css;
+    String? css;
     if (new File('$path/web/css/$theme.css').existsSync() ||
         new File('$path/web/css/$theme.scss').existsSync())
       css = 'css/$theme.css';
@@ -51,7 +51,7 @@ class Index extends Base {
   Future init() async {
     final Map<String, dynamic> data = {};
     final params = await getData();
-    if (params != null && params.isNotEmpty) data.addAll(params);
+    if (params.isNotEmpty) data.addAll(params);
     data['devmode'] = devmode;
     data[sessionKey] = req.session[sessionKey];
     for (final f in boot_call) await f(data);

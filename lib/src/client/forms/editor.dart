@@ -319,7 +319,7 @@ class Editor extends FieldBase<String, html.DivElement> {
       menu.indexOfElements.forEach((b) => b.setState(true));
     } else {
       _createEditor().then((e) {
-        fieldMirror.getDoc().setValue(getValue());
+        fieldMirror.getDoc()?.setValue(getValue()!);
         new CLElement(frame.dom.parent).hide();
         frame.hide();
         fieldContainer.show();
@@ -330,7 +330,7 @@ class Editor extends FieldBase<String, html.DivElement> {
         path.hide();
         menu.initButtons([]);
         fieldMirror.onChange
-            .listen((_) => setValue(fieldMirror.getDoc().getValue()));
+            .listen((_) => setValue(fieldMirror.getDoc()?.getValue()));
       });
     }
   }
@@ -350,7 +350,7 @@ class Editor extends FieldBase<String, html.DivElement> {
     addClass('disabled');
     frame.dom.contentEditable = 'false';
     menu.disable();
-    sourceBtn?.disable();
+    sourceBtn.disable();
   }
 
   void enable() {
@@ -358,6 +358,6 @@ class Editor extends FieldBase<String, html.DivElement> {
     removeClass('disabled');
     frame.dom.contentEditable = 'true';
     menu.enable();
-    sourceBtn?.enable();
+    sourceBtn.enable();
   }
 }

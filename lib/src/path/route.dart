@@ -2,22 +2,39 @@ part of path;
 
 class Routes {
   static UrlPattern get ws => new UrlPattern(r'/ws');
+
   static UrlPattern get init => new UrlPattern(r'/init');
+
   static UrlPattern get sync => new UrlPattern(r'/sync');
+
   static UrlPattern get upload => new UrlPattern(r'/upload');
+
   static UrlPattern get dirList => new UrlPattern(r'/folder/list');
+
   static UrlPattern get dirListAll => new UrlPattern(r'/folder/listAll');
+
   static UrlPattern get dirAdd => new UrlPattern(r'/folder/add');
+
   static UrlPattern get dirMove => new UrlPattern(r'/folder/move');
+
   static UrlPattern get dirRename => new UrlPattern(r'/folder/rename');
+
   static UrlPattern get dirDelete => new UrlPattern(r'/folder/delete');
+
   static UrlPattern get fileList => new UrlPattern(r'/file/list');
+
   static UrlPattern get fileMove => new UrlPattern(r'/file/move');
+
   static UrlPattern get fileRename => new UrlPattern(r'/file/rename');
+
   static UrlPattern get fileDelete => new UrlPattern(r'/file/delete');
+
   static UrlPattern get fileRead => new UrlPattern(r'/file/content');
+
   static UrlPattern get fileCreate => new UrlPattern(r'/file/create');
+
   static UrlPattern get fileWrite => new UrlPattern(r'/file/write');
+
   static UrlPattern get fileUpload => new UrlPattern(r'/file/upload');
 
   static const String eventServerStop = 'system:platform:stop';
@@ -69,22 +86,21 @@ abstract class $BaseConsts {
 }
 
 class DocumentBase {
-  String prefix = '';
-  int padchars = 10;
+  late String prefix = '';
+  late int padchars = 10;
 
   String encode(dynamic number) =>
       (number is num) ? prefix + pad(number) : prefix + number.toString();
 
   String get padZeros {
-    padchars ??= 10;
     final s = new StringBuffer();
     for (int i = 0; i < padchars; i++) s.write('0');
     return s.toString();
   }
 
-  String pad(int number) => new NumberFormat(padZeros).format(number);
+  String pad(num number) => new NumberFormat(padZeros).format(number);
 
-  int decode(String string) {
+  int? decode(String string) {
     if (string.startsWith(prefix))
       return int.tryParse(string.replaceFirst(new RegExp(prefix), ''));
     return int.tryParse(string);

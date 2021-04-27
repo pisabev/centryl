@@ -72,10 +72,10 @@ class Room {
 
 @DTOSerializable()
 class OfferRequest {
-  int from;
-  int to;
+  late int from;
+  late int to;
   bool isAnswer = false;
-  Map description;
+  late Map description;
 
   OfferRequest();
 
@@ -88,9 +88,9 @@ class OfferRequest {
 
 @DTOSerializable()
 class IceCandidate {
-  int from;
-  int to;
-  Map candidate;
+  late int from;
+  late int to;
+  late Map candidate;
 
   IceCandidate();
 

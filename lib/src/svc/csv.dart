@@ -5,7 +5,7 @@ class Csv {
 
   Csv(this.data);
 
-  String toCsvString({String fieldDelimiter}) {
+  String toCsvString({String? fieldDelimiter}) {
     const encoder = const csv.ListToCsvConverter();
     return encoder.convert(data, fieldDelimiter: fieldDelimiter);
   }

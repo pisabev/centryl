@@ -26,7 +26,7 @@ class Tree {
     domNode.onClick.listen((e) => operateNode(true));
     domValue = new AnchorElement();
     final icon = folderImage();
-    domValue.append(new Icon(icon).dom);
+    domValue.append(new Icon(icon!).dom);
     if (node.clas != null) domValue.classes.add(node.clas!);
     domValue.append(node.value is String
         ? (new SpanElement()
@@ -60,7 +60,7 @@ class Tree {
     return sp1;
   }
 
-  String folderImage() => treeBuilder.getIcon(this);
+  String? folderImage() => treeBuilder.getIcon(this);
 
   void folderNode() {
     final el = domNode..innerHtml = '';
@@ -180,7 +180,7 @@ class Tree {
     level = lev;
     isLast = lstNode;
     leftSide = lftSide;
-    treeBuilder.indexOfObjects[node.id] = this;
+    treeBuilder.indexOfObjects[node.id!] = this;
 
     if (childs.isNotEmpty) {
       if (treeBuilder.startOpen && level != 0) isOpen = true;

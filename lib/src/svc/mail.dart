@@ -1,15 +1,15 @@
 part of cl_base.svc.server;
 
 class Mail {
-  SmtpServer _transport;
-  mailer.Message _message;
+  late SmtpServer _transport;
+  late mailer.Message _message;
 
-  Mail([SmtpServer transport]) {
+  Mail([SmtpServer? transport]) {
     _transport = transport ?? new SmtpServer('localhost', port: 25);
     _message = new mailer.Message();
   }
 
-  void from(String from, [String name]) {
+  void from(String from, [String? name]) {
     _message.from = new mailer.Address(from, name);
   }
 
@@ -37,7 +37,7 @@ class Mail {
           .add(new mailer.FileAttachment(new File(source), fileName: fileName));
     else if (source is List)
       _message.attachments.add(new mailer.StreamAttachment(
-          new Stream.fromIterable([source]), 'application/octet-stream',
+          new Stream.fromIterable([source as List<int>]), 'application/octet-stream',
           fileName: fileName));
   }
 

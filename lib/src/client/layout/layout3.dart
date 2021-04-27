@@ -14,7 +14,7 @@ part of layout;
 /// +------------------------------------------+
 ///
 class LayoutContainer3 extends Container {
-  Container contMenu, contMiddle, contBottom;
+  late Container contMenu, contMiddle, contBottom;
 
   LayoutContainer3() : super() {
     contMenu = new Container();
