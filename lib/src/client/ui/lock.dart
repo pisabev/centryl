@@ -44,8 +44,8 @@ class Lock extends cl_action.Button {
 
     decorations = dec ?? new LockDecorations();
     addClass(decorations.bClass);
-    setTip(decorations.lockTip!, 'top');
-    if (decorations.title!.isNotEmpty) setTitle(decorations.title);
+    setTip(decorations.lockTip, 'top');
+    if (decorations.title.isNotEmpty) setTitle(decorations.title);
     addAction((e) => _lock());
     setIcon(decorations.unlockIcon);
   }
@@ -87,7 +87,7 @@ class Lock extends cl_action.Button {
     }
     _operate(false);
     setIcon(decorations.lockIcon);
-    setTip(decorations.unlockTip!, 'top');
+    setTip(decorations.unlockTip, 'top');
     removeAction('click.lock');
     addAction((e) => _unlock(), 'click.lock');
     _contr.add(true);
