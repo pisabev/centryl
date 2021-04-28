@@ -35,7 +35,7 @@ class ItemBuilderContainer extends ItemBuilderContainerBase {
     contInner.clearTabs();
   }
 
-  cl_gui.TabElement createTab(String title, dynamic element,
+  cl_gui.TabElement createTab(String? title, dynamic element,
       {bool scrollable = true}) {
     final te = contInner.createTab(title);
     if (element is cl_form.Data) {
@@ -361,7 +361,7 @@ abstract class ItemBuilder<C extends cl_app.Client> extends ItemBuilderBase<C> {
     layout.listenForChange = v;
   }
 
-  cl_gui.TabElement createTab(String title, dynamic element,
+  cl_gui.TabElement createTab(String? title, dynamic element,
           {bool scrollable = true}) =>
       layout.createTab(title, element, scrollable: scrollable);
 }
