@@ -32,7 +32,7 @@ abstract class Item<E extends Entity, T> extends Base {
 
   Future<Map> doGet(T id);
 
-  Future<T> doSave(T id, Map data);
+  Future<T> doSave(T id, Map<String, dynamic> data);
 
   Future<bool> doDelete(T id);
 }
