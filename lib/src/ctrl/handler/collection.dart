@@ -36,7 +36,8 @@ abstract class Collection<E extends Entity, T> extends Base {
 
   Future<Map> lister(E o) async => o.toJson();
 
-  Future<CollectionBuilder> doGet(Map filter, Map order, Map paginator);
+  Future<CollectionBuilder> doGet(
+      Map<String, dynamic> filter, Map order, Map paginator);
 
   Future<bool> doDelete(List<T> ids);
 }
