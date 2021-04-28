@@ -139,7 +139,7 @@ abstract class EventCalendar<E extends Event> {
   Future loadEvents(DateTime start, DateTime end);
 
   void renderEvents() {
-    montCont?.rows.forEach((r) {
+    montCont.rows.forEach((r) {
       r
         ..setFilters(filters)
         ..setEvents(events)

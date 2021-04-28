@@ -14,8 +14,9 @@ dependencies:
   convert: ^3.0.0
   crypto: ^3.0.1
   csv: ^5.0.0
-  excel: ^1.1.5
+  excel: ^2.0.0-null-safety
   http_server: any
+  http: ^0.13.1
   intl: ^0.17.0
   logging: ^1.0.1
   mailer: ^5.0.0
@@ -23,7 +24,9 @@ dependencies:
   resource: ^2.1.6
   stack_trace: ^1.10.0
   cl_annotation:
-    git: git@repo.centryl.org:centryl/cl_annotation.git
+    git:
+      url: git@repo.centryl.org:centryl/cl_annotation.git
+      ref: nullsafe
   pdf:
     git:
       url: git@repo.centryl.org:centryl/pdf.git
