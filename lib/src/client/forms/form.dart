@@ -146,7 +146,7 @@ class Form<T extends Data> extends Data<Map> {
   E? getElement<E extends T>(String name, [String? context]) => _indexOfElements
       .firstWhereOrNull((el) =>
           el.element.getName() == name && el.element.getContext() == context)
-      ?.element as E;
+      ?.element as E?;
 
   void setState(bool state) =>
       _indexOfElements.forEach((el) => el.element.setState(state));

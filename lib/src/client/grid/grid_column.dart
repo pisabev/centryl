@@ -57,9 +57,9 @@ class GridColumn {
 
   dynamic title = '';
 
-  late dynamic width;
+  dynamic width;
 
-  late dynamic minWidth;
+  dynamic minWidth;
 
   late String key;
 

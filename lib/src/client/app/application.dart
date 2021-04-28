@@ -252,7 +252,7 @@ class Application<C extends Client> {
     window.onPopState.listen((p) {
       if (p.state != null) winmanager.run(p.state);
     });
-    final subpath = window.location.pathname!.replaceFirst(baseurl ?? '/', '');
+    final subpath = window.location.pathname!.replaceFirst(baseurl, '');
     if (subpath.isNotEmpty) winmanager.run(subpath);
 
     onLoadEnd();

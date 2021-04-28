@@ -8,8 +8,8 @@ class GridListContainer extends Container {
   late Container contFoot;
 
   html.Element? _focusEl;
-  var _scrollTop = 0;
-  late bool fixedFooter;
+  int _scrollTop = 0;
+  bool fixedFooter;
 
   GridListContainer(this.gridList,
       {bool auto = false, this.fixedFooter = false})
@@ -122,7 +122,7 @@ class GridListContainer extends Container {
     _scrollTop = 0;
   }
 
-  int get scrollTop => contBody.scroll!.containerEl.scrollTop ?? 0;
+  int get scrollTop => contBody.scroll?.containerEl.scrollTop ?? 0;
 
   set scrollTop(int scrollTop) =>
       contBody.scroll!.scrollTo(_scrollTop = scrollTop);

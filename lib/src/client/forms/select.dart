@@ -1,7 +1,7 @@
 part of forms;
 
 class Select<T> extends _SelectBase<T> {
-  bool _testAgainstList(T v) => list?.any((r) => r[0] == v) ?? false;
+  bool _testAgainstList(T v) => list.any((r) => r[0] == v);
 
   Select();
 
