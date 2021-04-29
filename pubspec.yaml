@@ -21,7 +21,6 @@ dependencies:
   logging: ^1.0.1
   mailer: ^5.0.0
   path: ^1.8.0
-  resource: ^2.1.6
   stack_trace: ^1.10.0
   cl_annotation:
     git:

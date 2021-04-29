@@ -3,6 +3,7 @@ library cl_base.svc.server;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:communicator/server.dart';
 import 'package:convert/convert.dart';
@@ -18,28 +19,21 @@ import 'package:mapper/mapper.dart' as mapper;
 import 'package:path/path.dart';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:task/task.dart';
+import 'package:typed_data/typed_buffers.dart' show Uint8Buffer;
 
 import 'mapper.dart';
 import 'path.dart';
 
 part 'svc/csv.dart';
-
 part 'svc/file_sync.dart';
-
 part 'svc/ics.dart';
-
 part 'svc/mail.dart';
-
 part 'svc/manager.dart';
-
 part 'svc/pdf.dart';
-
+part 'svc/resource.dart';
 part 'svc/service.dart';
-
 part 'svc/sservice.dart';
-
 part 'svc/tree.dart';
-
 part 'svc/xls.dart';
 
 final List<FutureOr<void> Function(Router)> routes = [];

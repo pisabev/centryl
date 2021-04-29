@@ -9,7 +9,6 @@ import 'package:http_server/http_server.dart';
 import 'package:intl/intl.dart';
 import 'package:mapper/mapper.dart';
 import 'package:path/path.dart';
-import 'package:resource/resource.dart';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:template/mustache.dart';
 
