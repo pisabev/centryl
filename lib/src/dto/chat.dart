@@ -19,8 +19,8 @@ class Message {
   static int typeFile = 1;
 
   int? id;
-  int? type;
-  Member? member;
+  late int type;
+  late Member member;
   int? room_id;
   String? context;
   DateTime? timestamp;
