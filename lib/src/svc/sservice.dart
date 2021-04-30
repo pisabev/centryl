@@ -26,10 +26,12 @@ class SNotificator {
 }
 
 class SMessage {
-  int? notification_id;
-  DateTime? date;
-  String? key;
+  late int notification_id;
+  late DateTime date;
+  String key;
   String? value;
+
+  SMessage(this.key);
 }
 
 class History {

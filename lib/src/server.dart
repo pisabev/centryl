@@ -111,8 +111,8 @@ Future<void> addNotification(SMessage mes) async {
     if (mes.value != null) not.value = mes.value!;
     await manager.app.notification.insert(not);
     mes
-      ..notification_id = not.notification_id
-      ..date = not.date;
+      ..notification_id = not.notification_id!
+      ..date = not.date!;
     notificator.add(mes);
   });
 }
@@ -131,16 +131,16 @@ Future<void> server(String address, int port, [Logger? logger]) async {
 }
 
 void onServerDown() =>
-    addNotification(new SMessage()..key = Routes.eventServerStop);
+    addNotification(new SMessage(Routes.eventServerStop));
 
 void onServerStart() =>
-    addNotification(new SMessage()..key = Routes.eventServerStart);
+    addNotification(new SMessage(Routes.eventServerStart));
 
 void onServerStartUpdate() =>
-    addNotification(new SMessage()..key = Routes.eventServerUpdate);
+    addNotification(new SMessage(Routes.eventServerUpdate));
 
 void onServerStartUpdateR() =>
-    addNotification(new SMessage()..key = Routes.eventServerUpdater);
+    addNotification(new SMessage(Routes.eventServerUpdater));
 
 void logHandler() {
   final queue = new TaskQueue();
