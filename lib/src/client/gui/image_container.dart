@@ -4,7 +4,7 @@ class ImageContainer extends form.DataElement {
   late Map image;
   late int dataState;
   action.FileUploader? uploader;
-  late String Function() path_tmp, path_media;
+  late String Function()? path_tmp, path_media;
 
   ImageContainer(this.uploader, this.path_tmp, this.path_media) : super() {
     dom = new DivElement();
@@ -20,7 +20,7 @@ class ImageContainer extends form.DataElement {
   bool onFileLoadStart(String fileName) => true;
 
   bool onFileLoadEnd(String fileName) {
-    setImage(path_tmp, fileName);
+    setImage(path_tmp!, fileName);
     dataState = 1;
     contrValue.add(this);
     return true;
@@ -42,7 +42,7 @@ class ImageContainer extends form.DataElement {
   }
 
   void setValue(dynamic value) {
-    setImage(path_media, value);
+    setImage(path_media!, value);
     contrValue.add(this);
   }
 
