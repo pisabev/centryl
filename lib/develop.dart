@@ -83,13 +83,13 @@ class RandomUniqueInteger implements RandomBase<int> {
     _set = exclude ?? {};
   }
 
-  int? generate() {
+  int generate() {
     final n = new Random().nextInt(max);
     if (!_set.contains(n)) {
       _set.add(n);
       return n;
     } else {
-      if (_set.length == max) return null;
+      if (_set.length == max) return 0;
       return generate();
     }
   }
