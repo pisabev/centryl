@@ -1,7 +1,7 @@
 part of chat;
 
 class Member {
-  int? user_id;
+  int user_id;
   String? name;
   String? picture;
   bool status;
@@ -12,7 +12,7 @@ class Member {
       user_id: d.user_id,
       name: d.name,
       picture: d.picture,
-      status: d.status ?? false);
+      status: d.status);
 
   factory Member.fromMap(Map data) =>
       new Member.fromDto(new dto.Member.fromMap(data));

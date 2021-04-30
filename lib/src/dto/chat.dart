@@ -38,12 +38,12 @@ class Message {
 
 @DTOSerializable()
 class Member {
-  int? user_id;
+  late int user_id;
   String? name;
   String? picture;
-  bool? status;
+  bool status;
 
-  Member();
+  Member() : status = false;
 
   factory Member.fromMap(Map data) => _$MemberFromMap(data);
 
