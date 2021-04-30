@@ -20,9 +20,9 @@ class Notify {
   List<DateTime> Function() range_get =
       () => utils.Calendar.getWeeksBackRange(1);
   Future<void> Function(NotificationMessage) persist = (m) async {};
-  Future<List> Function(dynamic, DateTime, DateTime) load_archive =
+  Future<List?> Function(dynamic, DateTime, DateTime) load_archive =
       (v1, d1, d2) async => [];
-  Future<List> Function(dynamic)? load_recent;
+  Future<List?> Function(dynamic)? load_recent;
   Future<int?> Function(dynamic)? load_unread;
   Future<void> Function(NotificationMessage)? mark_read;
   Future<void> Function(NotificationMessage)? mark_unread;
