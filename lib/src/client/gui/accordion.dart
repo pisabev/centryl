@@ -1,6 +1,6 @@
 part of gui;
 
-abstract class AccordionNode extends CLElement {
+abstract class AccordionNode extends CLElement<DivElement> {
   late CLElement titleDom;
   late CLElement contentDom;
 
