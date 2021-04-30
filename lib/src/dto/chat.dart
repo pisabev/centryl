@@ -24,10 +24,10 @@ class Message {
   int? room_id;
   String? context;
   DateTime? timestamp;
-  List<Member> seen = [];
+  List<Member> seen;
   String? content;
 
-  Message();
+  Message() : seen = [];
 
   factory Message.fromMap(Map data) => _$MessageFromMap(data);
 
