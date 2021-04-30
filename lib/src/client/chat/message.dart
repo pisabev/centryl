@@ -8,7 +8,7 @@ class Message {
   int? id;
   int type;
   Member member;
-  List<Member>? seen;
+  List<Member> seen;
   int? room_id;
   String? context;
   String? content;
@@ -27,13 +27,14 @@ class Message {
       this.context,
       this.id,
       this.content,
-      this.seen});
+      List<Member>? seen})
+      : this.seen = seen ?? [];
 
   factory Message.fromDto(dto.Message d) => new Message(
       id: d.id,
       type: d.type!,
       member: new Member.fromDto(d.member!),
-      seen: d.seen?.map<Member>((m) => new Member.fromDto(m)).toList(),
+      seen: d.seen.map<Member>((m) => new Member.fromDto(m)).toList(),
       room_id: d.room_id,
       context: d.context,
       content: d.content,
@@ -91,7 +92,7 @@ class Message {
     }
     contM.append(contB);
     if (renderImage) member.renderProfile(contP);
-    seen?.forEach((m) => (!m.isMe && m.user_id != member.user_id)
+    seen.forEach((m) => (!m.isMe && m.user_id != member.user_id)
         ? m.renderProfileSmall(contBottom)
         : null);
     dom..append(contTop..append(contP)..append(contM))..append(contBottom);
@@ -120,7 +121,7 @@ class Message {
     ..id = id
     ..type = type
     ..member = member.toDto()
-    ..seen = seen?.map((e) => e.toDto()).toList()
+    ..seen = seen.map((e) => e.toDto()).toList()
     ..room_id = room_id
     ..context = context
     ..content = content
