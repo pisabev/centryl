@@ -84,7 +84,8 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
   Debouncer debouncer = new Debouncer(const Duration(milliseconds: 200));
   Set<Object> stream_changed_ids = {};
 
-  String? mode, key, key_click;
+  late String mode, key;
+  String? key_click;
 
   Listing(this.ap, {bool autoload = true, this.order, this.useCache = false}) {
     observer = new cl_util.Observer();
