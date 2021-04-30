@@ -16,15 +16,15 @@ class Client {
 
   int get userGroupId => data['client']['user_group_id'];
 
-  String? get name => data['client']['name'];
+  String get name => data['client']['name'] ?? username;
 
-  String? get username => data['client']['username'];
+  String get username => data['client']['username'];
 
-  Map? get settings => data['client']['settings'];
+  Map get settings => data['client']['settings'];
 
   String? get locale => data['client']['settings']['language'];
 
-  String? get session => data['client']['session'];
+  String get session => data['client']['session'];
 
   String? get picture => data['client']['picture'];
 
