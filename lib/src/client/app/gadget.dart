@@ -30,9 +30,9 @@ abstract class GadgetBase<T> extends CLElement<DivElement> {
   late GadgetController<T> contr;
   String? scope;
 
-  GadgetBase(GadgetController<T> contr) : super(new DivElement()) {
+  GadgetBase([GadgetController<T>? contr]) : super(new DivElement()) {
     createDom();
-    setController(contr);
+    if (contr != null) setController(contr);
   }
 
   void setController(GadgetController<T> controller) =>
