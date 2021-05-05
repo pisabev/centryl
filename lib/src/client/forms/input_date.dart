@@ -77,14 +77,14 @@ class InputDate extends Input {
   }
 
   @override
-  String getValue() {
+  String? getValue() {
     final d = super.getValue();
     return (d is DateTime) ? d.toString() : d;
   }
 
   String getRepresentation() => input_type.toString();
 
-  DateTime getValue_() => super.getValue();
+  DateTime? getValue_() => super.getValue();
 
   void hideDatePicker() {
     _slider.hide();
