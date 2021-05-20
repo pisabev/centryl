@@ -8,8 +8,19 @@ targets:
         options:
           compiler: dartdevc
 builders:
+  sprite_icon:
+    import: "package:cl_builder/sprite_icon.dart"
+    builder_factories: [ "spriteBuilder" ]
+    auto_apply: dependents
+    build_extensions:
+      $lib$: [ "images/icons-sprite.svg" ]
+    defaults:
+      options:
+        enabled: true
+      release_options:
+        enabled: true
   sass_builder:
-    import: "package:sass_builder/sass_builder.dart"
+    import: "package:cl_builder/sass_builder.dart"
     builder_factories: [ "sassBuilder" ]
     auto_apply: dependents
     build_extensions:
@@ -36,7 +47,7 @@ builders:
     build_to: source
 post_process_builders:
   sass_source_cleanup:
-    import: "package:sass_builder/sass_builder.dart"
+    import: "package:cl_builder/sass_builder.dart"
     builder_factory: "sassSourceCleanup"
     defaults:
       release_options:
