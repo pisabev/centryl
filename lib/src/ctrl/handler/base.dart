@@ -138,7 +138,7 @@ class Base {
     final file = new File('$path/web/packages/$packageFile');
     return file.existsSync()
         ? await file.readAsString()
-        : await new Resource('package:$packageFile').readAsString();
+        : await new ResourceLoader('package:$packageFile').readAsString();
   }
 
   /// Helper for executing function with scope/group permission.

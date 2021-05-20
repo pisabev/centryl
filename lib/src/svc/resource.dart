@@ -84,7 +84,7 @@ class ResourceLoader {
   }
 
   /// Read the bytes of a URI as a string.
-  Future<String> _readAsString(Uri uri, {Encoding? encoding}) async {
+  Future<String> _readAsString(Uri uri, {Encoding encoding}) async {
     if (uri.scheme == 'file') {
       encoding ??= utf8;
       return File.fromUri(uri).readAsString(encoding: encoding);
@@ -114,7 +114,7 @@ class ResourceLoader {
       return response.cast<List<int>>().transform(encoding.decoder).join();
     }
     if (uri.scheme == 'data') {
-      return uri.data!.contentAsString(encoding: encoding);
+      return uri.data.contentAsString(encoding: encoding);
     }
     throw UnsupportedError('Unsupported scheme: $uri');
   }

@@ -19,7 +19,7 @@ import 'package:mapper/mapper.dart' as mapper;
 import 'package:path/path.dart';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:task/task.dart';
-import 'package:'
+import 'package:typed_data/typed_buffers.dart' show Uint8Buffer;
 
 import 'mapper.dart';
 import 'path.dart';
