@@ -3,6 +3,7 @@ library cl_base.svc.server;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:communicator/server.dart';
 import 'package:convert/convert.dart';

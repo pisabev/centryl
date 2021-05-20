@@ -24,7 +24,7 @@ class ResourceLoader {
   /// The content is decoded into a string using an [Encoding].
   /// If no encoding is provided, an encoding is chosen depending on the
   /// protocol and/or available metadata.
-  Future<String> readAsString({Encoding? encoding}) async {
+  Future<String> readAsString({Encoding encoding}) async {
     final uri = await resolveUri(this.uri);
     return _readAsString(uri, encoding: encoding);
   }
@@ -55,7 +55,7 @@ class ResourceLoader {
       return;
     }
     if (uri.scheme == 'data') {
-      yield uri.data!.contentAsBytes();
+      yield uri.data.contentAsBytes();
       return;
     }
     throw UnsupportedError('Unsupported scheme: $uri');
@@ -78,7 +78,7 @@ class ResourceLoader {
       return buffer.toList();
     }
     if (uri.scheme == 'data') {
-      return uri.data!.contentAsBytes();
+      return uri.data.contentAsBytes();
     }
     throw UnsupportedError('Unsupported scheme: $uri');
   }
