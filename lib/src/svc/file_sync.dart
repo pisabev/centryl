@@ -32,7 +32,7 @@ class FileSync {
       file = file_name;
     }
     return http
-        .get(path_from)
+        .get(Uri.parse(path_from))
         .then((response) => _writeAsBytes(file, response.bodyBytes));
   }
 
