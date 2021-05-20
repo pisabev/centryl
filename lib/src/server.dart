@@ -18,6 +18,7 @@ import 'package:mapper/mapper.dart' as mapper;
 import 'package:path/path.dart';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:task/task.dart';
+import 'package:'
 
 import 'mapper.dart';
 import 'path.dart';
@@ -28,6 +29,7 @@ part 'svc/ics.dart';
 part 'svc/mail.dart';
 part 'svc/manager.dart';
 part 'svc/pdf.dart';
+part 'svc/resource.dart';
 part 'svc/service.dart';
 part 'svc/sservice.dart';
 part 'svc/tree.dart';
