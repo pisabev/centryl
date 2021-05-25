@@ -34,7 +34,7 @@ abstract class EventCalendar<E extends Event> {
 
   num? _zoom;
 
-  late Function _currentView;
+  Function? _currentView;
 
   EventCalendar(CLElement container) {
     dom = new Container()
@@ -158,7 +158,7 @@ abstract class EventCalendar<E extends Event> {
   void scale(num zoom) {
     _zoom = zoom;
     hourRowHeight = 0;
-    _currentView();
+    if (_currentView != null) _currentView!();
   }
 
   Future setViewMonth([bool load = true]) async {
@@ -574,10 +574,10 @@ abstract class EventCalendar<E extends Event> {
     montCont.rows.forEach((r) => r.clean());
     if (dayCont != null) dayCont!.cols.forEach((d) => d.clean());
     await loadEvents(curRangeStart, curRangeEnd);
-    _currentView();
+    if (_currentView != null) _currentView!();
   }
 
   void layout() {
-    if (_currentView != null) _currentView();
+    if (_currentView != null) _currentView!();
   }
 }

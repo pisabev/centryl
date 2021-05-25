@@ -12,12 +12,10 @@ class FileContainer extends form.DataElement {
   FileContainer(this.uploader, this.path_tmp, this.path_media) : super() {
     dom = new DivElement()..append(span);
     //addClass('ui-image-container');
-    if (uploader != null) {
-      uploader.observer
-        ..addHook(action.FileUploader.hookLoading, onFileLoadStart)
-        ..addHook(action.FileUploader.hookLoaded, onFileLoadEnd);
-      append(uploader);
-    }
+    uploader.observer
+      ..addHook(action.FileUploader.hookLoading, onFileLoadStart)
+      ..addHook(action.FileUploader.hookLoaded, onFileLoadEnd);
+    append(uploader);
   }
 
   bool onFileLoadStart(String fileName) {

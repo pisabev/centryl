@@ -23,7 +23,7 @@ class Menu extends CLElement {
       });
     ap.fieldLeft.append(control);
     ap.fieldLeft.append(this);
-    if (ap.settings.menuStyle == null || ap.settings.menuStyle == 1) {
+    if (ap.settings.menuStyle == 1) {
       renderer = new MenuElementRenderer(ap);
     } else if (ap.settings.menuStyle == 2) {
       ap.page.addClass('type2');

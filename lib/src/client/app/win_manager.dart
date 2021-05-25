@@ -99,7 +99,7 @@ class WinManager<C extends Client> {
   Item<C>? run(String key, [List? addParams]) {
     final obj = registry.get(key);
     if (obj != null) {
-      if (obj.wapi != null) refreshWinTabs(obj.wapi.win);
+      refreshWinTabs(obj.wapi.win);
       return obj as Item<C>;
     }
 

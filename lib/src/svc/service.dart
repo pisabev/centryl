@@ -32,7 +32,7 @@ class CacheService {
         manager.addNew(obj);
       } else {
         obj.value = value;
-        if (obj.expire != null) sched.removeEventsById('cache:$key');
+        sched.removeEventsById('cache:$key');
         manager.addDirty(obj);
       }
       if (expire != null) {

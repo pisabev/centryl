@@ -144,6 +144,6 @@ String Platform_updated() => Intl.message(
     name: 'Platform_updated');
 String Platform_updated_refresh() => Intl.message(
     'The platform has been'
-        ' started and updated, please hit F5 (Refresh) so the changes could take'
-        ' effect!',
+        ' started and updated, please hit F5 (Refresh) so the changes could '
+        'take effect!',
     name: 'Platform_updated_refresh');

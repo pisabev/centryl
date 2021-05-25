@@ -68,7 +68,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
   GridList? gridList;
   late cl_util.Observer observer;
   Map? params;
-  dynamic? data_response;
+  dynamic data_response;
   cl_form.Check? m_check;
   cl_form.GridOrder? order;
   Set<cl_form.Check> chks = {};

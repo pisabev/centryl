@@ -28,7 +28,7 @@ class Message {
       this.id,
       this.content,
       List<Member>? seen})
-      : this.seen = seen ?? [];
+      : seen = seen ?? [];
 
   factory Message.fromDto(dto.Message d) => new Message(
       id: d.id,

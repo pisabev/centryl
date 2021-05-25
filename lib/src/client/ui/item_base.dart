@@ -16,7 +16,7 @@ abstract class ItemBase<C extends cl_app.Client> {
   UrlPattern? contr_get, contr_save, contr_del;
 
   Map data_send = {};
-  dynamic? data_response;
+  dynamic data_response;
   late cl_util.Observer observer;
 
   ItemBase(this.ap, [dynamic id]) {

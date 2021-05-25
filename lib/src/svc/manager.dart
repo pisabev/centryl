@@ -87,6 +87,6 @@ Future emptyDirectory(String path, {bool recursive = false}) async {
 
 Future deleteDirectory(String path, {bool recursive = false}) async {
   final dir = new Directory(path);
-  if (await dir.exists()) await dir.delete(recursive: recursive);
+  if (dir.existsSync()) await dir.delete(recursive: recursive);
   return true;
 }

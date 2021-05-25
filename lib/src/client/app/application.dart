@@ -219,6 +219,7 @@ class Application<C extends Client> {
         window.console.error('${rec.error.toString()}'
             '\n\n${rec.stackTrace?.toString()}');
       } else
+        // ignore: avoid_print
         print(rec.message);
     });
 
