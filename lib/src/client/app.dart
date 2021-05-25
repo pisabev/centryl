@@ -38,5 +38,5 @@ part 'app/win_manager.dart';
 
 String getCodeMirrorTheme(Application ap) {
   final settings = ap.client.settings;
-  return settings?['theme'] == 'dark' ? 'ambiance' : 'neo';
+  return settings['theme'] == 'dark' ? 'ambiance' : 'neo';
 }

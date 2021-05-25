@@ -77,13 +77,12 @@ Message _$MessageFromMap(Map data) => new Message()
 Map<String, dynamic> _$MessageToMap(Message obj) => <String, dynamic>{
       $Message.id: obj.id,
       $Message.type: obj.type,
-      $Message.member: obj.member?.toMap(),
+      $Message.member: obj.member.toMap(),
       $Message.room_id: obj.room_id,
       $Message.context: obj.context,
       $Message.timestamp: obj.timestamp?.toIso8601String(),
-      $Message.seen: obj.seen == null
-          ? null
-          : new List.generate(obj.seen!.length, (i0) => obj.seen![i0].toMap()),
+      $Message.seen:
+          new List.generate(obj.seen.length, (i0) => obj.seen[i0].toMap()),
       $Message.content: obj.content
     };
 
