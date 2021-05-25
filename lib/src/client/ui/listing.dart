@@ -65,7 +65,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
 
   late cl_form.Form form;
   late cl_action.Menu menu;
-  late GridList gridList;
+  GridList? gridList;
   late cl_util.Observer observer;
   Map? params;
   dynamic? data_response;
@@ -155,17 +155,17 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
         customRowAfter: customRowAfter,
         initOrder: order,
         hookOrder: (_) {
-          order = gridList.grid.order;
+          order = gridList?.grid.order;
           getData();
           return true;
         }));
   }
 
   void setGrid(GridList grid) {
-    gridList.gridCont.remove();
+    gridList?.gridCont.remove();
     gridList = grid;
     layout.contMiddle.addRow(grid.gridCont..auto = true);
-    gridList.gridCont.initLayout();
+    gridList?.gridCont.initLayout();
   }
 
   void initColumnFilter(cl_form.GridColumn column) {
@@ -286,8 +286,8 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
   void debounceGet(dynamic id) => debouncer.execute(getData);
 
   bool inRange(dynamic id) {
-    final row = gridList.grid.tbody.dom.childNodes.firstWhereOrNull((r) =>
-        gridList.grid.getRowMapSerialized(r as TableRowElement)[key] == id);
+    final row = gridList?.grid.tbody.dom.childNodes.firstWhereOrNull((r) =>
+        gridList?.grid.getRowMapSerialized(r as TableRowElement)[key] == id);
     return row != null;
   }
 
@@ -328,7 +328,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
 
   void setParamsGet() {
     params = {
-      $BaseConsts.order: gridList.grid.order!.toMap(),
+      $BaseConsts.order: gridList?.grid.order!.toMap(),
       $BaseConsts.paginator: paginator?.getValue(),
       $BaseConsts.filter: form.getValue()
     };
@@ -421,11 +421,11 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
   void setData() {
     _exp = new Expando();
     paginator?.setTotal(data_response[$BaseConsts.total]);
-    final scroll = gridList.grid.scrollTop;
-    gridList.grid.empty();
+    final scroll = gridList?.grid.scrollTop;
+    gridList?.grid.empty();
     if (data_response[$BaseConsts.result] != null)
-      gridList.grid.renderIt(data_response[$BaseConsts.result]);
-    gridList.grid.scrollTop = scroll;
+      gridList?.grid.renderIt(data_response[$BaseConsts.result]);
+    if (scroll != null) gridList?.grid.scrollTop = scroll;
   }
 
   void checkClean([bool doms = false]) {
