@@ -152,7 +152,7 @@ void logHandler() {
             ' ${rec.level.name}]')
         ..write('\n${rec.message}');
       if (rec.error != null) sb.write('\n${rec.error}');
-      late String dscr;
+      String? dscr;
       if (rec.stackTrace != null) {
         dscr = Trace.format(rec.stackTrace!, terse: true);
         sb.write('\n$dscr');
