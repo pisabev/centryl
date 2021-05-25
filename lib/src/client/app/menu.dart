@@ -89,7 +89,7 @@ class Menu extends CLElement {
 class MenuElement extends CLElement {
   static int _key = 1;
 
-  late String key;
+  String? key;
   String? title, icon, scope, description;
   bool desktop = false;
   Function(Application)? action;
@@ -119,7 +119,8 @@ class MenuElement extends CLElement {
   }
 
   void _init(Menu m) {
-    _index[key] = this;
+    key ??= '${_key++}__';
+    _index[key!] = this;
     menu = m;
     createDom();
     menu.renderer.init(this);
