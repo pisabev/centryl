@@ -1,7 +1,7 @@
 part of cl_base.ctrl;
 
 class Base {
-  late dynamic req;
+  dynamic req;
   Manager? manager;
 
   Base(this.req);
