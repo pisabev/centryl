@@ -32,8 +32,8 @@ class Message {
 
   factory Message.fromDto(dto.Message d) => new Message(
       id: d.id,
-      type: d.type!,
-      member: new Member.fromDto(d.member!),
+      type: d.type,
+      member: new Member.fromDto(d.member),
       seen: d.seen.map<Member>((m) => new Member.fromDto(m)).toList(),
       room_id: d.room_id,
       context: d.context,

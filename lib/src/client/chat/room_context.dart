@@ -65,7 +65,7 @@ class RoomContext extends Container {
         if (activeRoom != null && activeRoom!.room_id == m.room_id) {
           final mes = messages.firstWhereOrNull((mes) => mes.id == m.id);
           if (mes != null)
-            m.seen?.forEach((member) =>
+            m.seen.forEach((member) =>
                 (!member.isMe && member.user_id != mes.member.user_id)
                     ? member.renderProfileSmall(mes.contBottom)
                     : null);
