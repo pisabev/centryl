@@ -163,7 +163,7 @@ void logHandler() {
           new LogMessage()
             ..level = rec.level.name
             ..date = rec.time
-            ..title = rec.error!.toString()
+            ..title = rec.error?.toString()
             ..description = dscr,
           rec.message));
       queue.schedule(() =>
