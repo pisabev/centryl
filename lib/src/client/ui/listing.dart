@@ -328,7 +328,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
 
   void setParamsGet() {
     params = {
-      $BaseConsts.order: gridList?.grid.order!.toMap(),
+      $BaseConsts.order: gridList?.grid.order?.toMap(),
       $BaseConsts.paginator: paginator?.getValue(),
       $BaseConsts.filter: form.getValue()
     };
