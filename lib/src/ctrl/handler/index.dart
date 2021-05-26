@@ -3,8 +3,6 @@ part of cl_base.ctrl;
 class Index extends Base {
   Index(req) : super(req);
 
-  late Map data;
-
   Future<void> index() async {
     if (req.session[sessionKey] == null) return page404();
     final settings = req.session[sessionKey]['settings'] ?? {};
