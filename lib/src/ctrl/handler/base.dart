@@ -2,7 +2,6 @@ part of cl_base.ctrl;
 
 class Base {
   dynamic req;
-  Manager? manager;
 
   Base(this.req);
 
@@ -61,7 +60,6 @@ class Base {
 
   /// JSON response
   void responseJson(dynamic data, [int? code]) {
-    if (manager != null) manager!.close();
     if (req is HttpRequest) {
       req.response.headers.contentType = ContentType.json;
       if (code != null) req.response.statusCode = code;
@@ -75,7 +73,6 @@ class Base {
 
   /// HTML response
   void responseHtml(dynamic data, [int? code]) {
-    if (manager != null) manager!.close();
     req.response.headers.contentType = ContentType.html;
     if (code != null) req.response.statusCode = code;
     req.response.headers.add('X-Powered-By', version);
@@ -85,7 +82,6 @@ class Base {
 
   /// Response write file using its path and filename.
   Future<void> responseFile(String path, [String? name]) {
-    if (manager != null) manager!.close();
     name ??= basename(path);
     req.response.headers.contentType = ContentType.binary;
     req.response.headers
@@ -95,7 +91,6 @@ class Base {
 
   /// Response write file using [List] data and filename.
   void responseFileBytes(List<int> data, [String? name]) {
-    if (manager != null) manager!.close();
     req.response.headers.contentType = ContentType.binary;
     req.response.headers
         .add('Content-Disposition', 'attachment; filename=$name');
@@ -105,7 +100,6 @@ class Base {
 
   /// Response write file using [List] data as PDF content.
   void responseFileBytesAsPDF(List<int> data) {
-    if (manager != null) manager!.close();
     req.response.headers.contentType = ContentType.binary;
     req.response.headers.add('Content-type', 'application/pdf');
     req.response.add(data);
@@ -114,7 +108,6 @@ class Base {
 
   /// Response write file using [Stream] data and filename.
   Future responseStream(Stream<List<int>> stream, [String? name]) {
-    if (manager != null) manager!.close();
     req.response.headers.contentType = ContentType.binary;
     req.response.headers
         .add('Content-Disposition', 'attachment; filename=$name');
@@ -142,15 +135,23 @@ class Base {
   }
 
   /// Helper for executing function with scope/group permission.
-  Future<void> run(
-      String? group, String? scope, String? access, Future Function() f) async {
+  Future<void> _run(
+      Manager? manager,
+      String? group,
+      String? scope,
+      String? access,
+      Future Function()? f,
+      Future Function(Manager m)? fm) async {
     if (permissionCheck(req.session, group, scope, access)) {
       try {
         final watch = Stopwatch()..start();
         final history = new History(req.session.id,
             req is WSRequest ? req.controller : req.requestedUri.path);
         notificator.addHistory(history);
-        await f();
+        if (manager != null)
+          await fm!(manager);
+        else
+          await f!();
         watch.stop();
         notificator.addHistory(history..execTime = watch.elapsedMilliseconds);
       } catch (e, s) {
@@ -162,35 +163,18 @@ class Base {
         'message': permissionMessage(group, scope, access)
       });
     }
+    await manager?.close();
   }
 
-  /// Helper for executing function with scope/group permission with bouncer.
-  Future<void> runBounced(
-      String group, String scope, String access, Future Function() f,
-      [int bounce = 1]) async {
-    if (permissionCheck(req.session, group, scope, access)) {
-      final cs = new CacheService();
-      final params = await getData();
-      final callKey = '${req.requestedUri.toString()}$params';
-      if (await cs.get(callKey) != null) return response(null);
-      try {
-        final watch = Stopwatch()..start();
-        final history = new History(req.session.id,
-            req is WSRequest ? req.controller : req.requestedUri.path);
-        notificator.addHistory(history);
-        await f();
-        await cs.set(callKey, {},
-            expireAfter: new Duration(seconds: bounce), persist: false);
-        watch.stop();
-        notificator.addHistory(history..execTime = watch.elapsedMilliseconds);
-      } catch (e, s) {
-        error(e, s);
-      }
-    } else {
-      response(null, {
-        'type': 'permission',
-        'message': permissionMessage(group, scope, access)
-      });
-    }
+  /// Helper for executing function with scope/group permission and manager.
+  Future<void> run(
+          String? group, String? scope, String? access, Future Function() f) =>
+      _run(null, group, scope, access, f, null);
+
+  /// Helper for executing function with scope/group permission and manager.
+  Future<void> runDb(String? group, String? scope, String? access,
+      Future Function(Manager) f) async {
+    final manager = await new Database().init();
+    return _run(manager, group, scope, access, null, f);
   }
 }
