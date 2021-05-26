@@ -7,7 +7,7 @@ abstract class Collection<E extends Entity, T> extends Base {
 
   Collection(req, [this.group, this.scope]) : super(req);
 
-  void get() => run(group, scope, $RunRights.read, () async {
+  void get() => runDb(group, scope, $RunRights.read, (manager) async {
         final params = await getData();
         final paginator = (params[$BaseConsts.paginator] != null)
             ? params[$BaseConsts.paginator]
@@ -21,22 +21,21 @@ abstract class Collection<E extends Entity, T> extends Base {
         paginator[$BaseConsts.page] = (paginator[$BaseConsts.page] != 0)
             ? paginator[$BaseConsts.page]
             : 1;
-        manager = await new Database().init();
-        final cb = await doGet(filter, order, paginator);
+        final cb = await doGet(manager, filter, order, paginator);
         final r = <Map>[];
-        for (final o in cb.collection) r.add(await lister(o));
-        response({$BaseConsts.total: cb.total, $BaseConsts.result: r});
+        for (final o in cb.collection) r.add(await lister(manager, o as E));
+        return response({$BaseConsts.total: cb.total, $BaseConsts.result: r});
       });
 
-  void delete() => run(group, scope, $RunRights.delete, () async {
+  void delete() => runDb(group, scope, $RunRights.delete, (manager) async {
         final params = await getData();
-        manager = await new Database().init();
-        response(await doDelete(params[$BaseConsts.ids].cast<T>()));
+        response(await doDelete(manager, params[$BaseConsts.ids].cast<T>()));
       });
 
-  Future<Map> lister(E o) async => o.toJson();
+  Future<Map> lister(Manager manager, E o) async => o.toJson();
 
-  Future<CollectionBuilder> doGet(Map filter, Map order, Map paginator);
+  Future<CollectionBuilder> doGet(
+      Manager manager, Map<String, dynamic> filter, Map order, Map paginator);
 
-  Future<bool> doDelete(List<T> ids);
+  Future<bool> doDelete(Manager manager, List<T> ids);
 }

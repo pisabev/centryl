@@ -7,32 +7,29 @@ abstract class Item<E extends Entity, T> extends Base {
 
   Item(req, [this.group, this.scope]) : super(req);
 
-  void get() => run(group, scope, $RunRights.read, () async {
+  void get() => runDb(group, scope, $RunRights.read, (manager) async {
         final params = await getData();
-        manager = await new Database().init();
-        response(await doGet(params['id']));
+        return response(await doGet(manager, params['id']));
       });
 
   Future<void> save() async {
     final body = await getData();
     final id = body['id'];
     final operation = (id != null) ? $RunRights.update : $RunRights.create;
-    await run(group, scope, operation, () async {
+    return runDb(group, scope, operation, (manager) async {
       final data = body['data'];
-      manager = await new Database().init();
-      response({'id': await doSave(id, data)});
+      return response({'id': await doSave(manager, id, data)});
     });
   }
 
-  void delete() => run(group, scope, $RunRights.delete, () async {
+  void delete() => runDb(group, scope, $RunRights.delete, (manager) async {
         final params = await getData();
-        manager = await new Database().init();
-        response(await doDelete(params['id']));
+        return response(await doDelete(manager, params['id']));
       });
 
-  Future<Map> doGet(T id);
+  Future<Map> doGet(Manager manager, T id);
 
-  Future<T> doSave(T id, Map data);
+  Future<T> doSave(Manager manager, T id, Map<String, dynamic> data);
 
-  Future<bool> doDelete(T id);
+  Future<bool> doDelete(Manager manager, T id);
 }
