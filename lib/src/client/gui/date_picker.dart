@@ -10,7 +10,7 @@ class DatePicker extends CLElement {
 
   late CLElement domMonth, domYear;
 
-  late CLElement clicked;
+  CLElement? clickedEl;
 
   late bool time;
   bool doClose = false;
@@ -192,8 +192,8 @@ class DatePicker extends CLElement {
 
     var k = 0;
     void clicked(DatePicker obj, [CLElement? n]) {
-      obj.clicked.removeClass('selected');
-      if (n != null) obj.clicked = n..addClass('selected');
+      obj.clickedEl?.removeClass('selected');
+      if (n != null) obj.clickedEl = n..addClass('selected');
     }
 
     clicked(this, null);
