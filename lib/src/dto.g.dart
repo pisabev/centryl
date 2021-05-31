@@ -14,7 +14,8 @@ DataContainer _$DataContainerFromMap(Map data) => new DataContainer()
   ..label = data[$DataContainer.label]
   ..clas = data[$DataContainer.clas]
   ..set = (data[$DataContainer.set])
-      ?.map<DataSet>((v0) => v0 is Map ? new DataSet.fromMap(v0) : v0)
+      ?.map<DataSet>(
+          (v0) => v0 is Map ? new DataSet.fromMap(v0) : v0 as DataSet)
       .toList();
 
 Map<String, dynamic> _$DataContainerToMap(DataContainer obj) =>
@@ -63,14 +64,14 @@ Message _$MessageFromMap(Map data) => new Message()
   ..type = data[$Message.type]
   ..member = data[$Message.member] is Map
       ? new Member.fromMap(data[$Message.member])
-      : data[$Message.member]
+      : data[$Message.member] as Member
   ..room_id = data[$Message.room_id]
   ..context = data[$Message.context]
   ..timestamp = data[$Message.timestamp] is String
       ? DateTime.parse(data[$Message.timestamp])
       : data[$Message.timestamp]
   ..seen = (data[$Message.seen])
-      ?.map<Member>((v0) => v0 is Map ? new Member.fromMap(v0) : v0)
+      ?.map<Member>((v0) => v0 is Map ? new Member.fromMap(v0) : v0 as Member)
       .toList()
   ..content = data[$Message.content];
 
@@ -118,7 +119,7 @@ abstract class $Room {
 Room _$RoomFromMap(Map data) => new Room()
   ..room_id = data[$Room.room_id]
   ..members = (data[$Room.members])
-      ?.map<Member>((v0) => v0 is Map ? new Member.fromMap(v0) : v0)
+      ?.map<Member>((v0) => v0 is Map ? new Member.fromMap(v0) : v0 as Member)
       .toList()
   ..context = data[$Room.context]
   ..lsm_id = data[$Room.lsm_id]
