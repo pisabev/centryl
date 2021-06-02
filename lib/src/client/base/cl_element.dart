@@ -137,7 +137,8 @@ abstract class CLElementBase<E extends Element> {
   void setWidth(Dimension dim) {
     dom.style.width = dim.toString();
   }
-///todo
+
+  ///todo
   void setStyle(Map<String, String?> styleMap) {
     styleMap.forEach(dom.style.setProperty);
   }
@@ -181,6 +182,13 @@ abstract class CLElementBase<E extends Element> {
     dom.style
       ..visibility = null
       ..display = null;
+  }
+
+  void setVisibility(bool way, {bool useVisibility = false}) {
+    if (way)
+      show();
+    else
+      hide(useVisibility: useVisibility);
   }
 
   void remove() => dom.remove();
