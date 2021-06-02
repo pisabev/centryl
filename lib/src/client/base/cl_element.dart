@@ -182,6 +182,13 @@ abstract class CLElementBase<E extends Element> {
       ..display = null;
   }
 
+  void setVisibility(bool way, {bool useVisibility = false}) {
+    if (way)
+      show();
+    else
+      hide(useVisibility: useVisibility);
+  }
+
   void remove() => dom.remove();
 
   void removeChilds() => dom.children.clear();
