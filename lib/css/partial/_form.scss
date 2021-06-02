@@ -133,6 +133,8 @@
     margin: 1rem;
     color: $section-color;
     border-bottom: 1px solid $section-separator;
+    display: flex;
+    align-items: center;
   }
 }
 
