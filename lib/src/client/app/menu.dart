@@ -303,7 +303,7 @@ class MenuElementRenderer extends MenuElementRendererBase {
   void _posCont(MenuElement element) {
     final pos = element.getRectangle();
     final height = element.children
-        .fold(0, (height, child) => height ?? 0 + child.getHeight());
+        .fold<num>(0, (height, child) => height + child.getHeight());
     final left = pos.left + pos.width;
     element.cont!.setStyle(
         {'top': '${pos.top}px', 'left': '${left}px', 'height': '${height}px'});
