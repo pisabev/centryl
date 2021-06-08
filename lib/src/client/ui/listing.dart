@@ -84,7 +84,8 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
   Debouncer debouncer = new Debouncer(const Duration(milliseconds: 200));
   Set<Object> stream_changed_ids = {};
 
-  late String mode, key;
+  late String key;
+  String? mode;
   String? key_click;
 
   Listing(this.ap, {bool autoload = true, this.order, this.useCache = false}) {
@@ -127,7 +128,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
 
   List<cl_form.GridColumn> prepareColumns(List<dynamic> columns) {
     final h = <cl_form.GridColumn>[];
-    if (mode == MODE_LIST) {
+    if (mode != null && mode == MODE_LIST) {
       m_check = new cl_form.Check('bool')
         ..setValue(true)
         ..setChecked(false)
