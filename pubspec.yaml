@@ -9,7 +9,7 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  args: ^2.1.0
+  args: ^2.1.1
   codemirror: ^0.6.1+5.61.0
   convert: ^3.0.0
   crypto: ^3.0.1
