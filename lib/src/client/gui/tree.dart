@@ -26,7 +26,7 @@ class Tree {
     domNode.onClick.listen((e) => operateNode(true));
     domValue = new AnchorElement();
     final icon = folderImage();
-    domValue.append(new Icon(icon!).dom);
+    if (icon != null) domValue.append(new Icon(icon).dom);
     if (node.clas != null) domValue.classes.add(node.clas!);
     domValue.append(node.value is String
         ? (new SpanElement()
