@@ -113,8 +113,8 @@ class Ap1 extends app.Item {
     c.contMiddleLeft.append(grdd);
     c.contMiddleRight.append(grdc);
 
-    wapi.win.getContent().append(c, scrollable: true);
-    wapi.render();
+    wapi!.win.getContent().append(c, scrollable: true);
+    wapi!.render();
   }
 
   cl_gui.FormElement formLeft(cl_form.Form f) {
