@@ -70,7 +70,7 @@ class _LayoutContainerOp extends ItemBuilderContainer {
 abstract class ItemBuilderBase<C extends cl_app.Client> extends ItemBase<C>
     implements cl_app.Item<C> {
   late cl_app.WinMeta meta;
-  late cl_app.WinApp<C> wapi;
+  cl_app.WinApp<C>? wapi;
 
   late ItemBuilderContainerBase layout;
   final StreamController<bool> _contr = new StreamController.broadcast();
@@ -145,21 +145,21 @@ abstract class ItemBuilderBase<C extends cl_app.Client> extends ItemBase<C>
 
   Future<void> _setTitle() async {
     if (meta.title != null)
-      wapi.setTitle(meta.getTitle(getId()));
+      wapi?.setTitle(meta.getTitle(getId()));
     else
-      wapi.setTitle(await getTitle());
+      wapi?.setTitle(await getTitle());
   }
 
   void initLayout() {
     createLayout();
     wapi = new cl_app.WinApp(ap);
-    wapi.load(meta, this);
+    wapi!.load(meta, this);
     menu = new cl_action.Menu(layout.contMenu..addClass('shadowed'));
-    wapi.win.getContent().append(layout, scrollable: true);
-    wapi.render();
+    wapi!.win.getContent().append(layout, scrollable: true);
+    wapi!.render();
     final action =
         new cl_util.KeyAction(cl_util.KeyAction.CTRL_S, () => saveIt(false));
-    wapi.win.addKeyAction(action);
+    wapi!.win.addKeyAction(action);
   }
 
   void setActions() {
@@ -242,15 +242,17 @@ abstract class ItemBuilderBase<C extends cl_app.Client> extends ItemBase<C>
       close(__close_set);
       return true;
     });
-    wapi.win.observer
-      ..addHook(
-          'close',
-          (_) => isDirty ? ask(intl.Close_warning(), wapi.win.close) : !isDirty,
-          true)
-      ..addHook('close', (_) {
-        ap.preventRefresh = false;
-        return true;
-      });
+    if (wapi != null)
+      wapi!.win.observer
+        ..addHook(
+            'close',
+            (_) =>
+                isDirty ? ask(intl.Close_warning(), wapi!.win.close) : !isDirty,
+            true)
+        ..addHook('close', (_) {
+          ap.preventRefresh = false;
+          return true;
+        });
   }
 
   Future get([cl.CLElementBase? loading]) => super.get(loading ?? layout);
@@ -322,7 +324,7 @@ abstract class ItemBuilderBase<C extends cl_app.Client> extends ItemBase<C>
       setId(null);
     if (way) {
       resetListeners();
-      wapi.close();
+      wapi?.close();
     } else {
       get();
     }

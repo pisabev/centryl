@@ -39,7 +39,7 @@ abstract class Report<C extends cl_app.Client> implements cl_app.Item<C> {
 
   late cl_app.Application<C> ap;
   late cl_app.WinMeta meta;
-  late cl_app.WinApp<C> wapi;
+  cl_app.WinApp<C>? wapi;
   late _LayoutContainerReport layout;
   late cl_action.Menu menuLeftBottom, menuRightTop, menuRightBottom;
 
@@ -68,8 +68,8 @@ abstract class Report<C extends cl_app.Client> implements cl_app.Item<C> {
     createLayout();
     wapi = new cl_app.WinApp(ap)..load(meta, this);
     menuLeftBottom = new cl_action.Menu(layout.contLeftBottom);
-    wapi.win.getContent().append(layout, scrollable: true);
-    wapi.render();
+    wapi!.win.getContent().append(layout, scrollable: true);
+    wapi!.render();
   }
 
   void setActions() {

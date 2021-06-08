@@ -13,7 +13,7 @@ class WinMeta {
 }
 
 class Item<C extends Client> {
-  late WinApp<C> wapi;
+  WinApp<C>? wapi;
 }
 
 class WinApp<C extends Client> {

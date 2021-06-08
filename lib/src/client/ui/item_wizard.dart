@@ -14,7 +14,7 @@ class LayoutContainerWizard extends cl.Container {
 }
 
 abstract class ItemWizard extends ItemBase implements cl_app.Item {
-  late cl_app.WinApp wapi;
+  cl_app.WinApp? wapi;
   late cl_app.WinMeta meta;
 
   late LayoutContainerWizard layout;
@@ -57,8 +57,8 @@ abstract class ItemWizard extends ItemBase implements cl_app.Item {
     createLayout();
     wapi = new cl_app.WinApp(ap)..load(meta, this);
     menu = new cl_action.Menu(layout.contMenu);
-    wapi.win.getContent().append(layout, scrollable: true);
-    wapi.render();
+    wapi!.win.getContent().append(layout, scrollable: true);
+    wapi!.render();
   }
 
   void setActions() {
@@ -118,7 +118,7 @@ abstract class ItemWizard extends ItemBase implements cl_app.Item {
       return true;
     });
     addHook(ItemBase.save_after, (_) {
-      wapi.close();
+      wapi?.close();
       return true;
     });
   }

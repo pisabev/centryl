@@ -59,7 +59,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
 
   cl_app.Application<C> ap;
   late cl_app.WinMeta meta;
-  late cl_app.WinApp<C> wapi;
+  cl_app.WinApp<C>? wapi;
   late ListingContainer layout;
   Expando? _exp;
 
@@ -116,12 +116,12 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
     createLayout();
     wapi = new cl_app.WinApp(ap)..load(meta, this);
     menu = new cl_action.Menu(layout.contMenu);
-    wapi.win.getContent().append(layout, scrollable: true);
-    wapi.render();
+    wapi!.win.getContent().append(layout, scrollable: true);
+    wapi!.render();
   }
 
   void initWinListener() {
-    wapi.win.onActiveStateChange.listen((state) {
+    wapi?.win.onActiveStateChange.listen((state) {
       if (state && stream_changed_ids.isNotEmpty) debounceInRangeGet(null);
     });
   }
@@ -269,7 +269,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
 
   void registerServerListener(String event, void Function(dynamic) f) {
     final subscr = ap.onServerCall.filter(event).listen(f);
-    wapi.addCloseHook((_) {
+    wapi?.addCloseHook((_) {
       subscr.cancel();
       return true;
     });
@@ -277,7 +277,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
 
   void debounceInRangeGet(dynamic id) {
     stream_changed_ids.add(id);
-    if (!wapi.win.isActive) return;
+    if (wapi != null && !wapi!.win.isActive) return;
     debouncer.execute(() {
       if (stream_changed_ids.any(inRange)) getData();
       stream_changed_ids = {};
