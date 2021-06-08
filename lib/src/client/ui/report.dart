@@ -43,7 +43,7 @@ abstract class Report<C extends cl_app.Client> implements cl_app.Item<C> {
   late _LayoutContainerReport layout;
   late cl_action.Menu menuLeftBottom, menuRightTop, menuRightBottom;
 
-  late GridList gridReport;
+  GridList? gridReport;
   cl_form.Form form = new cl_form.Form();
   cl_util.Observer observer = new cl_util.Observer();
   late Map params;
@@ -128,7 +128,7 @@ abstract class Report<C extends cl_app.Client> implements cl_app.Item<C> {
 
   void setParamsGet() {
     params = {
-      $BaseConsts.order: gridReport.grid.order?.toMap(),
+      $BaseConsts.order: gridReport?.grid.order?.toMap(),
       $BaseConsts.filter: form.getValue()
     };
   }
@@ -144,28 +144,28 @@ abstract class Report<C extends cl_app.Client> implements cl_app.Item<C> {
   }
 
   void setGrid(GridList grid) {
-    gridReport.gridCont.remove();
+    gridReport?.gridCont.remove();
     gridReport = grid;
-    layout.contRightInner.addRow(gridReport.gridCont..auto = true);
-    gridReport.gridCont.initLayout();
-    gridReport.grid.addHookOrder((_) {
+    layout.contRightInner.addRow(gridReport!.gridCont..auto = true);
+    gridReport!.gridCont.initLayout();
+    gridReport!.grid.addHookOrder((_) {
       getData();
       return true;
     });
   }
 
   void setData() {
-    gridReport.grid.empty();
+    gridReport?.grid.empty();
     if (data_response == null ||
         data_response![$BaseConsts.result] == null ||
         data_response![$BaseConsts.result].isEmpty) {
-      gridReport.gridCont.hide();
+      gridReport?.gridCont.hide();
       return;
     }
-    gridReport.gridCont.show();
+    gridReport?.gridCont.show();
     menuLeftBottom[$BaseConsts.print]?.enable();
     menuLeftBottom[$BaseConsts.export]?.enable();
-    gridReport.grid.renderIt(data_response![$BaseConsts.result]);
+    gridReport?.grid.renderIt(data_response![$BaseConsts.result]);
   }
 
   void addHook(String scope, cl_util.ObserverFunction func,
