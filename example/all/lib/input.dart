@@ -18,6 +18,6 @@ class AppInputs extends cl_app.Item {
       ..load(meta, this)
       ..render();
 
-    wapi.win.getContent().append(run(ap), scrollable: true);
+    wapi!.win.getContent().append(run(ap), scrollable: true);
   }
 }

@@ -18,6 +18,6 @@ class AppActions extends cl_app.Item {
       ..load(meta, this)
       ..render();
 
-    wapi.win.getContent().append(run(), scrollable: true);
+    wapi!.win.getContent().append(run(), scrollable: true);
   }
 }

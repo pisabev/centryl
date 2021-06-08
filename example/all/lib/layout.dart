@@ -49,9 +49,9 @@ class Ap1 extends cl_app.Item {
 
     form.setValue(m);
 
-    wapi.win.getContent().append(c, scrollable: true);
-    wapi.render();
-    wapi.win.addKeyAction(new util.KeyAction(util.KeyAction.ALT_S, () {
+    wapi!.win.getContent().append(c, scrollable: true);
+    wapi!.render();
+    wapi!.win.addKeyAction(new util.KeyAction(util.KeyAction.ALT_S, () {
       print('Laytout 1 ALT+S');
     }));
   }
@@ -132,8 +132,8 @@ class Ap2 extends cl_app.Item {
 
     form.setValue(m);
 
-    wapi.win.getContent().append(c, scrollable: true);
-    wapi.render();
+    wapi!.win.getContent().append(c, scrollable: true);
+    wapi!.render();
   }
 }
 
@@ -190,8 +190,8 @@ class Ap3 extends cl_app.Item {
     gridList.renderIt(l);
     new cl_action.Menu(c.contBottom).add(new cl_form.Paginator());
 
-    wapi.win.getContent().append(c, scrollable: true);
-    wapi.render();
+    wapi!.win.getContent().append(c, scrollable: true);
+    wapi!.render();
   }
 }
 
@@ -247,7 +247,7 @@ class Ap4 extends cl_app.Item {
     c.contLeft.append(tree, scrollable: true);
     tree.renderTree(tree.main!, d);
 
-    wapi.win.getContent().append(c, scrollable: true);
-    wapi.render();
+    wapi!.win.getContent().append(c, scrollable: true);
+    wapi!.render();
   }
 }

@@ -18,6 +18,6 @@ class AppGrid extends cl_app.Item {
       ..load(meta, this)
       ..render();
 
-    wapi.win.getContent().append(grid4(), scrollable: true);
+    wapi!.win.getContent().append(grid4(), scrollable: true);
   }
 }
