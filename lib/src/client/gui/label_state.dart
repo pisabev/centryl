@@ -3,7 +3,7 @@ part of gui;
 class LabelState extends action.Button {
   late final List<String> states;
   final List<String>? colors;
-  late int _current;
+  int? _current;
   List<int>? _clickables;
   List<StreamSubscription> _subs = [];
   final StreamController<int> _contr = new StreamController.broadcast();
@@ -12,7 +12,7 @@ class LabelState extends action.Button {
 
   Stream<int> get onChange => _contr.stream;
 
-  int get current => _current;
+  int? get current => _current;
 
   void createDom() {
     addClass('ui-state');
@@ -32,7 +32,7 @@ class LabelState extends action.Button {
       ..classes.add(clas);
     if (_current != index) {
       _current = index;
-      _contr.add(_current);
+      _contr.add(_current!);
     }
   }
 

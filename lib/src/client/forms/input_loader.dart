@@ -11,7 +11,7 @@ class InputLoader<T> extends InputFunction<T> with DataLoader<List<Map>> {
   late utils.UISlider _slider;
   late CLElement scrollContainer;
   int currentIndex = -1;
-  late String _lastVisibleValue;
+  String? _lastVisibleValue;
   bool isListVisible = false;
   bool _userAction = false;
   bool _tryValueLater = false;
