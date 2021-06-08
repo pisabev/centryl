@@ -6,11 +6,11 @@ class CallView {
   late Container contTop, contInner, contBottom;
   late CLElement<VideoElement> videoRemote;
   late action.Button hangup;
-  final void Function()? onHangup;
+  final void Function() onHangup;
   Room room;
   late LocalView localView;
 
-  CallView(this.ap, this.room, {this.onHangup}) {
+  CallView(this.ap, this.room, {required this.onHangup}) {
     localView = new LocalView(ap);
     createDom();
   }
