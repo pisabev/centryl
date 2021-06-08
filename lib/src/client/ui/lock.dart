@@ -17,12 +17,12 @@ class LockDecorations {
       String? unlockIcon,
       String? bClass,
       String? title}) {
-    lockTip = lockTip ?? intl.Lock();
-    unlockTip = unlockTip ?? intl.Unlock();
-    lockIcon = lockIcon ?? cl.Icon.lock_outline;
-    unlockIcon = unlockIcon ?? cl.Icon.lock_open;
-    bClass = bClass ?? 'warning';
-    title = title ?? '';
+    this.lockTip = lockTip ?? intl.Lock();
+    this.unlockTip = unlockTip ?? intl.Unlock();
+    this.lockIcon = lockIcon ?? cl.Icon.lock_outline;
+    this.unlockIcon = unlockIcon ?? cl.Icon.lock_open;
+    this.bClass = bClass ?? 'warning';
+    this.title = title ?? '';
   }
 }
 
