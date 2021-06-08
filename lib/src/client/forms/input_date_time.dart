@@ -17,13 +17,13 @@ class InputDateTime extends Input {
       ..addClass('clickable')
       ..appendTo(inner);
     picker = new gui.DatePicker(time: true)
+      ..filter = validateValue
       ..onSet.listen((_) {
         if (picker.getDate() != null) fieldUpdate(picker.getDate()!);
       })
       ..appendTo(this)
       ..addAction<html.Event>((e) => e.stopPropagation(), 'mousedown');
     addAction(showDatePicker, 'dblclick');
-    picker.filter = validateValue;
     _slider = new utils.UISlider(picker, this)..autoWidth = false;
     addAction<html.KeyboardEvent>((e) {
       if (e.keyCode == 8 &&
