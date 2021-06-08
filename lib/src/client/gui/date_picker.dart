@@ -17,7 +17,7 @@ class DatePicker extends CLElement {
 
   late form.InputTime timeField;
 
-  late FutureOr<bool> Function(DateTime date) filter;
+  FutureOr<bool> Function(DateTime date) filter = (d) => true;
 
   late DateTime _currentDate;
   late DateTime _viewDate;
