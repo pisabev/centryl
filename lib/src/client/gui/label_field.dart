@@ -1,10 +1,10 @@
 part of gui;
 
 class LabelField extends CLElement {
-  dynamic label;
-  List elements;
-  CLElement labelDom;
-  CLElement formData;
+  late dynamic label;
+  late List elements;
+  CLElement? labelDom;
+  late CLElement formData;
 
   LabelField(this.label, this.elements) : super(new DivElement()) {
     addClass('label-field');
@@ -13,15 +13,15 @@ class LabelField extends CLElement {
 
   void setLabel(dynamic label) {
     if (labelDom == null) return;
-    labelDom.removeChilds();
+    labelDom!.removeChilds();
     _appendLabel(label);
   }
 
   void _appendLabel(dynamic label) {
     if (label is CLElement || label is Element)
-      labelDom.append(label);
+      labelDom!.append(label);
     else if (label is String)
-      labelDom.append(new CLElement(new SpanElement())..setText(label));
+      labelDom!.append(new CLElement(new SpanElement())..setText(label));
   }
 
   void createDom() {

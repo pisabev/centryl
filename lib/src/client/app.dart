@@ -5,9 +5,9 @@ import 'dart:convert';
 import 'dart:html' hide Dimension;
 import 'dart:math' as math;
 
+import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
-import 'package:meta/meta.dart';
 
 import '../../intl/client.dart' as intl;
 import '../dto.dart' as dto;
@@ -37,7 +37,6 @@ part 'app/win_app.dart';
 part 'app/win_manager.dart';
 
 String getCodeMirrorTheme(Application ap) {
-  var settings = ap.client.settings;
-  settings ??= {};
+  final settings = ap.client.settings;
   return settings['theme'] == 'dark' ? 'ambiance' : 'neo';
 }

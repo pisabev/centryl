@@ -3,9 +3,8 @@ library chat;
 
 import 'dart:async';
 import 'dart:html' hide Dimension;
-import 'dart:typed_data';
-import 'dart:web_audio';
 
+import 'package:collection/collection.dart';
 import 'package:js/js.dart';
 import 'package:pdf/pdf.dart';
 

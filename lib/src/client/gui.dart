@@ -4,6 +4,8 @@ import 'dart:async';
 import 'dart:html';
 import 'dart:math' as math;
 
+import 'package:collection/collection.dart';
+
 import '../../intl/client.dart' as intl;
 import 'action.dart' as action;
 import 'app.dart';
@@ -17,10 +19,10 @@ part 'gui/date_picker.dart';
 part 'gui/date_picker_range.dart';
 part 'gui/file_attach.dart';
 part 'gui/file_comment.dart';
+part 'gui/file_container.dart';
 part 'gui/file_manager.dart';
 part 'gui/file_manager_base.dart';
 part 'gui/form_element.dart';
-part 'gui/file_container.dart';
 part 'gui/image_container.dart';
 part 'gui/label_field.dart';
 part 'gui/label_state.dart';

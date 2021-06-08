@@ -1,16 +1,16 @@
 part of forms;
 
 class _GridPos {
-  int col;
-  int row;
+  late int col;
+  late int row;
 }
 
 class _Section {
-  _GridPos topLeft;
-  _GridPos bottomRight;
-  final List<html.TableRowElement> rows;
+  late _GridPos topLeft;
+  late _GridPos bottomRight;
+  late final List<html.TableRowElement> rows;
   List<html.TableCellElement> selected = [];
-  int offset;
+  late int offset;
   static const String clas = 'highlighted';
 
   _Section(this.rows, [this.offset = 0]) {
@@ -76,13 +76,13 @@ class _Section {
 }
 
 class Selector {
-  _Section section;
-  GridColumn gc;
-  CLElement label;
-  Sumator sum;
-  List<html.TableRowElement> rows;
-  List<html.TableCellElement> cells;
-  bool text;
+  late _Section section;
+  late GridColumn gc;
+  CLElement? label;
+  late Sumator sum;
+  late List<html.TableRowElement> rows;
+  late List<html.TableCellElement> cells;
+  late bool text;
 
   Selector(this.sum, {this.text = true});
 
@@ -101,7 +101,8 @@ class Selector {
         ..setBottomRight(el.dom);
       cells.forEach((td) {
         final elem = new CLElement(td);
-        elem.addAction((e) => section.setBottomRight(elem.dom),
+        elem.addAction(
+            (e) => section.setBottomRight(elem.dom as html.TableCellElement),
             'mouseover.selector${section.hashCode}');
       });
     }
@@ -136,12 +137,12 @@ class Selector {
     sum.nullify();
     if (section.selected.isEmpty) return;
     section.selected.forEach((sel) {
-      final obj = gc.grid.getRowMap(sel.parent);
+      final obj = gc.grid.getRowMap(sel.parent as html.TableRowElement);
       sum.add(obj[gc.key].object);
     });
     final last = section.selected.last;
     label ??= new CLElement(new html.SpanElement())..addClass('sum-label');
-    label.appendTo(gc.grid);
+    label!.appendTo(gc.grid);
     final el = new CLElement(last),
         offset = el.getHeight(),
         pos_tbody = gc.grid.getRectangle(),
@@ -150,17 +151,17 @@ class Selector {
           'top': pos_cell.top - pos_tbody.top,
           'left': pos_cell.left - pos_tbody.left,
         };
-    label.setStyle({
+    label!.setStyle({
       'display': 'block',
-      'top': '${pos['top'] + offset}px',
+      'top': '${pos['top']! + offset}px',
       'left': '${pos['left']}px',
       'z-index': '1'
     });
     if (text)
-      label.dom.text = 'Σ = ${sum.total}';
+      label!.dom.text = 'Σ = ${sum.total}';
     else {
-      label.dom.innerHtml = '';
-      label.dom.append(sum.total);
+      label!.dom.innerHtml = '';
+      label!.dom.append(sum.total);
     }
   }
 
@@ -173,7 +174,7 @@ class Selector {
         final el = new CLElement<html.TableCellElement>(td);
         el
           ..addClass('hightlightable')
-          ..addAction((e) {
+          ..addAction<html.MouseEvent>((e) {
             startSelection(el, e);
             final doc = new CLElement(html.document.body);
             doc.addAction((e) {
@@ -181,7 +182,7 @@ class Selector {
               doc.removeAction('mousedown.selector${section.hashCode}');
             }, 'mousedown.selector${section.hashCode}');
           }, 'mousedown.selector${section.hashCode}')
-          ..addAction((e) {
+          ..addAction<html.Event>((e) {
             e.stopPropagation();
             stopSelection();
             getLabel();

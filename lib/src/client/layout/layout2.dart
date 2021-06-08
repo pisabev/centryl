@@ -16,8 +16,8 @@ part of layout;
 /// +------------------------------------------+
 ///
 class LayoutContainer2 extends Container {
-  Container contMenu, contTop, contTopLeft, contTopRight;
-  TabContainer contBottom;
+  late Container contMenu, contTop, contTopLeft, contTopRight;
+  late TabContainer contBottom;
 
   LayoutContainer2() : super() {
     contTop = new Container();

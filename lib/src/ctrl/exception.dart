@@ -5,9 +5,9 @@ class ResourceNotFoundException implements Exception {
 }
 
 class WorkflowException implements Exception {
-  final String Function() _message;
+  final String Function()? _message;
 
-  String get message => _message != null ? _message() : '';
+  String get message => _message != null ? _message!() : '';
 
   WorkflowException([this._message]) : super();
 

@@ -1,7 +1,7 @@
 part of forms;
 
 class GridBase<T> extends DataElement<T, html.TableElement> {
-  CLElement<html.TableSectionElement> thead, tbody, tfoot;
+  late CLElement<html.TableSectionElement> thead, tbody, tfoot;
   utils.Observer observer = new utils.Observer();
 
   GridBase() : super() {
@@ -11,13 +11,13 @@ class GridBase<T> extends DataElement<T, html.TableElement> {
     tfoot = new CLElement(dom.createTFoot())..appendTo(this);
   }
 
-  html.TableRowElement rowCreate() => tbody.dom.insertRow(-1);
+  html.TableRowElement rowInsert() => tbody.dom.insertRow(-1);
 
   html.TableCellElement cellCreate(html.TableRowElement row) =>
       row.insertCell(-1);
 
   html.TableRowElement rowCreateBefore(html.TableRowElement row,
-      [html.TableRowElement row_new]) {
+      [html.TableRowElement? row_new]) {
     row_new = (row_new != null) ? row_new : new html.TableRowElement();
     tbody.dom.insertBefore(row_new, row.nextElementSibling);
     return row_new;

@@ -1,7 +1,7 @@
 part of cl_base.svc.server;
 
 class CacheService {
-  static CacheService _instance;
+  static CacheService? _instance;
   final Schedule sched = new Schedule();
   static final Map<String, Map> _local = {};
 
@@ -10,7 +10,7 @@ class CacheService {
   CacheService._();
 
   Future set(String key, Map value,
-      {DateTime expire, Duration expireAfter, bool persist = true}) async {
+      {DateTime? expire, Duration? expireAfter, bool persist = true}) async {
     expire = expireAfter != null
         ? new DateTime.now().toUtc().add(expireAfter)
         : expire;
@@ -32,7 +32,7 @@ class CacheService {
         manager.addNew(obj);
       } else {
         obj.value = value;
-        if (obj.expire != null) sched.removeEventsById('cache:$key');
+        sched.removeEventsById('cache:$key');
         manager.addDirty(obj);
       }
       if (expire != null) {
@@ -45,9 +45,9 @@ class CacheService {
     });
   }
 
-  Future<Map> get(String key) async {
+  Future<Map?> get(String key) async {
     if (_local.containsKey(key)) return _local[key];
-    return dbWrap<Map>((manager) async {
+    return dbWrap<Map?>((manager) async {
       final c = await manager.app.cache.find(key);
       return c?.value;
     });

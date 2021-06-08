@@ -5,6 +5,7 @@ import 'dart:html' as html;
 import 'dart:math' as math;
 
 import 'package:codemirror/codemirror.dart' as codemirror;
+import 'package:collection/collection.dart';
 
 import '../../intl/client.dart' as intl;
 import 'action.dart' as action;

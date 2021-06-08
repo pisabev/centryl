@@ -1,14 +1,14 @@
 part of forms;
 
 class Select<T> extends _SelectBase<T> {
-  bool _testAgainstList(T v) => list?.any((r) => r[0] == v) ?? false;
+  bool _testAgainstList(T v) => list.any((r) => r[0] == v);
 
   Select();
 
   factory Select.fromOptions(List options) =>
       new Select()..setOptions(options);
 
-  void setValue(T value) => _setValue(value);
+  void setValue(T? value) => _setValue(value);
 
   void _manageValue(dynamic value) {
     var newIndex = 0;

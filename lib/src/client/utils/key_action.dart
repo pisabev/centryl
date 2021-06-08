@@ -25,7 +25,7 @@ class KeyAction {
   void run(Event e) {
     if (e is! KeyboardEvent) return;
     try {
-      if (_combos[combo](e)) {
+      if (_combos[combo]!(e)) {
         e.preventDefault();
         action();
       }

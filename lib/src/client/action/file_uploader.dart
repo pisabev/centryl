@@ -7,16 +7,16 @@ class FileUploader extends Button {
   static const String hookLoading = 'hook_loading';
   static const String hookLoaded = 'hook_loaded';
 
-  CLElement<InputElement> input;
+  CLElement<InputElement>? input;
   dynamic id;
-  utils.Observer observer;
+  late utils.Observer observer;
 
   int fileToLoad = 0;
 
   String uploadPath;
   String contr;
 
-  FileUploader([this.ap, this.uploadPath = 'tmp', this.contr = '/file/upload'])
+  FileUploader(this.ap, [this.uploadPath = 'tmp', this.contr = '/file/upload'])
       : super() {
     observer = new utils.Observer();
     _initInput();
@@ -45,11 +45,11 @@ class FileUploader extends Button {
 
   void createInput() {
     input = new CLElement(new InputElement());
-    input.dom
+    input!.dom
       ..type = 'file'
       ..name = 'filename[]'
       ..multiple = true;
-    input
+    input!
       ..setStyle({
         'opacity': '0',
         'position': 'absolute',
@@ -60,9 +60,9 @@ class FileUploader extends Button {
         'text-align': 'right'
       })
       ..addAction((e) {
-        if (input.dom.files.isNotEmpty) {
-          fileToLoad = input.dom.files.length;
-          input.dom.files.forEach((f) {
+        if (input!.dom.files!.isNotEmpty) {
+          fileToLoad = input!.dom.files!.length;
+          input!.dom.files!.forEach((f) {
             final fr = new FileReader();
             fr.onLoad.listen((e) {
               final parts = (fr.result as String).split(',');
@@ -92,11 +92,8 @@ class FileUploader extends Button {
 
   void _upload(name, content) {
     observer.execHooks(hookLoading, name);
-    ap.serverCall(contr, {
-      'object': name,
-      'base': uploadPath,
-      'content': content
-    }).then((data) {
+    ap.serverCall(contr,
+        {'object': name, 'base': uploadPath, 'content': content}).then((data) {
       fileToLoad--;
       if (fileToLoad == 0) _initInput();
       observer.execHooks(hookLoaded, name);

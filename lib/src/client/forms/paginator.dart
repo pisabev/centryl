@@ -5,10 +5,10 @@ class Paginator extends DataElement<Map, html.DivElement> {
   int _limit = 50;
   int _total = 0;
 
-  action.Button contr_p, contr_n, contr_l, contr_f;
-  Input contr_i;
-  Select contr_c;
-  Text contr_t;
+  late action.Button contr_p, contr_n, contr_l, contr_f;
+  late Input contr_i;
+  late Select contr_c;
+  late Text contr_t;
 
   Paginator() : super() {
     dom = new html.DivElement();
@@ -61,15 +61,13 @@ class Paginator extends DataElement<Map, html.DivElement> {
     setPage(_page + 1);
   }
 
-  void lastPage([_]) {
-    if (_limit != null) setPage((_total / _limit).ceil());
-  }
+  void lastPage([_]) => setPage((_total / _limit).ceil());
 
   void curPage([_]) {
     setPage(contr_i.getValue());
   }
 
-  void setPage([int page]) {
+  void setPage([int? page]) {
     page = (page == null) ? _page : page;
     final limit = contr_c.getValue();
     final pages = (limit != null) ? (_total / limit).ceil() : 1;
@@ -88,10 +86,10 @@ class Paginator extends DataElement<Map, html.DivElement> {
   }
 
   void setTotal(int total) {
-    _total = total ?? 0;
-    var from = (_limit != null) ? (_page - 1) * _limit + 1 : 0;
+    _total = total;
+    var from = (_page - 1) * _limit + 1;
     from = (from < 0) ? 0 : from;
-    var to = (_limit != null) ? _page * _limit : _total;
+    var to = _page * _limit;
     to = (to > _total) ? _total : to;
     contr_t.setValue(intl.pages(from, to, _total));
     setPage(null);

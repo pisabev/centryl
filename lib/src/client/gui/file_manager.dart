@@ -1,10 +1,10 @@
 part of gui;
 
 class FileManagerLayout extends cl.Container {
-  Container leftOptionsTop;
-  Container leftInner;
-  Container rightOptionsTop;
-  Container rightInner;
+  late Container leftOptionsTop;
+  late Container leftInner;
+  late Container rightOptionsTop;
+  late Container rightInner;
 
   FileManagerLayout() {
     leftOptionsTop = new Container();
@@ -37,8 +37,8 @@ class Thumb extends cl.CLElement<DivElement> {
 }
 
 class FileManager extends FileManagerBase {
-  FileManagerLayout layout;
-  WinApp wapi;
+  late FileManagerLayout layout;
+  late WinApp wapi;
   WinMeta meta = new WinMeta()
     ..title = intl.File_manager()
     ..icon = cl.Icon.folder
@@ -46,10 +46,10 @@ class FileManager extends FileManagerBase {
 
   final StreamController<Thumb> _contr = new StreamController.broadcast();
 
-  Thumb currentThumb;
-  action.Menu menuTop;
-  action.Menu menu;
-  List<Thumb> list;
+  Thumb? currentThumb;
+  late action.Menu menuTop;
+  late action.Menu menu;
+  late List<Thumb> list;
 
   FileManager(Application ap, String path)
       : super(ap, path, {'folder': cl.Icon.folder}) {
@@ -112,7 +112,7 @@ class FileManager extends FileManagerBase {
     final data = await ap.serverCall<List>(FileManagerBase.rfileList,
         {'base': base, 'object': current.node.id}, layout.rightInner);
     layout.rightInner.removeChilds();
-    data.forEach((f) {
+    data!.forEach((f) {
       final thumb = new Thumb(f, false);
       thumb
         ..appendTo(layout.rightInner)
@@ -133,7 +133,7 @@ class FileManager extends FileManagerBase {
 
   Future<void> deleteFile(_) async {
     await ap.serverCall(FileManagerBase.rfileDelete,
-        {'base': base, 'object': currentThumb.file}, treeDom);
+        {'base': base, 'object': currentThumb?.file}, treeDom);
     await clickedNode(current);
   }
 

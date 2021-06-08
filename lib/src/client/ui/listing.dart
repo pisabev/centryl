@@ -1,7 +1,7 @@
 part of ui;
 
 class ListingContainerBase extends cl.Container {
-  cl.Container contMenu, contMiddle, contBottom;
+  late cl.Container contMenu, contMiddle, contBottom;
 }
 
 class ListingContainer extends ListingContainerBase {
@@ -17,15 +17,15 @@ class ListingContainer extends ListingContainerBase {
 }
 
 class GridList {
-  cl_form.GridListContainer gridCont;
-  cl_form.GridList grid;
+  late cl_form.GridListContainer gridCont;
+  late cl_form.GridList grid;
 
   GridList(
-      {List<cl_form.GridColumn> headers,
-      cl_form.GridOrder initOrder,
-      bool Function(TableRowElement row, Map data) customRow,
-      bool Function(TableRowElement row, Map data) customRowAfter,
-      FutureOr<bool> Function(dynamic) hookOrder}) {
+      {required List<cl_form.GridColumn> headers,
+      required bool Function(TableRowElement row, Map data) customRow,
+      cl_form.GridOrder? initOrder,
+      bool Function(TableRowElement row, Map data)? customRowAfter,
+      FutureOr<bool> Function(dynamic)? hookOrder}) {
     grid = new cl_form.GridList(new cl_form.RenderBuffered());
     gridCont =
         new cl_form.GridListContainer(grid, auto: true, fixedFooter: true);
@@ -55,28 +55,26 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
 
   static String get print_before => $BaseConsts.print_before;
 
-  dynamic lang_select;
-
-  UrlPattern contr_get, contr_del, contr_print, contr_pdf;
+  UrlPattern? contr_get, contr_del, contr_pdf;
 
   cl_app.Application<C> ap;
-  cl_app.WinMeta meta;
-  cl_app.WinApp<C> wapi;
-  ListingContainer layout;
-  Expando _exp;
+  late cl_app.WinMeta meta;
+  late cl_app.WinApp<C> wapi;
+  late ListingContainer layout;
+  Expando? _exp;
 
-  cl_form.Form form;
-  cl_action.Menu menu;
-  GridList gridList;
-  cl_util.Observer observer;
-  Map params;
+  late cl_form.Form form;
+  late cl_action.Menu menu;
+  GridList? gridList;
+  late cl_util.Observer observer;
+  Map? params;
   dynamic data_response;
-  cl_form.Check m_check;
-  cl_form.GridOrder order;
+  cl_form.Check? m_check;
+  cl_form.GridOrder? order;
   Set<cl_form.Check> chks = {};
   Set<Object> chks_set = {};
   Set<Object> _chks_set_tmp = {};
-  cl_form.Paginator paginator;
+  cl_form.Paginator? paginator;
 
   bool fixedFooter = false;
   bool __answer = false;
@@ -86,7 +84,8 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
   Debouncer debouncer = new Debouncer(const Duration(milliseconds: 200));
   Set<Object> stream_changed_ids = {};
 
-  String mode, key, key_click;
+  late String mode, key;
+  String? key_click;
 
   Listing(this.ap, {bool autoload = true, this.order, this.useCache = false}) {
     observer = new cl_util.Observer();
@@ -121,10 +120,9 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
   }
 
   void initWinListener() {
-    if (wapi != null)
-      wapi.win.onActiveStateChange.listen((state) {
-        if (state && stream_changed_ids.isNotEmpty) debounceInRangeGet(null);
-      });
+    wapi.win.onActiveStateChange.listen((state) {
+      if (state && stream_changed_ids.isNotEmpty) debounceInRangeGet(null);
+    });
   }
 
   List<cl_form.GridColumn> prepareColumns(List<dynamic> columns) {
@@ -149,8 +147,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
   void initGrid() {
     if (order == null) {
       final ord = initOrder();
-      if (ord != null && ord.length == 2)
-        order = new cl_form.GridOrder(ord[0], ord[1]);
+      if (ord.length == 2) order = new cl_form.GridOrder(ord[0], ord[1]);
     }
     setGrid(new GridList(
         headers: prepareColumns(initHeader()),
@@ -158,17 +155,17 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
         customRowAfter: customRowAfter,
         initOrder: order,
         hookOrder: (_) {
-          order = gridList.grid.order;
+          order = gridList?.grid.order;
           getData();
           return true;
         }));
   }
 
   void setGrid(GridList grid) {
-    gridList?.gridCont?.remove();
+    gridList?.gridCont.remove();
     gridList = grid;
     layout.contMiddle.addRow(grid.gridCont..auto = true);
-    gridList.gridCont.initLayout();
+    gridList?.gridCont.initLayout();
   }
 
   void initColumnFilter(cl_form.GridColumn column) {
@@ -207,21 +204,6 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
         ..setIcon(cl.Icon.delete)
         ..addClass('warning')
         ..addAction((e) => delData()));
-      if (contr_print != null) {
-        final p = new cl_action.ButtonOption()
-          ..setName($print)
-          ..setDefault(new cl_action.Button()
-            ..setTitle(intl.Print())
-            ..setIcon(cl.Icon.print)
-            ..addAction(printData))
-          ..setState(false);
-        if (contr_pdf != null)
-          p.addSub(new cl_action.Button()
-            ..setTitle('PDF')
-            ..setIcon(cl.Icon.file_pdf)
-            ..addAction(pdfData));
-        menu.add(p);
-      }
     }
     final filter = new cl_action.ButtonOption()
           ..setName($BaseConsts.filter)
@@ -274,7 +256,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
 
   void setPaginator() {
     paginator = new cl_form.Paginator();
-    paginator.onValueChanged.listen((_) {
+    paginator!.onValueChanged.listen((_) {
       checkClean();
       getData();
     });
@@ -284,7 +266,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
 
   List<dynamic> initHeader();
 
-  void registerServerListener(String event, Function f) {
+  void registerServerListener(String event, void Function(dynamic) f) {
     final subscr = ap.onServerCall.filter(event).listen(f);
     wapi.addCloseHook((_) {
       subscr.cancel();
@@ -304,9 +286,8 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
   void debounceGet(dynamic id) => debouncer.execute(getData);
 
   bool inRange(dynamic id) {
-    final row = gridList.grid.tbody.dom.childNodes.firstWhere(
-        (r) => gridList.grid.getRowMapSerialized(r)[key] == id,
-        orElse: () => null);
+    final row = gridList?.grid.tbody.dom.childNodes.firstWhereOrNull((r) =>
+        gridList?.grid.getRowMapSerialized(r as TableRowElement)[key] == id);
     return row != null;
   }
 
@@ -332,7 +313,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
     });
     (menu[$BaseConsts.filter] as cl_action.ButtonOption)
         .buttonDefault
-        .setIcon(way ? cl.Icon.filter_list : cl.Icon.sync);
+        ?.setIcon(way ? cl.Icon.filter_list : cl.Icon.sync);
   }
 
   void filterGet([_]) {
@@ -347,7 +328,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
 
   void setParamsGet() {
     params = {
-      $BaseConsts.order: gridList.grid.order?.toMap(),
+      $BaseConsts.order: gridList?.grid.order?.toMap(),
       $BaseConsts.paginator: paginator?.getValue(),
       $BaseConsts.filter: form.getValue()
     };
@@ -357,7 +338,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
     params = {'ids': chks_set.toList()};
   }
 
-  bool ask([String message]) {
+  bool ask([String? message]) {
     if (__answer) {
       __answer = false;
       return true;
@@ -387,16 +368,17 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
 
   void initRowCheckAction(TableRowElement row, Map obj) {
     final chk = new cl_form.Check('bool');
-    chk.addAction((e) {
-      e.stopPropagation();
-      e.preventDefault();
+    chk.addAction<Event>((e) {
+      e
+        ..stopPropagation()
+        ..preventDefault();
       check(chk, e);
     }, 'click');
-    _exp[chk] = obj[key];
+    _exp![chk] = obj[key];
     _chk_to_row[chk.hashCode] = row;
     if (_chks_set_tmp.contains(obj[key])) {
       rowCheck(chk);
-      chks_set.add(_exp[chk]);
+      chks_set.add(_exp![chk]!);
       checkActivation(true);
     }
     chks.add(chk);
@@ -414,7 +396,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
   List<String> initOrder() => [];
 
   Future actionSend(String type, String controller,
-      [cl.CLElement element]) async {
+      [cl.CLElement? element]) async {
     await ap.loadExecute(element ?? layout.contMiddle, () async {
       if (await observer.execHooksAsync('${type}_before')) {
         _setData(await ap.serverCall(
@@ -424,34 +406,13 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
     });
   }
 
-  void printer(dynamic contr) {
-    if (observer.execHooks($BaseConsts.print_before)) {
-      final cont = new cl.Container()
-        ..addClass('center')
-        ..append(lang_select);
-      new cl_app.Confirmer(ap, cont)
-        ..title = intl.Language()
-        ..icon = cl.Icon.settings
-        ..onOk = (() => window.open(
-            ap.baseurl +
-                contr.reverse([
-                  lang_select.getValue(),
-                  params['ids'].join(',')
-                ]).substring(1),
-            ''))
-        ..render(width: 200, height: 200);
-    }
-  }
+  Future<void>? getData([cl.CLElement? loading]) => contr_get != null
+      ? actionSend('get', contr_get!.reverse([]), loading)
+      : null;
 
-  void printData([_]) => printer(contr_print);
-
-  void pdfData([_]) => printer(contr_pdf);
-
-  Future<void> getData([cl.CLElement loading]) =>
-      actionSend('get', contr_get.reverse([]), loading);
-
-  Future<void> delData([cl.CLElement loading]) =>
-      actionSend($del, contr_del.reverse([]), loading);
+  Future<void>? delData([cl.CLElement? loading]) => contr_del != null
+      ? actionSend($del, contr_del!.reverse([]), loading)
+      : null;
 
   void _setData([dynamic data]) {
     data_response = data ?? {$BaseConsts.total: 0, $BaseConsts.result: []};
@@ -460,16 +421,16 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
   void setData() {
     _exp = new Expando();
     paginator?.setTotal(data_response[$BaseConsts.total]);
-    final scroll = gridList.grid.scrollTop;
-    gridList.grid.empty();
+    final scroll = gridList?.grid.scrollTop;
+    gridList?.grid.empty();
     if (data_response[$BaseConsts.result] != null)
-      gridList.grid.renderIt(data_response[$BaseConsts.result]);
-    gridList.grid.scrollTop = scroll;
+      gridList?.grid.renderIt(data_response[$BaseConsts.result]);
+    if (scroll != null) gridList?.grid.scrollTop = scroll;
   }
 
   void checkClean([bool doms = false]) {
     _chks_set_tmp = chks_set;
-    if (m_check != null) m_check.setChecked(false);
+    if (m_check != null) m_check!.setChecked(false);
     if (doms) chks.forEach(rowUncheck);
     chks = {};
     chks_set = {};
@@ -507,7 +468,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
   }
 
   void checkAll(Event e) {
-    if (m_check.getValue())
+    if (m_check?.getValue())
       chks.forEach(rowCheck);
     else
       chks.forEach(rowUncheck);
@@ -517,7 +478,7 @@ abstract class Listing<C extends cl_app.Client> implements cl_app.Item<C> {
   void setChecked() {
     chks_set = {};
     chks.forEach((check) {
-      if (check.getValue()) chks_set.add(_exp[check]);
+      if (check.getValue()) chks_set.add(_exp![check]!);
     });
     checkActivation(chks_set.isNotEmpty);
   }

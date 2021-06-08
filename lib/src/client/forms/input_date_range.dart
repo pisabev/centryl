@@ -1,12 +1,12 @@
 part of forms;
 
-class InputDateRange extends Input<List> {
+class InputDateRange extends Input<List<dynamic>> {
   final StreamController _contrOpen = new StreamController.broadcast();
   final StreamController _contrClose = new StreamController.broadcast();
 
-  CLElement domAction;
-  gui.DatePickerRange picker;
-  utils.UISlider _slider;
+  late CLElement domAction;
+  late gui.DatePickerRange picker;
+  late utils.UISlider _slider;
 
   InputDateRange() : super(new InputTypeDateRange()) {
     addClass('ui-field-input date');
@@ -17,37 +17,37 @@ class InputDateRange extends Input<List> {
       ..appendTo(inner);
     picker = new gui.DatePickerRange(this)
       ..appendTo(this)
-      ..addAction((e) => e.stopPropagation(), 'mousedown');
+      ..addAction<html.Event>((e) => e.stopPropagation(), 'mousedown');
     _slider = new utils.UISlider(picker, this)..autoWidth = false;
     addAction<html.KeyboardEvent>((e) {
       if (e.keyCode == 8) {
-        if (field.dom.value.endsWith(':') || field.dom.value.endsWith('/'))
+        if (field.dom.value!.endsWith(':') || field.dom.value!.endsWith('/'))
           field.dom.value =
-              field.dom.value.substring(0, field.dom.value.length - 1);
-        else if (field.dom.value.endsWith(' - '))
+              field.dom.value!.substring(0, field.dom.value!.length - 1);
+        else if (field.dom.value!.endsWith(' - '))
           field.dom.value =
-              field.dom.value.substring(0, field.dom.value.length - 3);
+              field.dom.value!.substring(0, field.dom.value!.length - 3);
       }
     }, 'keydown');
     addAction<html.KeyboardEvent>((e) {
       if (e.keyCode == 8) return;
-      if (field.dom.value.startsWith(new RegExp(r'^\d\d$')) ||
-          field.dom.value.startsWith(new RegExp(r'^\d\d\/\d\d$'))) {
-        final parts = field.dom.value.split('/');
+      if (field.dom.value!.startsWith(new RegExp(r'^\d\d$')) ||
+          field.dom.value!.startsWith(new RegExp(r'^\d\d\/\d\d$'))) {
+        final parts = field.dom.value!.split('/');
         if (parts.length == 1)
           field.dom.value = '${_maxPad(31, parts[0])}';
         else if (parts.length == 2)
           field.dom.value = '${_maxPad(31, parts[0])}'
               '/${_maxPad(12, parts[1])}';
-        field.dom.value += '/';
-      } else if (field.dom.value
+        field.dom.value = '${field.dom.value!}/';
+      } else if (field.dom.value!
           .startsWith(new RegExp(r'^\d\d\/\d\d\/\d\d\d\d$'))) {
-        field.dom.value += ' - ';
-      } else if (field.dom.value
+        field.dom.value = '${field.dom.value!} - ';
+      } else if (field.dom.value!
               .startsWith(new RegExp(r'^\d\d\/\d\d\/\d\d\d\d - \d\d$')) ||
-          field.dom.value
+          field.dom.value!
               .startsWith(new RegExp(r'^\d\d\/\d\d\/\d\d\d\d - \d\d\/\d\d$'))) {
-        final firstPart = field.dom.value.split(' - ');
+        final firstPart = field.dom.value!.split(' - ');
         final parts = firstPart.last.split('/');
         var str = '';
         if (parts.length == 1)
@@ -69,17 +69,20 @@ class InputDateRange extends Input<List> {
   Stream<void> get onPickerClose => _contrClose.stream;
 
   @override
-  List<String> getValue() {
+  List<String?>? getValue() {
     final d = super.getValue();
     if (d == null) return null;
     return d.map((d) => d?.toString()).toList();
   }
 
-  bool hasValue() => getValue().any((e) => e != null);
+  bool hasValue() {
+    final val = getValue();
+    return val != null && val.any((e) => e != null);
+  }
 
-  List<DateTime> getValue_() => super.getValue();
+  List<DateTime?>? getValue_() => super.getValue() as List<DateTime?>?;
 
-  void setValue(List value) {
+  void setValue(List? value) {
     super.setValue(value);
     // Explicitly calling change (does not work by default logic)
     contrValue.add(this);
@@ -97,7 +100,7 @@ class InputDateRange extends Input<List> {
       ..init()
       ..set(getValue_());
 
-    CLElement doc;
+    late CLElement doc;
     doc = new CLElement(html.document.body)
       ..addAction((e) {
         onPickerDone();

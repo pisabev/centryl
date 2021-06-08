@@ -1,8 +1,6 @@
 part of app;
 
 class Clock extends CLElement {
-  Application ap;
-
   Clock() : super(new DivElement()) {
     setClass('ui-addon ui-timer');
     final timer_func = ([_]) => dom.innerHtml =

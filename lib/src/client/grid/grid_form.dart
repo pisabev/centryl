@@ -1,8 +1,8 @@
 part of forms;
 
 class GridFormNode extends CLElementBase {
-  GridForm parent;
-  gui.FormElement form;
+  late GridForm parent;
+  late gui.FormElement form;
 
   GridFormNode(this.parent);
 
@@ -15,23 +15,25 @@ class GridFormNode extends CLElementBase {
   void _setDraggable(GridFormNode node) {
     node.dom.draggable = true;
     node
-      ..addAction((e) {
+      ..addAction<html.MouseEvent>((e) {
         e.stopPropagation();
         e.dataTransfer.setData('text', parent.getRowIndex(node).toString());
         e.dataTransfer.effectAllowed = 'move';
       }, 'dragstart')
       ..addAction((e) => node.addClass('ui-drag-over'), 'dragenter')
       ..addAction((e) => node.removeClass('ui-drag-over'), 'dragleave')
-      ..addAction((e) {
-        e.preventDefault();
-        e.stopPropagation();
+      ..addAction<html.MouseEvent>((e) {
+        e
+          ..preventDefault()
+          ..stopPropagation();
         e.dataTransfer.dropEffect = 'move';
       }, 'dragover')
-      ..addAction((e) {
+      ..addAction<html.MouseEvent>((e) {
         parent._rowSwap(int.parse(e.dataTransfer.getData('text')),
             parent.getRowIndex(node));
-        e.preventDefault();
-        e.stopPropagation();
+        e
+          ..preventDefault()
+          ..stopPropagation();
       }, 'drop');
   }
 
@@ -43,9 +45,9 @@ class GridFormNode extends CLElementBase {
 class GridForm extends DataElement<Object, html.DivElement> {
   List<GridFormNode> nodes = [];
 
-  List<GridFormNode> insert;
-  List<GridFormNode> update;
-  List<GridFormNode> delete;
+  late List<GridFormNode> insert;
+  late List<GridFormNode> update;
+  late List<GridFormNode> delete;
 
   static const String hook_row = 'hook_row';
   utils.Observer observer = new utils.Observer();
@@ -69,12 +71,12 @@ class GridForm extends DataElement<Object, html.DivElement> {
   }
 
   void addHookRow(void Function(GridFormNode, Map) func) =>
-      observer.addHook(hook_row, (arr) {
+      observer.addHook<List>(hook_row, (arr) {
         func(arr[0], arr[1]);
         return true;
       });
 
-  void setValue(Object value) {
+  void setValue(Object? value) {
     empty();
     if (value is List && value.isNotEmpty) {
       value.forEach((r) {
@@ -159,10 +161,10 @@ class GridForm extends DataElement<Object, html.DivElement> {
   void rowNumRerender() {
     if (drag) {
       for (var i = 0; i < dom.children.length; i++)
-        _exp[dom.children[i]]
+        _exp[dom.children[i]]!
             .form
             .formInner
-            .getElement('position')
+            .getElement('position')!
             .setValue(i + 1);
     }
   }
@@ -179,7 +181,7 @@ class GridForm extends DataElement<Object, html.DivElement> {
   }
 
   void _rowSwap(int s_rownum, int t_rownum) {
-    html.TableRowElement _numRow(n) => dom.children[n];
+    html.TableRowElement _numRow(n) => dom.children[n] as html.TableRowElement;
     if (s_rownum == t_rownum) return;
     if (s_rownum > t_rownum)
       dom.insertBefore(_numRow(s_rownum), _numRow(t_rownum));

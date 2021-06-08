@@ -1,8 +1,10 @@
 library calendar;
 
 import 'dart:async';
-import 'dart:html' hide Dimension;
+import 'dart:html' as html;
 import 'dart:math' as math;
+
+import 'package:collection/collection.dart';
 
 import '../../intl/client.dart' as intl;
 import 'action.dart' as action;

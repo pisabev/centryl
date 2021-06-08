@@ -1,10 +1,10 @@
 part of utils;
 
 class Preloader {
-  static Preloader instance;
+  static Preloader? instance;
 
-  List<String> _cache;
-  List<Completer> _pool;
+  late List<String> _cache;
+  late List<Completer> _pool;
 
   factory Preloader() => instance ??= new Preloader._();
 
@@ -32,7 +32,7 @@ class Preloader {
       script
           ..defer = true
           ..src = scr;
-      document.head.append(script);
+      document.head!.append(script);
       _pool.add(completer);
       futures.add(completer.future);
     });
@@ -58,7 +58,7 @@ class Preloader {
       link
         ..href = scr
         ..rel = 'stylesheet';
-      document.head.append(link);
+      document.head!.append(link);
       _pool.add(completer);
       futures.add(completer.future);
     });

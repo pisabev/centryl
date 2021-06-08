@@ -3,7 +3,7 @@ part of forms;
 class DataList extends Data<List> {
   List<Form> arr_data = [];
 
-  void setValue(List value) {
+  void setValue(List? value) {
     if (value != null && value.isNotEmpty) {
       final form = new Form();
       value.forEach((el) {

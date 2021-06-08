@@ -58,15 +58,13 @@ abstract class $Cache {
 void _$CacheFromMap(Cache obj, Map data) => obj
   ..key = data[$Cache.key]
   ..value = data[$Cache.value]
-  ..expire = data[$Cache.expire] is String
-      ? DateTime.tryParse(data[$Cache.expire])
-      : data[$Cache.expire];
+  ..expire = DateTime.parse(data[$Cache.expire]);
 
 Map<String, dynamic> _$CacheToMap(Cache obj, [asJson = false]) =>
     <String, dynamic>{
       $Cache.key: obj.key,
       $Cache.value: obj.value,
-      $Cache.expire: asJson ? obj.expire?.toIso8601String() : obj.expire
+      $Cache.expire: asJson ? obj.expire.toIso8601String() : obj.expire
     };
 
 abstract class $Notification {
@@ -81,7 +79,7 @@ void _$NotificationFromMap(Notification obj, Map data) => obj
   ..key = data[$Notification.key]
   ..value = data[$Notification.value]
   ..date = data[$Notification.date] is String
-      ? DateTime.tryParse(data[$Notification.date])
+      ? DateTime.parse(data[$Notification.date])
       : data[$Notification.date];
 
 Map<String, dynamic> _$NotificationToMap(Notification obj, [asJson = false]) =>

@@ -2,11 +2,11 @@ part of forms;
 
 abstract class RenderBase {
   List<html.TableRowElement> rows = [];
-  GridList grid;
+  late GridList grid;
 
-  List<num> tbodyWidths;
-  List<num> theadWidths;
-  List<num> tfootWidths;
+  List<num>? tbodyWidths;
+  List<num>? theadWidths;
+  List<num>? tfootWidths;
   num rowHeight = 30;
 
   RenderBase();
@@ -28,14 +28,14 @@ abstract class RenderBase {
     tbodyWidths = [];
     final firstRow = grid.tbody.dom.rows[0];
     for (var i = 0; i < firstRow.childNodes.length; i++)
-      tbodyWidths.add(new CLElement(firstRow.cells[i]).getWidthComputed());
+      tbodyWidths!.add(new CLElement(firstRow.cells[i]).getWidthComputed());
   }
 
   void calcTheadWidths() {
     theadWidths = [];
     final firstRow = grid.thead.dom.rows.last;
     for (var i = 0; i < firstRow.childNodes.length; i++)
-      theadWidths.add(new CLElement(firstRow.cells[i]).getWidthComputed());
+      theadWidths!.add(new CLElement(firstRow.cells[i]).getWidthComputed());
   }
 
   void calcTfootWidths() {
@@ -43,12 +43,12 @@ abstract class RenderBase {
     if (grid.tfoot.dom.rows.isEmpty) return;
     final firstRow = grid.tfoot.dom.rows[0];
     for (var i = 0; i < firstRow.childNodes.length; i++)
-      tfootWidths.add(new CLElement(firstRow.cells[i]).getWidthComputed());
+      tfootWidths!.add(new CLElement(firstRow.cells[i]).getWidthComputed());
   }
 
   void setTbodyWidths([bool auto = false]) {
     if (tbodyWidths != null &&
-        tbodyWidths.isNotEmpty &&
+        tbodyWidths!.isNotEmpty &&
         grid.tbody.dom.childNodes.isNotEmpty) {
       final firstRow = grid.tbody.dom.childNodes[0];
       for (var i = 0; i < firstRow.childNodes.length; i++) {
@@ -56,33 +56,33 @@ abstract class RenderBase {
         if (auto)
           cl.setStyle({'width': 'auto'});
         else
-          cl.setStyle({'width': '${tbodyWidths[i]}px'});
+          cl.setStyle({'width': '${tbodyWidths![i]}px'});
       }
     }
   }
 
   void setTheadWidths([bool auto = false]) {
-    if (theadWidths != null && theadWidths.isNotEmpty) {
+    if (theadWidths != null && theadWidths!.isNotEmpty) {
       final firstRow = grid.thead.dom.rows.last;
       for (var i = 0; i < firstRow.childNodes.length; i++) {
         final cl = new CLElement(firstRow.childNodes[i]);
         if (auto)
           cl.setStyle({'width': 'auto'});
         else
-          cl.setStyle({'width': '${theadWidths[i]}px'});
+          cl.setStyle({'width': '${theadWidths![i]}px'});
       }
     }
   }
 
   void setTfootWidths([bool auto = false]) {
-    if (tfootWidths != null && tfootWidths.isNotEmpty) {
+    if (tfootWidths != null && tfootWidths!.isNotEmpty) {
       final firstRow = grid.tfoot.dom.childNodes[0];
       for (var i = 0; i < firstRow.childNodes.length; i++) {
         final cl = new CLElement(firstRow.childNodes[i]);
         if (auto)
           cl.setStyle({'width': 'auto'});
         else
-          cl.setStyle({'width': '${tfootWidths[i]}px'});
+          cl.setStyle({'width': '${tfootWidths![i]}px'});
       }
     }
   }

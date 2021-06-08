@@ -1,10 +1,10 @@
 part of gui;
 
 class LabelState extends action.Button {
-  final List<String> states;
-  final List<String> colors;
-  int _current;
-  List<int> _clickables;
+  late final List<String> states;
+  final List<String>? colors;
+  late int _current;
+  List<int>? _clickables;
   List<StreamSubscription> _subs = [];
   final StreamController<int> _contr = new StreamController.broadcast();
 
@@ -24,8 +24,8 @@ class LabelState extends action.Button {
     }
   }
 
-  void setActive(int index, [String clas]) {
-    clas ??= (colors != null) ? colors[index] : 'state1';
+  void setActive(int index, [String? clas]) {
+    clas ??= (colors != null) ? colors![index] : 'state1';
     dom.children.forEach((e) => e.classes.remove('current'));
     dom.children.elementAt((dom.children.length - 1) - index)
       ..classes.add('current')
@@ -42,7 +42,7 @@ class LabelState extends action.Button {
     dom.children.forEach((e) => e.classes.remove('clickable'));
     _subs.forEach((s) => s.cancel());
     _subs = [];
-    _clickables.forEach((indx) {
+    _clickables!.forEach((indx) {
       final el = dom.children.elementAt((dom.children.length - 1) - indx)
         ..classes.add('clickable');
       _subs.add(el.onClick.listen((e) => setActive(indx)));
@@ -56,6 +56,6 @@ class LabelState extends action.Button {
   }
 
   void enable() {
-    if (_clickables != null) setClickable(_clickables);
+    if (_clickables != null) setClickable(_clickables!);
   }
 }

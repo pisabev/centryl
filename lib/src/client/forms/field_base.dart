@@ -2,8 +2,8 @@ part of forms;
 
 abstract class FieldBase<T, E extends html.Element> extends DataElement<T, E>
     with Validator {
-  html.SpanElement inner, input;
-  CLElement<html.Element> field;
+  late html.SpanElement inner, input;
+  late CLElement<html.Element> field;
   List<CLElementBase> _suffix = [];
   List<CLElementBase> _prefix = [];
 
@@ -20,7 +20,7 @@ abstract class FieldBase<T, E extends html.Element> extends DataElement<T, E>
     addClass('focus');
   }
 
-  void setValue(T value);
+  void setValue(T? value);
 
   void setValueDynamic(dynamic value);
 

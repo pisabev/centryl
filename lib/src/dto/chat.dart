@@ -2,7 +2,7 @@ part of dto;
 
 @DTOSerializable()
 class ChatSearchDTO {
-  String search;
+  late String search;
 
   ChatSearchDTO();
 
@@ -18,16 +18,16 @@ class Message {
   static int typeMessage = 0;
   static int typeFile = 1;
 
-  int id;
-  int type;
-  Member member;
+  int? id;
+  late int type;
+  late Member member;
+  int? room_id;
+  String? context;
+  DateTime? timestamp;
   List<Member> seen;
-  int room_id;
-  String context;
-  String content;
-  DateTime timestamp;
+  String? content;
 
-  Message();
+  Message() : seen = [];
 
   factory Message.fromMap(Map data) => _$MessageFromMap(data);
 
@@ -38,12 +38,12 @@ class Message {
 
 @DTOSerializable()
 class Member {
-  int user_id;
-  String name;
-  String picture;
+  late int user_id;
+  String? name;
+  String? picture;
   bool status;
 
-  Member();
+  Member() : status = false;
 
   factory Member.fromMap(Map data) => _$MemberFromMap(data);
 
@@ -54,12 +54,12 @@ class Member {
 
 @DTOSerializable()
 class Room {
-  int room_id;
-  String context;
-  List<Member> members;
-  int lsm_id;
-  int unseen;
-  int messages;
+  int? room_id;
+  late List<Member> members;
+  String? context;
+  int? lsm_id;
+  int? unseen;
+  int? messages;
 
   Room();
 
@@ -72,10 +72,10 @@ class Room {
 
 @DTOSerializable()
 class OfferRequest {
-  int from;
-  int to;
+  late int from;
+  late int to;
   bool isAnswer = false;
-  Map description;
+  late Map description;
 
   OfferRequest();
 
@@ -88,9 +88,9 @@ class OfferRequest {
 
 @DTOSerializable()
 class IceCandidate {
-  int from;
-  int to;
-  Map candidate;
+  late int from;
+  late int to;
+  late Map candidate;
 
   IceCandidate();
 

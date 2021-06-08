@@ -30,13 +30,13 @@ class Route {
     pattern.allMatches(test).forEach((m) {
       for (var i = 0; i < m.groupCount; i++) {
         final v = m.group(i + 1);
-        params.add((typeList[i] == ':int') ? int.parse(v) : v);
+        params.add((typeList[i] == ':int') ? int.parse(v!) : v);
       }
     });
     return params;
   }
 
-  String reverse([List params]) {
+  String reverse([List? params]) {
     var k = 0;
     if (params == null) return templ;
     return templ.replaceAllMapped(pat, (m) => params[k++].toString());

@@ -2,17 +2,17 @@ part of chat;
 
 class Member {
   int user_id;
-  String name;
-  String picture;
+  String? name;
+  String? picture;
   bool status;
 
-  Member({this.user_id, this.name, this.picture, this.status = false});
+  Member({required this.user_id, this.name, this.picture, this.status = false});
 
   factory Member.fromDto(dto.Member d) => new Member(
       user_id: d.user_id,
       name: d.name,
       picture: d.picture,
-      status: d.status ?? false);
+      status: d.status);
 
   factory Member.fromMap(Map data) =>
       new Member.fromDto(new dto.Member.fromMap(data));
@@ -38,7 +38,7 @@ class Member {
 
   void renderProfileSmall(CLElement cont) {
     final uniqueId = 'chat-member-$user_id';
-    document.body.querySelector('#$uniqueId')?.remove();
+    document.body?.querySelector('#$uniqueId')?.remove();
     cont.append(createDom(showStatus: false)..dom.id = uniqueId);
   }
 

@@ -1,17 +1,18 @@
 part of calendar;
 
 class MonthContainer {
-  CLElement dom, dragCont;
+  CLElement dom;
+  late CLElement dragCont;
 
   EventCalendar calendar;
 
-  List<MonthCell> cells;
-  List<MonthRow> rows;
+  late List<MonthCell> cells;
+  late List<MonthRow> rows;
 
-  MonthCell startCell, endCell;
+  MonthCell? startCell, endCell;
 
   MonthContainer(this.dom, this.calendar) {
-    dragCont = new CLElement(new DivElement())..setClass('drag-grid');
+    dragCont = new CLElement(new html.DivElement())..setClass('drag-grid');
   }
 
   void setDragable(MonthRow row) {
@@ -21,13 +22,12 @@ class MonthContainer {
       ..end(release);
   }
 
-  MonthCell getCellByEvent(MouseEvent e) => cells.firstWhere(
-      (cell) => cell
+  MonthCell? getCellByEvent(html.MouseEvent e) =>
+      cells.firstWhereOrNull((cell) => cell
           .getRectangle()
-          .containsPoint(new math.Point(e.client.x, e.client.y)),
-      orElse: () => null);
+          .containsPoint(new math.Point(e.client.x, e.client.y)));
 
-  void onDrag(MouseEvent e) {
+  void onDrag(html.MouseEvent e) {
     final cell = getCellByEvent(e);
     if (cell == null) return;
     if (calendar.filters.isNotEmpty &&
@@ -37,34 +37,34 @@ class MonthContainer {
     dragCont
       ..removeChilds()
       ..appendTo(dom);
-    highLight(startCell, endCell, dragCont);
+    highLight(startCell!, endCell!, dragCont);
   }
 
-  void onDragEvent(MouseEvent e, Event drag) {
+  void onDragEvent(html.MouseEvent e, Event drag) {
     final cell = getCellByEvent(e);
     if (cell == null) return;
     final offset_date = utils.Calendar.UTCAdd(
         cell.date,
         new Duration(
             hours: utils.Calendar.UTCDifference(drag.end, drag.start).inHours));
-    var cell2 = cells.firstWhere((mc) => mc.date.compareTo(offset_date) == 0,
-        orElse: () => null);
+    var cell2 =
+        cells.firstWhereOrNull((mc) => mc.date.compareTo(offset_date) == 0);
     if (!drag.isAllDayEvent()) cell2 = cell;
     cell2 ??= cells.last;
     if (calendar.filters.isNotEmpty &&
-        !rows.any((d) => d.fCol.inRange(cell.date, cell2.date))) return;
+        !rows.any((d) => d.fCol.inRange(cell.date, cell2!.date))) return;
     startCell = cell;
     endCell = cell2;
     dragCont
       ..removeChilds()
       ..appendTo(dom);
-    highLight(startCell, endCell, dragCont);
+    highLight(startCell!, endCell!, dragCont);
   }
 
-  Future onDropEvent(MouseEvent e, Event drag) async {
+  Future onDropEvent(html.MouseEvent e, Event drag) async {
     if (startCell == null) return;
     final new_start = drag.start
-        .add(startCell.date.difference(EventCalendar.normDate(drag.start)));
+        .add(startCell!.date.difference(EventCalendar.normDate(drag.start)));
     final new_end = new_start.add(drag.end.difference(drag.start));
     drag
       ..start = new_start
@@ -95,21 +95,21 @@ class MonthContainer {
     final top = calendar.body.getRectangle();
     m.forEach((k, v) {
       final rect = v.first;
-      new CLElement(new DivElement())
+      new CLElement(new html.DivElement())
         ..setStyle({
           'width': '${v.last.left - rect.left + rect.width + 1}px',
           'height': '${rect.height}px',
-          'top': '${rect.top + document.body.scrollTop - top.top}px',
-          'left': '${rect.left + document.body.scrollLeft - top.left}px'
+          'top': '${rect.top + html.document.body!.scrollTop - top.top}px',
+          'left': '${rect.left + html.document.body!.scrollLeft - top.left}px'
         })
         ..appendTo(container);
     });
   }
 
-  void release(MouseEvent e) {
+  void release(html.MouseEvent e) {
     if (startCell == null || endCell == null) return;
-    calendar.createEvent(utils.Calendar.min(startCell.date, endCell.date),
-        utils.Calendar.max(startCell.date, endCell.date), true);
+    calendar.createEvent(utils.Calendar.min(startCell!.date, endCell!.date),
+        utils.Calendar.max(startCell!.date, endCell!.date), true);
     dragCont.remove();
     rows.forEach((row) {
       row

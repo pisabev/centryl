@@ -5,7 +5,7 @@ class MyUriPolicy implements html.UriPolicy {
 }
 
 class EditorOption {
-  final String icon;
+  final String? icon;
   final String title;
   final dynamic action;
 
@@ -54,21 +54,21 @@ class EditorOptions {
 }
 
 class Editor extends FieldBase<String, html.DivElement> {
-  app.Application ap;
-  CLElement<html.DivElement> frame;
-  Container fieldContainer;
-  codemirror.CodeMirror fieldMirror;
-  CLElement head, body, footer, path;
-  action.Menu menu;
-  List<EditorOption> options;
+  late app.Application ap;
+  late CLElement<html.DivElement> frame;
+  late Container fieldContainer;
+  late codemirror.CodeMirror fieldMirror;
+  late CLElement head, body, footer, path;
+  late action.Menu menu;
+  late List<EditorOption> options;
   final bool showFooter;
-  action.Button sourceBtn;
+  late action.Button sourceBtn;
 
-  CLElement _parentDom;
-  num _bHeight;
+  late CLElement _parentDom;
+  late num _bHeight;
   bool _fullscreen = false;
 
-  utils.CLscroll _scroll;
+  late utils.CLscroll _scroll;
 
   final html.NodeValidatorBuilder _htmlValidator =
       new html.NodeValidatorBuilder()
@@ -80,7 +80,7 @@ class Editor extends FieldBase<String, html.DivElement> {
         ..allowInlineStyles()
         ..allowSvg();
 
-  Editor(this.ap, {List<EditorOption> options, this.showFooter = true})
+  Editor(this.ap, {List<EditorOption>? options, this.showFooter = true})
       : super() {
     dom = new html.DivElement();
     setClass('ui-editor');
@@ -197,7 +197,7 @@ class Editor extends FieldBase<String, html.DivElement> {
           ..setIcon(option.icon)
           ..addClass('light');
         if (option.action == 'insertimage')
-          a.addAction((e) => insertImage(e, option.action));
+          a.addAction<html.Event>((e) => insertImage(e, option.action));
         else if (option.action == 'fullScreen')
           a.addAction(fullScreen);
         else
@@ -215,14 +215,14 @@ class Editor extends FieldBase<String, html.DivElement> {
   }
 
   void _onPaste(html.ClipboardEvent e) {
-    String clipb = e.clipboardData
+    String clipb = e.clipboardData!
         .getData('text/html')
         .replaceAll(new RegExp(r'\s{2,}'), ' ')
         .replaceAll('\n', '');
-    if (clipb.isEmpty) clipb = e.clipboardData.getData('text/plain');
+    if (clipb.isEmpty) clipb = e.clipboardData!.getData('text/plain');
     final node = new html.DivElement()..innerHtml = clipb;
     final selection = html.window.getSelection();
-    selection.getRangeAt(0)
+    selection!.getRangeAt(0)
       ..deleteContents()
       ..insertNode(node);
     e.preventDefault();
@@ -233,7 +233,7 @@ class Editor extends FieldBase<String, html.DivElement> {
     body.prepend(new html.Element.tag('style')..text = style);
   }
 
-  void setValue(String value) {
+  void setValue(String? value) {
     super.setValue(value);
     setValueDynamic(value);
   }
@@ -255,9 +255,9 @@ class Editor extends FieldBase<String, html.DivElement> {
 
   void insertImage(html.Event e, String cmd) {
     frame.dom.focus();
-    final range = html.window.getSelection().getRangeAt(0);
+    final range = html.window.getSelection()!.getRangeAt(0);
     new gui.FileManager(ap, 'media/upload').onDblClick.listen((thumb) {
-      html.window.getSelection()
+      html.window.getSelection()!
         ..removeAllRanges()
         ..addRange(range);
       _exec(cmd, 'media/${thumb.file}');
@@ -266,7 +266,7 @@ class Editor extends FieldBase<String, html.DivElement> {
 
   void insertUrl(html.Event e, String cmd) {
     frame.dom.focus();
-    final range = html.window.getSelection().getRangeAt(0);
+    final range = html.window.getSelection()!.getRangeAt(0);
     final input = new Input();
     final cont = new Container()
       ..addClass('center')
@@ -274,7 +274,7 @@ class Editor extends FieldBase<String, html.DivElement> {
     new app.Confirmer(ap, cont)
       ..title = 'URL'
       ..onOk = () {
-        html.window.getSelection()
+        html.window.getSelection()!
           ..removeAllRanges()
           ..addRange(range);
         _exec(cmd, input.getValue());
@@ -284,7 +284,7 @@ class Editor extends FieldBase<String, html.DivElement> {
   }
 
   void _exec(cmd, [value]) {
-    frame.dom.ownerDocument.execCommand(cmd, false, value);
+    frame.dom.ownerDocument!.execCommand(cmd, false, value);
     super.setValue(frame.dom.innerHtml);
   }
 
@@ -319,7 +319,7 @@ class Editor extends FieldBase<String, html.DivElement> {
       menu.indexOfElements.forEach((b) => b.setState(true));
     } else {
       _createEditor().then((e) {
-        fieldMirror.getDoc().setValue(getValue());
+        fieldMirror.getDoc()?.setValue(getValue()!);
         new CLElement(frame.dom.parent).hide();
         frame.hide();
         fieldContainer.show();
@@ -330,7 +330,7 @@ class Editor extends FieldBase<String, html.DivElement> {
         path.hide();
         menu.initButtons([]);
         fieldMirror.onChange
-            .listen((_) => setValue(fieldMirror.getDoc().getValue()));
+            .listen((_) => setValue(fieldMirror.getDoc()?.getValue()));
       });
     }
   }
@@ -350,7 +350,7 @@ class Editor extends FieldBase<String, html.DivElement> {
     addClass('disabled');
     frame.dom.contentEditable = 'false';
     menu.disable();
-    sourceBtn?.disable();
+    sourceBtn.disable();
   }
 
   void enable() {
@@ -358,6 +358,6 @@ class Editor extends FieldBase<String, html.DivElement> {
     removeClass('disabled');
     frame.dom.contentEditable = 'true';
     menu.enable();
-    sourceBtn?.enable();
+    sourceBtn.enable();
   }
 }

@@ -2,12 +2,12 @@ part of chat;
 
 class LocalView {
   app.Application ap;
-  Media media;
-  app.Win win;
-  CLElement<VideoElement> videoLocal;
-  MediaStream _localStream;
-  action.Button settings, share, mic, camera;
-  bool shareOn, micOn, cameraOn;
+  late Media media;
+  late app.Win win;
+  late CLElement<VideoElement> videoLocal;
+  MediaStream? _localStream;
+  late action.Button settings, share, mic, camera;
+  late bool shareOn, micOn, cameraOn;
 
   final StreamController<MediaStream> _localStreamContr =
       new StreamController.broadcast();
@@ -70,7 +70,7 @@ class LocalView {
     if (media.videoId != null) selectVideo.setValue(media.videoId);
     if (media.audioId != null) selectAudio.setValue(media.audioId);
     final previewLocal = new CLElement<VideoElement>(new VideoElement());
-    void setPreviewStream(MediaStream str) {
+    void setPreviewStream(MediaStream? str) {
       previewLocal.dom
         ..autoplay = true
         ..muted = true
@@ -108,9 +108,9 @@ class LocalView {
       ..title = intl.Settings()
       ..onOk = (() => true)
       ..render(width: 250, height: 450);
-    w.win.observer.addHook(app.Win.hookClose, (_) {
+    w.win?.observer.addHook(app.Win.hookClose, (_) {
       previewLocal.dom.srcObject
-          .getTracks()
+          ?.getTracks()
           .forEach(allowInterop((dynamic t) => t.stop()));
       previewLocal.dom.srcObject = null;
       return true;
@@ -129,7 +129,7 @@ class LocalView {
 
   void micAction([bool init = false]) {
     if (!init) micOn = !micOn;
-    _localStream?.getAudioTracks()?.forEach((t) => t.enabled = micOn);
+    _localStream?.getAudioTracks().forEach((t) => t.enabled = micOn);
     mic.setIcon(micOn ? Icon.mic : Icon.mic_off);
   }
 
@@ -138,7 +138,7 @@ class LocalView {
       cameraOn = !cameraOn;
       media.getUserMedia(video: cameraOn, audio: true).then((stream) {
         if (!micOn)
-          _localStream.getAudioTracks().forEach((t) => t.enabled = micOn);
+          _localStream?.getAudioTracks().forEach((t) => t.enabled = micOn);
         _setStream(stream);
       }).catchError((e) {});
     }
@@ -148,24 +148,25 @@ class LocalView {
   Future<MediaStream> getStreamShare() async {
     final stream = await media.getScreen();
     final audioTracks = await getAudioTracks();
-    audioTracks.forEach(stream.addTrack);
+    audioTracks?.forEach(stream.addTrack);
     return stream;
   }
 
-  Future<List<MediaStreamTrack>> getVideoTracks() async {
+  Future<List<MediaStreamTrack>?> getVideoTracks() async {
     final stream = await media.getUserMedia(video: true, audio: false);
-    return stream.getVideoTracks().cast<MediaStreamTrack>();
+    return stream?.getVideoTracks().cast<MediaStreamTrack>();
   }
 
-  Future<List<MediaStreamTrack>> getAudioTracks() async {
+  Future<List<MediaStreamTrack>?> getAudioTracks() async {
     final stream = await media.getUserMedia(audio: true, video: false);
-    return stream.getAudioTracks().cast<MediaStreamTrack>();
+    return stream?.getAudioTracks().cast<MediaStreamTrack>();
   }
 
-  void _setStream(MediaStream stream) {
+  void _setStream(MediaStream? stream) {
+    if (stream == null) return;
     closeStream();
     _localStream = stream;
-    _localStreamContr.add(_localStream);
+    _localStreamContr.add(_localStream!);
     videoLocal.dom
       ..autoplay = true
       ..muted = true
@@ -173,7 +174,7 @@ class LocalView {
   }
 
   void closeStream() {
-    _localStream?.getTracks()?.forEach(allowInterop((dynamic t) => t.stop()));
+    _localStream?.getTracks().forEach(allowInterop((dynamic t) => t.stop()));
     _localStream = null;
   }
 

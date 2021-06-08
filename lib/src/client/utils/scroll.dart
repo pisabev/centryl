@@ -2,27 +2,26 @@ part of utils;
 
 class CLscroll {
   Element el;
-  Element trackX, trackY;
-  Element scrollbarX, scrollbarY;
-  Element contentEl;
-  Element containerEl;
-  Timer flashTimeout;
+  late Element trackX, trackY;
+  late Element scrollbarX, scrollbarY;
+  late Element contentEl;
+  late Element containerEl;
+  Timer? flashTimeout;
   Map<String, num> dragOffset = {'x': 0, 'y': 0};
   Map<String, bool> isVisible = {'x': true, 'y': true};
-  MutationObserver observer;
-  String currentAxis;
+  late String currentAxis;
   bool enabled = true;
   bool autoHide = true;
   bool forceEnabled = false;
   num scrollbarMinSize = 40;
   num _cor = 1;
 
-  StreamSubscription _el_enter;
-  StreamSubscription _doc_mousemove;
-  StreamSubscription _doc_mouseup;
-  StreamSubscription _scrbX_mousemove;
-  StreamSubscription _scrbY_mousemove;
-  StreamSubscription _scr_content;
+  late StreamSubscription _el_enter;
+  late StreamSubscription _doc_mousemove;
+  late StreamSubscription _doc_mouseup;
+  late StreamSubscription _scrbX_mousemove;
+  late StreamSubscription _scrbY_mousemove;
+  late StreamSubscription _scr_content;
 
   //Function recalculate;
 
@@ -32,7 +31,7 @@ class CLscroll {
     'track': 'track'
   };
 
-  CLscroll([this.el]) {
+  CLscroll(this.el) {
     el.classes.add('ui-scroll');
     //recalculate = debounce(_recalculate, new Duration(milliseconds: 100));
     init();
@@ -89,13 +88,13 @@ class CLscroll {
     track.classes.add(classNames['track']);
     track.append(scrollbar);
 
-    trackX = track.clone(true);
+    trackX = track.clone(true) as Element;
     trackX.classes.add('horizontal');
-    scrollbarX = trackX.firstChild;
+    scrollbarX = trackX.firstChild as Element;
 
-    trackY = track.clone(true);
+    trackY = track.clone(true) as Element;
     trackY.classes.add('vertical');
-    scrollbarY = trackY.firstChild;
+    scrollbarY = trackY.firstChild as Element;
 
     el
       ..insertBefore(trackX, el.firstChild)
@@ -119,17 +118,6 @@ class CLscroll {
     scrollbarY.onMouseOver.listen((e) => scrollbarY.classes.add('over'));
 
     _scr_content = containerEl.onScroll.listen(onScroll);
-
-    // MutationObserver is IE11+
-    /*observer = new MutationObserver(
-        (List<MutationRecord> mutations, MutationObserver obs) {
-      mutations.forEach((mutation) {
-        if (mutation.target == el || mutation.addedNodes.length > 0)
-          recalculate();
-      });
-    });
-    observer.observe(el,
-      attributes: true, childList: true, characterData: true, subtree: true);*/
   }
 
   void removeListeners() {
@@ -140,8 +128,6 @@ class CLscroll {
     _scrbY_mousemove.cancel();
 
     _scr_content.cancel();
-
-    if (observer != null) observer.disconnect();
   }
 
   /// Start scrollbar handle drag
@@ -175,7 +161,7 @@ class CLscroll {
 
     // Calculate how far the user's mouse is from the top/left of the scrollbar (minus the dragOffset).
     final dragPos =
-        eventOffset - offset(track, currentAxis) - dragOffset[currentAxis];
+        eventOffset - offset(track, currentAxis) - dragOffset[currentAxis]!;
 
     // Convert the mouse position into a percentage of the scrollbar height/width.
     final dragPerc = dragPos / scrollSizeFix(track, currentAxis);
@@ -199,7 +185,7 @@ class CLscroll {
       ? el.getBoundingClientRect().top
       : el.getBoundingClientRect().left;
 
-  void scrollOffsetSet(Element el, String currentAxis, num value) {
+  void scrollOffsetSet(Element el, String currentAxis, int value) {
     if (currentAxis == 'y')
       el.scrollTop = value;
     else
@@ -238,7 +224,7 @@ class CLscroll {
     // Either scrollTop() or scrollLeft().
     final scrollOffset = scrollOffsetGet(containerEl, axis);
     final scrollbarSize = scrollSizeFix(track, axis);
-    var handleSize = scrollbarSize * (scrollbarSize / contentSize);
+    num handleSize = scrollbarSize * (scrollbarSize / contentSize);
     if (handleSize < scrollbarMinSize) {
       _cor = 1 + (scrollbarMinSize - handleSize) / scrollbarSize;
       handleSize = scrollbarMinSize;
@@ -253,7 +239,7 @@ class CLscroll {
     // (content is shorter than wrapper)
     isVisible[axis] = scrollbarSize < contentSize;
 
-    if (isVisible[axis]) {
+    if (isVisible[axis]!) {
       track.style.visibility = 'visible';
 
       if (axis == 'x') {
@@ -298,7 +284,7 @@ class CLscroll {
 
   /// Show scrollbar
   void showScrollbar([String axis = 'y']) {
-    if (!isVisible[axis]) return;
+    if (!isVisible[axis]!) return;
 
     if (axis == 'x')
       scrollbarX.classes.add('visible');
@@ -307,8 +293,7 @@ class CLscroll {
 
     if (!autoHide) return;
 
-    if (flashTimeout != null) flashTimeout.cancel();
-
+    flashTimeout?.cancel();
     flashTimeout = new Timer(const Duration(milliseconds: 1000), hideScrollbar);
   }
 
@@ -319,10 +304,8 @@ class CLscroll {
     scrollbarX.classes.remove('over');
     scrollbarY.classes.remove('over');
 
-    if (flashTimeout != null) {
-      flashTimeout.cancel();
-      flashTimeout = null;
-    }
+    flashTimeout?.cancel();
+    flashTimeout = null;
   }
 
   void scrollTo(int to) => containerEl.scrollTop = to;

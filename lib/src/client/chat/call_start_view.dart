@@ -2,15 +2,15 @@ part of chat;
 
 class CallStartView {
   app.Application ap;
-  app.Win win;
-  Container contTop, contBottom;
-  action.Button answer;
-  action.Button hangup;
-  final void Function() onAnswer;
-  final void Function() onHangup;
+  late app.Win win;
+  late Container contTop, contBottom;
+  late action.Button answer;
+  late action.Button hangup;
+  final void Function()? onAnswer;
+  final void Function()? onHangup;
   Room room;
   final bool caller;
-  Timer _timer;
+  Timer? _timer;
   Duration duration = const Duration(seconds: 30);
 
   CallStartView(this.ap, this.room,
@@ -28,13 +28,13 @@ class CallStartView {
       ..addClass('important')
       ..addAction((e) {
         answer.disable();
-        if (onAnswer is Function) onAnswer();
+        if (onAnswer is Function) onAnswer!();
       });
     hangup = new action.Button()
       ..setIcon(Icon.call_end)
       ..addClass('warning')
       ..addAction((e) {
-        if (onHangup is Function) onHangup();
+        if (onHangup is Function) onHangup!();
       });
     final cont = new Container()..addClass('ui-call-start');
     contTop = new Container()
@@ -52,11 +52,11 @@ class CallStartView {
       ..loop = true
       ..src = '${ap.baseurl}packages/centryl/sound/ringing.mp3'
       ..play().catchError((e) => null));
-    _timer = new Timer(duration, onHangup);
+    _timer = new Timer(duration, onHangup!);
   }
 
   void close() {
-    _timer.cancel();
+    _timer?.cancel();
     win.close();
   }
 }

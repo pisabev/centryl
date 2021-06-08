@@ -5,9 +5,10 @@ import 'dart:async';
 import 'package:centryl/app.dart' as app;
 import 'package:centryl/chat.dart' as chat;
 import 'package:centryl/develop.dart';
+import 'package:collection/collection.dart';
 
-chat.ChatController controller;
-app.Application ap;
+late chat.ChatController controller;
+late app.Application ap;
 
 void main() {
   ap = initApp(new app.Client({
@@ -19,9 +20,7 @@ void main() {
     ..loadRoomMessages = ((room) => new Future.value(mess[room]))
     ..loadRoomMessagesNew = loadMessagesNew
     ..persistMessage = persistMessage
-    ..callStart = ((room) {
-
-    });
+    ..callStart = ((room) {});
 
   final o = new chat.Chat(
       ap,
@@ -34,13 +33,15 @@ void main() {
 
 Future<bool> persistMessage(chat.Message message) async {
   final room = findRoomByMessage(message);
-  mess[room].insert(0, message..id = getMessageId());
-  controller.notifierMessage.add(room);
+  if(room != null) {
+    mess[room]!.insert(0, message..id = getMessageId());
+    controller.notifierMessage.add(room);
+  }
   return true;
 }
 
 Future<List<chat.Message>> loadMessagesNew(chat.Room room) async =>
-    mess[room].where((m) => m.id > room.lsm_id).toList();
+    mess[room]!.where((m) => m.id! > room.lsm_id).toList();
 
 final List<chat.Room> rooms = [
   _generateRoom(),
@@ -57,12 +58,12 @@ chat.Room _generateRoom() {
       members: [_generateMemberMe(), _generateMember()]);
   mess[room] = [];
   final n = new RandomInteger(10).generate();
-  for (int i = 0; i < n; i++) mess[room].add(_generateMessage(room));
+  for (int i = 0; i < n; i++) mess[room]!.add(_generateMessage(room));
   return room;
 }
 
-chat.Room findRoomByMessage(chat.Message message) =>
-    rooms.firstWhere((r) => r.room_id == message.room_id, orElse: () => null);
+chat.Room? findRoomByMessage(chat.Message message) =>
+    rooms.firstWhereOrNull((r) => r.room_id == message.room_id);
 
 chat.Member _generateMember() =>
     new chat.Member(user_id: userId.generate(), name: memberName.generate());
@@ -71,6 +72,7 @@ chat.Member _generateMemberMe() =>
     new chat.Member(user_id: ap.client.userId, name: ap.client.name);
 
 chat.Message _generateMessage(chat.Room room) => new chat.Message(
+    type: 0,
     id: getMessageId(),
     room_id: room.room_id,
     member: room.members[new RandomInteger(2).generate()],

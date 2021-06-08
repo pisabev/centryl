@@ -1,12 +1,12 @@
 part of cl_base.svc.server;
 
 class TreeItem {
-  String type;
-  String value;
+  String? type;
+  String? value;
   dynamic id;
   dynamic parentId;
-  String clas;
-  bool hasChilds;
+  String? clas;
+  bool? hasChilds;
   dynamic data;
 
   Map toMap() => {

@@ -1,11 +1,11 @@
 part of gui;
 
 class WizardElement extends CLElement {
-  CLElement titleDom;
-  CLElement contentDom;
-  Wizard _parent;
+  late CLElement titleDom;
+  late CLElement contentDom;
+  late Wizard _parent;
 
-  FutureOr<bool> Function() validate;
+  FutureOr<bool> Function()? validate;
 
   WizardElement() : super(new LIElement()) {
     createDom();
@@ -37,7 +37,7 @@ class WizardElement extends CLElement {
   void enable() {
     addAction((e) {
       final curStep = _parent.getCurrentStep();
-      final curIndex = curStep._parent.views.indexOf(curStep);
+      final curIndex = curStep!._parent.views.indexOf(curStep);
       final nextIndex = _parent.views.indexOf(this);
       if (curIndex > nextIndex) current();
     });
@@ -80,16 +80,21 @@ class Wizard extends Container {
   }
 
   bool isCurrentStep(WizardElement tab) => tab.existClass('current');
+
   void currentStep(WizardElement tab) => tab.current();
+
   void enableStep(WizardElement tab) => tab.enable();
+
   void disableStep(WizardElement tab) => tab.disable();
+
   void hideStep(WizardElement tab) => tab.hide();
+
   void showStep(WizardElement tab) => tab.show();
 
-  WizardElement getCurrentStep() =>
-      views.firstWhere((e) => e.existClass('current'), orElse: () => null);
+  WizardElement? getCurrentStep() =>
+      views.firstWhereOrNull((e) => e.existClass('current'));
 
-  WizardElement prev() {
+  WizardElement? prev() {
     final current = getCurrentStep();
     if (current != null) {
       final curIndex = views.indexOf(current);
@@ -101,10 +106,10 @@ class Wizard extends Container {
     return null;
   }
 
-  Future<WizardElement> next({bool validate = true}) async {
+  Future<WizardElement?> next({bool validate = true}) async {
     final current = getCurrentStep();
     if (current != null &&
-        (!validate || current.validate == null || await current.validate())) {
+        (!validate || current.validate == null || await current.validate!())) {
       final curIndex = views.indexOf(current);
       final nextIndex = math.min(views.length - 1, curIndex + 1);
       return views[nextIndex]

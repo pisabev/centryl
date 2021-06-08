@@ -3,46 +3,46 @@ part of ui;
 typedef CheckF = bool Function();
 
 class LockDecorations {
-  String lockTip;
-  String unlockTip;
-  String lockIcon;
-  String unlockIcon;
-  String bClass;
-  String title;
+  late String lockTip;
+  late String unlockTip;
+  late String lockIcon;
+  late String unlockIcon;
+  late String bClass;
+  late String title;
 
   LockDecorations(
-      {this.lockTip,
-      this.unlockTip,
-      this.lockIcon,
-      this.unlockIcon,
-      this.bClass,
-      this.title}) {
-    lockTip ??= intl.Lock();
-    unlockTip ??= intl.Unlock();
-    lockIcon ??= cl.Icon.lock_outline;
-    unlockIcon ??= cl.Icon.lock_open;
-    bClass ??= 'warning';
-    title ??= '';
+      {String? lockTip,
+      String? unlockTip,
+      String? lockIcon,
+      String? unlockIcon,
+      String? bClass,
+      String? title}) {
+    lockTip = lockTip ?? intl.Lock();
+    unlockTip = unlockTip ?? intl.Unlock();
+    lockIcon = lockIcon ?? cl.Icon.lock_outline;
+    unlockIcon = unlockIcon ?? cl.Icon.lock_open;
+    bClass = bClass ?? 'warning';
+    title = title ?? '';
   }
 }
 
 class Lock extends cl_action.Button {
   cl_app.Application ap;
-  String permission;
+  String? permission;
   bool _locked = false;
 
   bool get locked => _locked;
-  LockDecorations decorations;
-  final List<Object> _components = [];
+  late LockDecorations decorations;
+  late final List<dynamic> _components = [];
   final StreamController _contr = new StreamController<bool>.broadcast();
   final StreamController _contrLockTry = new StreamController<bool>.broadcast();
   CheckF checkF = () => false;
 
-  Lock(this.ap, this.permission, {this.decorations, CheckF f}) : super() {
+  Lock(this.ap, this.permission, {LockDecorations? dec, CheckF? f}) : super() {
     ///Have we external function for lock checking
     if (f != null) checkF = f;
 
-    decorations ??= new LockDecorations();
+    decorations = dec ?? new LockDecorations();
     addClass(decorations.bClass);
     setTip(decorations.lockTip, 'top');
     if (decorations.title.isNotEmpty) setTitle(decorations.title);

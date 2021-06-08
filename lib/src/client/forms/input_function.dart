@@ -2,7 +2,7 @@ part of forms;
 
 class InputFunction<T> extends InputField<T> {
   String icon = Icon.search;
-  CLElement domAction;
+  late CLElement domAction;
   bool full = false;
 
   InputFunction() : super() {
@@ -26,7 +26,7 @@ class InputFunction<T> extends InputField<T> {
     field.dom.value = (value == null) ? '' : value.toString();
   }
 
-  String getText() => field.dom.value;
+  String getText() => field.dom.value!;
 
   @override
   void disable() {

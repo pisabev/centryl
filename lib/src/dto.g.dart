@@ -13,17 +13,17 @@ abstract class $DataContainer {
 DataContainer _$DataContainerFromMap(Map data) => new DataContainer()
   ..label = data[$DataContainer.label]
   ..clas = data[$DataContainer.clas]
-  ..set = (data[$DataContainer.set] as List)
-      ?.map((v0) => v0 == null ? null : new DataSet.fromMap(v0))
-      ?.toList();
+  ..set = (data[$DataContainer.set])
+      ?.map<DataSet>(
+          (v0) => v0 is Map ? new DataSet.fromMap(v0) : v0 as DataSet)
+      .toList();
 
 Map<String, dynamic> _$DataContainerToMap(DataContainer obj) =>
     <String, dynamic>{
       $DataContainer.label: obj.label,
       $DataContainer.clas: obj.clas,
-      $DataContainer.set: obj.set == null
-          ? null
-          : new List.generate(obj.set.length, (i0) => obj.set[i0]?.toMap())
+      $DataContainer.set:
+          new List.generate(obj.set.length, (i0) => obj.set[i0].toMap())
     };
 
 abstract class $DataSet {
@@ -52,40 +52,39 @@ abstract class $Message {
       id = 'id',
       type = 'type',
       member = 'member',
-      seen = 'seen',
       room_id = 'room_id',
       context = 'context',
-      content = 'content',
-      timestamp = 'timestamp';
+      timestamp = 'timestamp',
+      seen = 'seen',
+      content = 'content';
 }
 
 Message _$MessageFromMap(Map data) => new Message()
   ..id = data[$Message.id]
   ..type = data[$Message.type]
-  ..member = data[$Message.member] == null
-      ? null
-      : new Member.fromMap(data[$Message.member])
-  ..seen = (data[$Message.seen] as List)
-      ?.map((v0) => v0 == null ? null : new Member.fromMap(v0))
-      ?.toList()
+  ..member = data[$Message.member] is Map
+      ? new Member.fromMap(data[$Message.member])
+      : data[$Message.member] as Member
   ..room_id = data[$Message.room_id]
   ..context = data[$Message.context]
-  ..content = data[$Message.content]
   ..timestamp = data[$Message.timestamp] is String
-      ? DateTime.tryParse(data[$Message.timestamp])
-      : data[$Message.timestamp];
+      ? DateTime.parse(data[$Message.timestamp])
+      : data[$Message.timestamp]
+  ..seen = (data[$Message.seen])
+      ?.map<Member>((v0) => v0 is Map ? new Member.fromMap(v0) : v0 as Member)
+      .toList()
+  ..content = data[$Message.content];
 
 Map<String, dynamic> _$MessageToMap(Message obj) => <String, dynamic>{
       $Message.id: obj.id,
       $Message.type: obj.type,
-      $Message.member: obj.member?.toMap(),
-      $Message.seen: obj.seen == null
-          ? null
-          : new List.generate(obj.seen.length, (i0) => obj.seen[i0]?.toMap()),
+      $Message.member: obj.member.toMap(),
       $Message.room_id: obj.room_id,
       $Message.context: obj.context,
-      $Message.content: obj.content,
-      $Message.timestamp: obj.timestamp?.toIso8601String()
+      $Message.timestamp: obj.timestamp?.toIso8601String(),
+      $Message.seen:
+          new List.generate(obj.seen.length, (i0) => obj.seen[i0].toMap()),
+      $Message.content: obj.content
     };
 
 abstract class $Member {
@@ -110,8 +109,8 @@ Map<String, dynamic> _$MemberToMap(Member obj) => <String, dynamic>{
 
 abstract class $Room {
   static const String room_id = 'room_id',
-      context = 'context',
       members = 'members',
+      context = 'context',
       lsm_id = 'lsm_id',
       unseen = 'unseen',
       messages = 'messages';
@@ -119,21 +118,19 @@ abstract class $Room {
 
 Room _$RoomFromMap(Map data) => new Room()
   ..room_id = data[$Room.room_id]
+  ..members = (data[$Room.members])
+      ?.map<Member>((v0) => v0 is Map ? new Member.fromMap(v0) : v0 as Member)
+      .toList()
   ..context = data[$Room.context]
-  ..members = (data[$Room.members] as List)
-      ?.map((v0) => v0 == null ? null : new Member.fromMap(v0))
-      ?.toList()
   ..lsm_id = data[$Room.lsm_id]
   ..unseen = data[$Room.unseen]
   ..messages = data[$Room.messages];
 
 Map<String, dynamic> _$RoomToMap(Room obj) => <String, dynamic>{
       $Room.room_id: obj.room_id,
+      $Room.members: new List.generate(
+          obj.members.length, (i0) => obj.members[i0].toMap()),
       $Room.context: obj.context,
-      $Room.members: obj.members == null
-          ? null
-          : new List.generate(
-              obj.members.length, (i0) => obj.members[i0]?.toMap()),
       $Room.lsm_id: obj.lsm_id,
       $Room.unseen: obj.unseen,
       $Room.messages: obj.messages

@@ -3,37 +3,37 @@ part of utils;
 class KeyValidator {
   static bool isNum(KeyboardEvent event) {
     final code = event.which;
-    return new RegExp(r'\d').hasMatch(String.fromCharCode(code));
+    return new RegExp(r'\d').hasMatch(String.fromCharCode(code!));
   }
 
   static bool isPoint(KeyboardEvent event) {
     final code = event.which;
-    return new RegExp(r'\.').hasMatch(String.fromCharCode(code));
+    return new RegExp(r'\.').hasMatch(String.fromCharCode(code!));
   }
 
   static bool isComma(KeyboardEvent event) {
     final code = event.which;
-    return new RegExp(r',').hasMatch(String.fromCharCode(code));
+    return new RegExp(r',').hasMatch(String.fromCharCode(code!));
   }
 
   static bool isMinus(KeyboardEvent event) {
     final code = event.which;
-    return new RegExp(r'-').hasMatch(String.fromCharCode(code));
+    return new RegExp(r'-').hasMatch(String.fromCharCode(code!));
   }
 
   static bool isPlus(KeyboardEvent event) {
     final code = event.which;
-    return new RegExp(r'\+').hasMatch(String.fromCharCode(code));
+    return new RegExp(r'\+').hasMatch(String.fromCharCode(code!));
   }
 
   static bool isSlash(KeyboardEvent event) {
     final code = event.which;
-    return new RegExp(r'/').hasMatch(String.fromCharCode(code));
+    return new RegExp(r'/').hasMatch(String.fromCharCode(code!));
   }
 
   static bool isColon(KeyboardEvent event) {
     final code = event.which;
-    return new RegExp(r':').hasMatch(String.fromCharCode(code));
+    return new RegExp(r':').hasMatch(String.fromCharCode(code!));
   }
 
   static bool isKeyDown(KeyboardEvent event) {

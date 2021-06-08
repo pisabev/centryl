@@ -2,8 +2,8 @@ part of base;
 
 class Container<E extends Element> extends CLElement<E> {
   bool _auto = false;
-  CLscroll scroll;
-  Container parent;
+  CLscroll? scroll;
+  Container? parent;
   List<Container> containers = [];
 
   Container([element]) : super(element ?? new DivElement()) {
@@ -25,19 +25,19 @@ class Container<E extends Element> extends CLElement<E> {
 
   void addSlider() {
     final col = new Container();
-    CLElement prev, next, res;
-    num prev_width, next_width;
-    Rectangle box;
+    CLElement? prev, next, res;
+    late num prev_width, next_width;
+    late Rectangle box;
 
-    Container getPrevCol(Container cur) {
-      Container c;
+    Container? getPrevCol(Container cur) {
+      Container? c;
       for (var i = 0; i < containers.length; i++)
         if (containers[i] == cur) c = containers[i - 1];
       return c;
     }
 
-    Container getNextCol(Container cur) {
-      Container c;
+    Container? getNextCol(Container cur) {
+      Container? c;
       for (var i = 0; i < containers.length; i++)
         if (containers[i] == cur) c = containers[i + 1];
       return c;
@@ -49,23 +49,23 @@ class Container<E extends Element> extends CLElement<E> {
         e.stopPropagation();
         prev = getPrevCol(col);
         next = getNextCol(col);
-        prev_width = prev.getWidth();
-        next_width = next.getWidth();
+        prev_width = prev?.getWidth() ?? 0;
+        next_width = next?.getWidth() ?? 0;
         res = new CLElement(new DivElement())..setClass('ui-slider-shadow');
         box = col.getRectangle();
-        res.setRectangle(box);
-        document.body.append(res.dom);
+        res!.setRectangle(box);
+        document.body?.append(res!.dom);
       })
       ..on((e) {
         final min_p = prev_width + drag.dx - 150;
         if (min_p < 0) drag.dx -= min_p;
         final min_n = next_width - drag.dx - 150;
         if (min_n < 0) drag.dx += min_n;
-        res.setStyle({'left': '${box.left + drag.dx}px'});
+        res!.setStyle({'left': '${box.left + drag.dx}px'});
       })
       ..end((e) {
-        res.remove();
-        prev.setWidth(new Dimension.px(prev_width + drag.dx));
+        res?.remove();
+        prev?.setWidth(new Dimension.px(prev_width + drag.dx));
         //Not needed - FlexBox takes care for sizing
         //next.setWidth(next_width - drag.dx);
       });

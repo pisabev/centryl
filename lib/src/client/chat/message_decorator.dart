@@ -3,7 +3,7 @@ part of chat;
 class MessageDecoratorManager {
   Map<int, List<MessageDecoratorBase>> decorators = {};
 
-  static MessageDecoratorManager instance;
+  static MessageDecoratorManager? instance;
 
   factory MessageDecoratorManager() =>
       instance ??= new MessageDecoratorManager._();
@@ -12,16 +12,16 @@ class MessageDecoratorManager {
 
   void registerDecorator(int type, MessageDecoratorBase decorator) {
     if (decorators[type] == null) decorators[type] = [];
-    decorators[type].add(decorator);
+    decorators[type]!.add(decorator);
   }
 
   void removeDecorator(int type, MessageDecoratorBase decorator) =>
-      decorators[type].remove(decorator);
+      decorators[type]!.remove(decorator);
 
-  dynamic decorate(int type, String message) {
-    if (type == null) return message;
+  dynamic decorate(int? type, String? message) {
+    if (type == null || message == null) return message;
     dynamic res = message;
-    for (final d in decorators[type]) {
+    for (final d in decorators[type]!) {
       if (d.check(message)) {
         res = d.decorate(res);
         if (d.single) break;
@@ -42,8 +42,8 @@ abstract class MessageDecoratorBase {
 }
 
 abstract class MessageDecoratorFile extends MessageDecoratorBase {
-  String fileName;
-  String source;
+  late String fileName;
+  late String source;
   int width = 265;
   int height = 265;
 
@@ -75,7 +75,7 @@ class MessageDecoratorLink extends MessageDecoratorBase {
     if (matches.isNotEmpty) {
       matches.forEach((m) {
         final l = m.group(1);
-        message = message.replaceAll(l, '<a href="$l" target="_blank">$l</a>');
+        message = message.replaceAll(l!, '<a href="$l" target="_blank">$l</a>');
       });
     }
     return message;
@@ -199,8 +199,9 @@ class MessageDecoratorFilePdf extends MessageDecoratorFile {
       ..href = source
       ..title = fileName;
 
-    final CanvasElement canvas = document.createElement('canvas');
-    final ctx = canvas.getContext('2d');
+    final CanvasElement canvas =
+        document.createElement('canvas') as CanvasElement;
+    final ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     canvas
       ..width = width
       ..height = height;
@@ -211,7 +212,7 @@ class MessageDecoratorFilePdf extends MessageDecoratorFile {
       final page = await FutureWrap<Page>(d.getPage(1));
       final v = page.getViewport(new Arguments(
           scale:
-              canvas.width / page.getViewport(new Arguments(scale: 1)).width));
+              canvas.width! / page.getViewport(new Arguments(scale: 1)).width));
       final task =
           page.render(new RenderParameters(viewport: v, canvasContext: ctx));
       await FutureWrap(task.promise);

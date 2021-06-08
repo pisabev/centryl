@@ -1,9 +1,7 @@
 part of forms;
 
 class _InputTimeField<T, E extends html.InputElement>
-    extends DataElement<int, E> with Validator {
-  html.SpanElement inner, input;
-
+    extends DataElement<int, html.InputElement> with Validator {
   _InputTimeField(InputType type) {
     set(type);
     dom = new html.InputElement();
@@ -11,7 +9,7 @@ class _InputTimeField<T, E extends html.InputElement>
     addAction(_onFocus, 'focus');
     addAction(_onBlur, 'blur');
     addAction(_onKeyDown, 'keydown');
-    addAction((e) {
+    addAction<html.Event>((e) {
       if (!validateInput(e)) e.preventDefault();
     }, 'keypress');
     onReadyChanged.listen((e) {
@@ -22,17 +20,17 @@ class _InputTimeField<T, E extends html.InputElement>
     });
   }
 
-  void setValue(int value) => setValueDynamic(value);
+  void setValue(int? value) => setValueDynamic(value);
 
   void setValueDynamic(dynamic value) {
     dynamic val;
     if (input_type != null) {
-      input_type.set(value);
-      if (input_type.value != null)
+      input_type!.set(value);
+      if (input_type!.value != null)
         dom.value = input_type.toString().padLeft(2, '0');
       else
         dom.value = '';
-      val = input_type.value;
+      val = input_type!.value;
     } else {
       dom.value = (value == null) ? '' : value.toString();
       val = value;
@@ -58,10 +56,10 @@ class _InputTimeField<T, E extends html.InputElement>
   }
 
   void _onBlur(html.Event e) =>
-      setValueDynamic(dom.value.isEmpty ? null : dom.value);
+      setValueDynamic(dom.value!.isEmpty ? null : dom.value);
 
   void _onKeyDown(html.KeyboardEvent e) {
-    if (e.keyCode == 13) setValueDynamic(dom.value.isEmpty ? null : dom.value);
+    if (e.keyCode == 13) setValueDynamic(dom.value!.isEmpty ? null : dom.value);
   }
 
   void setPlaceHolder(String value) {
@@ -88,11 +86,11 @@ class _InputTimeField<T, E extends html.InputElement>
 }
 
 class InputTime extends DataElement<int, html.SpanElement> with Validator {
-  html.SpanElement inner, input;
-  _InputTimeField field_hours, field_minutes;
+  late html.SpanElement inner, input;
+  late _InputTimeField field_hours, field_minutes;
   bool canBeNull;
 
-  InputTime({int maxHours = 23, this.canBeNull = false}) : super() {
+  InputTime({int? maxHours = 23, this.canBeNull = false}) : super() {
     dom = new html.SpanElement();
     setAttribute('tabindex', '0');
     inner = new html.SpanElement()..classes.add('inner');
@@ -107,8 +105,8 @@ class InputTime extends DataElement<int, html.SpanElement> with Validator {
     final minutesRange = [0, 59];
     const minuteFieldLength = 2;
     field_hours = new _InputTimeField(new InputTypeInt(range: hoursRange))
-      ..addAction((e) {
-        if (field_hours.dom.value.length == hourFieldLength &&
+      ..addAction<html.KeyboardEvent>((e) {
+        if (field_hours.dom.value!.length == hourFieldLength &&
             utils.KeyValidator.isNum(e)) field_minutes.focus();
       }, 'keyup')
       ..addKeyAction((e) => _keyNavigate(e, field_hours, hoursRange))
@@ -132,8 +130,8 @@ class InputTime extends DataElement<int, html.SpanElement> with Validator {
           field_minutes.dom == html.document.activeElement) return;
       focus();
     }, 'focusin');
-    addAction((e) {
-      if (dom.contains(e.relatedTarget)) return;
+    addAction<html.MouseEvent>((e) {
+      if (dom.contains(e.relatedTarget as html.Node?)) return;
       removeClass('focus');
       _checkValue();
     }, 'focusout');
@@ -146,9 +144,9 @@ class InputTime extends DataElement<int, html.SpanElement> with Validator {
     });
   }
 
-  void setValue(int value) {
-    num hours;
-    num minutes;
+  void setValue(int? value) {
+    int? hours;
+    int? minutes;
     super.setValue(value);
     if (value == null) {
       hours = null;
@@ -166,9 +164,9 @@ class InputTime extends DataElement<int, html.SpanElement> with Validator {
     setValue(d.hour * 60 + d.minute);
   }
 
-  int getHours() => field_hours.getValue();
+  int? getHours() => field_hours.getValue();
 
-  int getMinutes() => field_minutes.getValue();
+  int? getMinutes() => field_minutes.getValue();
 
   void _checkValue() {
     final vh = field_hours.getValue();
@@ -180,7 +178,7 @@ class InputTime extends DataElement<int, html.SpanElement> with Validator {
     setValue((vh ?? 0) * 60 + (vm ?? 0));
   }
 
-  bool _keyNavigate(e, _InputTimeField f, List range) {
+  bool _keyNavigate(e, _InputTimeField f, List? range) {
     var v = f.getValue() ?? -1;
     if (utils.KeyValidator.isKeyUp(e))
       v++;
@@ -188,8 +186,10 @@ class InputTime extends DataElement<int, html.SpanElement> with Validator {
       v--;
     else
       return false;
-    if (v > range[1]) v = range[0];
-    if (v < range[0]) v = range[1];
+    if (range != null) {
+      if (v > range[1]) v = range[0];
+      if (v < range[0]) v = range[1];
+    }
     f.setValue(v);
     return false;
   }

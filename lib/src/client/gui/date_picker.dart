@@ -6,22 +6,22 @@ class DatePicker extends CLElement {
 
   static List month_days = [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-  CLElement<TableSectionElement> domTbody;
+  late CLElement<TableSectionElement> domTbody;
 
-  CLElement domMonth, domYear;
+  late CLElement domMonth, domYear;
 
-  CLElement clicked;
+  CLElement? clickedEl;
 
-  bool time;
+  late bool time;
   bool doClose = false;
 
-  form.InputTime timeField;
+  late form.InputTime timeField;
 
-  FutureOr<bool> Function(DateTime date) filter;
+  late FutureOr<bool> Function(DateTime date) filter;
 
-  DateTime _currentDate;
-  DateTime _viewDate;
-  DateTime _choosedDate;
+  late DateTime _currentDate;
+  late DateTime _viewDate;
+  DateTime? _choosedDate;
 
   DatePicker({this.time = false}) : super(new DivElement()) {
     setClass('ui-calendar');
@@ -136,9 +136,13 @@ class DatePicker extends CLElement {
   }
 
   void _chooseCurrent([day_sel]) {
-    day_sel ??= (_viewDate.year == _choosedDate.year &&
-            _viewDate.month == _choosedDate.month)
-        ? _choosedDate.day
+    if (_choosedDate == null) {
+      day_sel = null;
+      return;
+    }
+    day_sel ??= (_viewDate.year == _choosedDate!.year &&
+            _viewDate.month == _choosedDate!.month)
+        ? _choosedDate!.day
         : null;
     if (day_sel == null) return;
     _setDate(new DateTime(_viewDate.year, _viewDate.month, day_sel,
@@ -146,14 +150,14 @@ class DatePicker extends CLElement {
     doClose = true;
   }
 
-  DateTime getDate() => _choosedDate;
+  DateTime? getDate() => _choosedDate;
 
-  void _setDate(DateTime date) {
+  void _setDate(DateTime? date) {
     _choosedDate = date;
     _contrSet.add(this);
   }
 
-  void setDate(DateTime date) {
+  void setDate(DateTime? date) {
     if (date != null) {
       _viewDate = new DateTime(date.year, date.month, date.day);
       _choosedDate =
@@ -162,7 +166,7 @@ class DatePicker extends CLElement {
     render();
   }
 
-  Future _set([DateTime date]) async {
+  Future _set([DateTime? date]) async {
     _viewDate = date ?? _viewDate;
     await render();
   }
@@ -181,23 +185,24 @@ class DatePicker extends CLElement {
             _viewDate.month == _currentDate.month)
         ? _currentDate.day
         : null;
-    final day_sel = (_viewDate.year == _choosedDate.year &&
-            _viewDate.month == _choosedDate.month)
-        ? _choosedDate.day
+    final day_sel = (_viewDate.year == _choosedDate?.year &&
+            _viewDate.month == _choosedDate?.month)
+        ? _choosedDate?.day
         : null;
 
     var k = 0;
-    void clicked(DatePicker obj, [CLElement n]) {
-      if (obj.clicked != null) obj.clicked.removeClass('selected');
-      if (n != null) obj.clicked = n..addClass('selected');
+    void clicked(DatePicker obj, [CLElement? n]) {
+      obj.clickedEl?.removeClass('selected');
+      if (n != null) obj.clickedEl = n..addClass('selected');
     }
 
     clicked(this, null);
     if (time) {
+      if (_choosedDate != null)
+        timeField.setValue(_choosedDate!.hour * 60 + _choosedDate!.minute);
       timeField
-        ..setValue(_choosedDate.hour * 60 + _choosedDate.minute)
         ..removeActionsAll()
-        ..addAction((e) {
+        ..addAction<KeyboardEvent>((e) {
           if (KeyValidator.isKeyEnter(e)) _chooseCurrent(day_sel);
         }, 'keyup');
     }
@@ -221,10 +226,7 @@ class DatePicker extends CLElement {
         final filter0 = () async =>
             filter(new DateTime(_viewDate.year, _viewDate.month, x, 0, 0));
 
-        if (filter == null ||
-            (time
-                ? (await filter2359() || await filter0())
-                : await filter0())) {
+        if (time ? (await filter2359() || await filter0()) : await filter0()) {
           span
             ..addClass('active')
             ..addAction((e) {
@@ -232,8 +234,8 @@ class DatePicker extends CLElement {
                   _viewDate.year,
                   _viewDate.month,
                   x,
-                  time ? (timeField?.getHours() ?? 0) : 0,
-                  time ? (timeField?.getMinutes() ?? 0) : 0));
+                  time ? (timeField.getHours() ?? 0) : 0,
+                  time ? (timeField.getMinutes() ?? 0) : 0));
               clicked(this, span);
             });
         }

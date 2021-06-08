@@ -18,7 +18,7 @@ class IconManager {
     icons.add(cont);
   }
 
-  void set(List arr) => arr.forEach(add);
+  void set(List<Map> arr) => arr.forEach(add);
 
   void render() {
     icons.forEach((icon) {

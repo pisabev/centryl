@@ -12,18 +12,18 @@ class Observer {
     if (_hook[scope] == null) _hook[scope] = new Queue();
     if (func is Function) {
       if (first)
-        _hook[scope].addFirst(func);
+        _hook[scope]!.addFirst(func);
       else
-        _hook[scope].add(func);
+        _hook[scope]!.add(func);
     }
   }
 
-  Queue getHook([String scope]) => scope != null ? _hook[scope] : _hook;
+  Queue? getHook(String scope) => _hook[scope];
 
   Future<bool> execHooksAsync(String scope, [dynamic object]) {
     final completer = new Completer<bool>();
     if (_hook[scope] is Queue) {
-      final iterator = _hook[scope].iterator;
+      final iterator = _hook[scope]!.iterator;
       var ret = true;
       Future.doWhile(() async {
         if (!iterator.moveNext()) return false;
@@ -39,7 +39,7 @@ class Observer {
 
   bool execHooks(String scope, [dynamic object]) {
     if (_hook[scope] is Queue) {
-      final iterator = _hook[scope].iterator;
+      final iterator = _hook[scope]!.iterator;
       var ret = true;
       while (iterator.moveNext()) {
         final r = iterator.current(object);
@@ -54,10 +54,10 @@ class Observer {
     }
   }
 
-  void removeHook<T>(String scope, [ObserverFunction<T> func]) {
+  void removeHook<T>(String scope, [ObserverFunction<T>? func]) {
     if (func is Function) {
-      if (_hook[scope] != null && _hook[scope].contains(func))
-        _hook[scope].remove(func);
+      if (_hook[scope] != null && _hook[scope]!.contains(func))
+        _hook[scope]!.remove(func);
     } else {
       _hook[scope] = new Queue();
     }

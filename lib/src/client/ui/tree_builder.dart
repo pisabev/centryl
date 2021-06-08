@@ -1,10 +1,10 @@
 part of ui;
 
 class TreeBuilder {
-  cl.Container search_container, tree_container;
-  cl_form.Input filter;
-  cl_action.Menu menu;
-  cl_gui.TreeBuilder tree;
+  late cl.Container search_container, tree_container;
+  late cl_form.Input filter;
+  late cl_action.Menu menu;
+  late cl_gui.TreeBuilder tree;
 
   TreeBuilder(this.search_container, this.tree_container) {
     initFilter();
@@ -24,10 +24,10 @@ class TreeBuilder {
     tree_container
       ..removeChilds()
       ..append(tree, scrollable: scrollable);
-    tree.main.openChilds();
+    tree.main!.openChilds();
   }
 
-  void searchFilter([KeyboardEvent e]) {
+  void searchFilter([KeyboardEvent? e]) {
     if (e?.which == 13) refreshTree();
   }
 

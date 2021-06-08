@@ -1,8 +1,8 @@
 part of action;
 
 class ButtonGroup extends Button {
-  Button current;
-  CLElement domList;
+  Button? current;
+  late CLElement domList;
 
   ButtonGroup() : super();
 
@@ -22,7 +22,7 @@ class ButtonGroup extends Button {
       ..appendTo(domList);
   }
 
-  void setCurrent([int num]) {
+  void setCurrent([int? num]) {
     sub.forEach((b) => b.removeClass('current'));
     if (num != null) {
       sub[num].addClass('current');

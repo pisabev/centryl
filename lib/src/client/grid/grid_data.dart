@@ -1,13 +1,13 @@
 part of forms;
 
 class GridData extends GridList<Object> {
-  List<html.TableRowElement> insert;
-  List<html.TableRowElement> update;
-  List<html.TableRowElement> delete;
+  late List<html.TableRowElement> insert;
+  late List<html.TableRowElement> update;
+  late List<html.TableRowElement> delete;
 
   bool fullData = false;
 
-  GridData([RenderBase renderer]) : super(renderer) {
+  GridData([RenderBase? renderer]) : super(renderer) {
     setClass('ui-table-grid');
     tfoot.hide();
     initSendRows();
@@ -33,7 +33,7 @@ class GridData extends GridList<Object> {
     delete = [];
   }
 
-  void setValue(Object value) {
+  void setValue(Object? value) {
     empty();
     if (value is List && value.isNotEmpty) {
       show();
@@ -159,7 +159,7 @@ class GridData extends GridList<Object> {
   }
 
   html.TableRowElement findRowByKeyValue(String key, dynamic value) {
-    html.TableRowElement row;
+    late html.TableRowElement row;
     for (var i = 0; i < renderer.rows.length; i++) {
       if (getRowMapSerialized(renderer.rows[i])[key] == value) {
         row = renderer.rows[i];
@@ -182,13 +182,13 @@ class GridData extends GridList<Object> {
     return n;
   }
 
-  html.TableRowElement rowCreate([Map obj]) {
+  html.TableRowElement rowCreate(Map obj) {
     final row = super.rowCreate(obj);
     if (!state) disableRow(row);
     return row;
   }
 
-  void disableRow(html.Node row) {
+  void disableRow(html.TableRowElement row) {
     getRowMap(row).forEach((k, dc) {
       if (dc is RowDataCell) {
         if (dc is RowEditCell)
@@ -203,7 +203,7 @@ class GridData extends GridList<Object> {
     });
   }
 
-  void enableRow(html.Node row) {
+  void enableRow(html.TableRowElement row) {
     getRowMap(row).forEach((k, dc) {
       if (dc is RowDataCell) {
         if (dc is RowEditCell)

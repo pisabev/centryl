@@ -2,7 +2,7 @@ part of base;
 
 class LoadElement extends CLElement {
   CLElementBase container;
-  Timer _sub;
+  Timer? _sub;
 
   LoadElement(this.container, [int delay = 100]) : super(new DivElement()) {
     if (container.dom.attributes['loading'] != null) return;

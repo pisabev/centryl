@@ -10,6 +10,7 @@ import 'package:centryl/base.dart' as cl;
 import 'package:centryl/forms.dart' as cl_form;
 import 'package:centryl/gui.dart' as cl_gui;
 import 'package:centryl/utils.dart' as cl_util;
+import 'package:collection/collection.dart';
 import 'package:communicator/client.dart';
 import 'package:task/task.dart';
 

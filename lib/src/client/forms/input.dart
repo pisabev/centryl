@@ -1,10 +1,10 @@
 part of forms;
 
 class Input<T> extends InputField<T> {
-  num _step;
-  CLElement stepDom;
+  num? _step;
+  CLElement? stepDom;
 
-  Input([InputType type]) : super(type) {
+  Input([InputType? type]) : super(type) {
     _setSteps();
   }
 
@@ -18,8 +18,8 @@ class Input<T> extends InputField<T> {
         ..append(new Icon(Icon.arrow_drop_down).dom
           ..onClick.listen(_stepDown)
           ..classes.add('clickable'));
-      setSuffixElement(stepDom);
-      field.addAction((e) {
+      setSuffixElement(stepDom!);
+      field.addAction<html.KeyboardEvent>((e) {
         if (utils.KeyValidator.isKeyDown(e))
           _stepDown(e);
         else if (utils.KeyValidator.isKeyUp(e)) _stepUp(e);
@@ -40,27 +40,27 @@ class Input<T> extends InputField<T> {
 
   void _stepUp(e) {
     if (!state) return;
-    var v = (getValue() as num) ?? 0;
-    v += _step;
+    var v = (getValue() as num?) ?? 0;
+    v += _step!;
     setValue(v as T);
   }
 
   void _stepDown(e) {
     if (!state) return;
-    var v = (getValue() as num) ?? 0;
-    v -= _step;
+    var v = (getValue() as num?) ?? 0;
+    v -= _step!;
     setValue(v as T);
   }
 
   @override
-  void setValue(T value) => setValueDynamic(value);
+  void setValue(T? value) => setValueDynamic(value);
 
   void setValueDynamic(dynamic value) {
     dynamic val;
     if (input_type != null) {
-      input_type.set(value);
+      input_type!.set(value);
       field.dom.value = input_type.toString();
-      val = input_type.value;
+      val = input_type!.value;
     } else {
       field.dom.value = (value == null) ? '' : value.toString();
       val = value;

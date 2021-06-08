@@ -6,15 +6,15 @@ class SelectMulti<T> extends _SelectBase<List<T>> {
   }
 
   bool _testAgainstList(List<T> v) =>
-      v?.every((val) => list.any((r) => r[0] == val)) ?? false;
+      v.every((val) => list.any((r) => r[0] == val));
 
   /// Responds to key arrows and sets the currentIndex
-  void _moveIndex(p) {
+  void _moveIndex(int p) {
     if (list.isEmpty || !state || isLoading) return;
     if (!isListVisible) return;
     final cur_indx = currentIndex;
     list[cur_indx][1].removeClass('hover');
-    var next_indx = cur_indx + p;
+    int next_indx = cur_indx + p;
     if (next_indx > list.length - 1) next_indx = 0;
     if (next_indx < 0) next_indx = list.length - 1;
     list[next_indx][1].addClass('hover');
@@ -22,7 +22,7 @@ class SelectMulti<T> extends _SelectBase<List<T>> {
     _moveView();
   }
 
-  void navAction(html.Event e) {
+  void navAction(html.KeyboardEvent e) {
     if (utils.KeyValidator.isKeyDown(e)) {
       e.preventDefault();
       _moveIndex(1);
@@ -40,14 +40,16 @@ class SelectMulti<T> extends _SelectBase<List<T>> {
 
   CLElement addOption(dynamic value, dynamic title, [bool initValue = true]) {
     final li = new CLElement(new html.LIElement())
-      ..addAction((e) {
-        e.stopPropagation();
-        e.preventDefault();
+      ..addAction<html.Event>((e) {
+        e
+          ..stopPropagation()
+          ..preventDefault();
         _addRemoveValue(value);
       }, 'mousedown')
-      ..addAction((e) {
-        e.stopPropagation();
-        e.preventDefault();
+      ..addAction<html.Event>((e) {
+        e
+          ..stopPropagation()
+          ..preventDefault();
       }, 'click')
       ..setAttribute('title', '$title')
       ..setHtml('$title');
@@ -61,7 +63,7 @@ class SelectMulti<T> extends _SelectBase<List<T>> {
   ///TODO
   void addOptionGroup(String group) {}
 
-  void setValue(List<T> value) => _setValue(value);
+  void setValue(List<T>? value) => _setValue(value);
 
   void _manageValue(dynamic value) {
     var newIndex = 0;
@@ -84,7 +86,7 @@ class SelectMulti<T> extends _SelectBase<List<T>> {
   }
 
   void _addRemoveValue(dynamic value) {
-    final current = new List.from(getValue() ?? []);
+    final current = new List.from(getValue() ?? []) as List<T>;
     if (current.contains(value))
       current.remove(value);
     else

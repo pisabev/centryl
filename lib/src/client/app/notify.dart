@@ -5,9 +5,9 @@ typedef SearchF = void Function();
 class Notify {
   Application ap;
 
-  CLElement outer, inner;
+  CLElement? outer, inner;
 
-  SpanElement count;
+  SpanElement? count;
 
   List<NotificationMessage> notifications = [];
 
@@ -15,35 +15,35 @@ class Notify {
 
   bool visible = false;
 
-  StreamSubscription down;
+  StreamSubscription? down;
 
   List<DateTime> Function() range_get =
       () => utils.Calendar.getWeeksBackRange(1);
   Future<void> Function(NotificationMessage) persist = (m) async {};
-  Future<List> Function(dynamic, DateTime, DateTime) load_archive =
+  Future<List?> Function(dynamic, DateTime, DateTime) load_archive =
       (v1, d1, d2) async => [];
-  Future<List> Function(dynamic) load_recent = (v) async => null;
-  Future<int> Function(dynamic) load_unread = (v) async => null;
-  Future<void> Function(NotificationMessage) mark_read = (v) async {};
-  Future<void> Function(NotificationMessage) mark_unread = (v) async {};
-  Function remove;
+  Future<List?> Function(dynamic)? load_recent;
+  Future<int?> Function(dynamic)? load_unread;
+  Future<void> Function(NotificationMessage)? mark_read;
+  Future<void> Function(NotificationMessage)? mark_unread;
+  Function? remove;
 
-  Timer timer_remove;
-  Duration autoclose;
-  Timer timer_remove_auto;
+  Timer? timer_remove;
+  Duration? autoclose;
+  Timer? timer_remove_auto;
 
-  action.Button bottom_dom;
+  action.Button? bottom_dom;
   SearchF searchNotify = () {};
 
   Notify(this.ap);
 
   void init() {
-    if (load_unread == null) return;
     refreshUnread();
   }
 
   void refreshUnread() {
-    load_unread(null).then((res) {
+    if (load_unread == null) return;
+    load_unread!(null).then((res) {
       unread = res ?? 0;
       _showUnread();
     });
@@ -51,7 +51,7 @@ class Notify {
 
   action.Button messageDom() => bottom_dom = new action.Button()
     ..setIcon(Icon.notifications)
-    ..addAction((e) {
+    ..addAction<Event>((e) {
       e.stopPropagation();
       renderAll();
     })
@@ -59,7 +59,7 @@ class Notify {
     ..append(count = new SpanElement()..classes.add('note'));
 
   void _addMessage(NotificationMessage el,
-      [bool animate = false, CLElement append]) {
+      [bool animate = false, CLElement? append]) {
     append ??= inner;
     final cont = new Container()..setClass('message');
     if (el.priority.isNotEmpty) cont.addClass(el.priority);
@@ -67,7 +67,7 @@ class Notify {
     if (el.icon != null) {
       cont
         ..addClass('has-icon')
-        ..append(new Icon(el.icon).dom);
+        ..append(new Icon(el.icon!).dom);
     }
     CLElement dateCont;
     cont.append(dateCont = new CLElement(new DivElement())
@@ -76,18 +76,18 @@ class Notify {
       ..append(new SpanElement()
         ..text = utils.Calendar.stringWithTimeFull(el.date)));
 
-    action.Button visible;
+    late action.Button visible;
     void markRead(Event e) {
       e.stopPropagation();
       if (el.read) {
-        mark_unread(el);
+        if (mark_unread != null) mark_unread!(el);
         el.read = false;
         cont.removeClass('read');
         visible.removeClass('light');
         unread++;
         _showUnread();
       } else {
-        mark_read(el);
+        if (mark_read != null) mark_read!(el);
         el.read = true;
         cont.addClass('read');
         visible.addClass('light');
@@ -105,17 +105,17 @@ class Notify {
         ..append(new action.Button()
           ..setIcon(Icon.delete)
           ..setTip(intl.Delete(), 'top')
-          ..addAction((e) {
+          ..addAction<Event>((e) {
             e.stopPropagation();
             cont.remove();
             if (!el.read) {
               unread--;
               _showUnread();
             }
-            if (remove is Function) remove(el);
+            if (remove is Function) remove!(el);
           }));
 
-      cont.addAction((e) {
+      cont.addAction<Event>((e) {
         if (!el.read) markRead(e);
       });
 
@@ -128,10 +128,10 @@ class Notify {
     const int maxLen = 90;
     final o = new forms.Text();
     if (el.textFunction != null) {
-      el.textFunction(o);
+      el.textFunction!(o);
     } else {
       String text = el.text != null
-          ? el.text
+          ? el.text!
               .replaceAll(new RegExp(r'\s+'), ' ')
               .replaceAll(new RegExp(r'\r?\n|\r'), '')
           : '';
@@ -147,29 +147,29 @@ class Notify {
     if (el.action is Function)
       cont
         ..addClass('action')
-        ..addAction((_) => el.action());
+        ..addAction((_) => el.action!());
     cont.append(o);
 
     if (animate) {
-      append.prepend(cont);
+      append!.prepend(cont);
       cont.addClass('new');
       new Timer(
           const Duration(milliseconds: 100 * 1), () => cont.addClass('show'));
     } else {
-      append.append(cont);
+      append!.append(cont);
       cont.addClass('show');
     }
   }
 
   void _renderAttention(NotificationMessage message) {
     if (visible) return _addMessage(message, true);
-    if (timer_remove != null) timer_remove.cancel();
+    if (timer_remove != null) timer_remove!.cancel();
     _createFlyingContainer();
-    new Timer(const Duration(milliseconds: 10), () => outer.addClass('show'));
+    new Timer(const Duration(milliseconds: 10), () => outer?.addClass('show'));
     _addMessage(message, false);
     down?.cancel();
     down = document.onMouseDown.listen((e) => _close());
-    if (autoclose != null) timer_remove_auto = new Timer(autoclose, _close);
+    if (autoclose != null) timer_remove_auto = new Timer(autoclose!, _close);
   }
 
   void _createFlyingContainer() {
@@ -177,8 +177,8 @@ class Notify {
     outer = new CLElement(new DivElement())..addClass('ui-notify');
     inner = new CLElement(new DivElement())..appendTo(outer);
     ap.page.append(outer);
-    outer
-      ..addAction((e) => e.stopPropagation(), 'mousedown')
+    outer!
+      ..addAction<Event>((e) => e.stopPropagation(), 'mousedown')
       ..show();
   }
 
@@ -197,18 +197,22 @@ class Notify {
         ..addClass('light')
         ..addAction((e) {
           final dates = date.getValue_();
-          date.setValue([
-            dates.first.subtract(dates.last.difference(dates.first)),
-            dates.first
-          ]);
+          if (dates != null) {
+            final first = dates.first ?? new DateTime.now();
+            final last = dates.last ?? new DateTime.now();
+            date.setValue([first.subtract(last.difference(first)), first]);
+          }
         }))
       ..append(action.Button()
         ..setIcon(Icon.chevron_right)
         ..addClass('light')
         ..addAction((e) {
           final dates = date.getValue_();
-          date.setValue(
-              [dates.last, dates.last.add(dates.last.difference(dates.first))]);
+          if (dates != null) {
+            final first = dates.first ?? new DateTime.now();
+            final last = dates.last ?? new DateTime.now();
+            date.setValue([last, last.add(last.difference(first))]);
+          }
         }))
       ..append(action.Button()
         ..setIcon(Icon.search)
@@ -219,7 +223,7 @@ class Notify {
 
     final outer = new Container()
       ..addClass('ui-notify-container')
-      ..addAction((e) => e.stopPropagation(), 'mousedown');
+      ..addAction<Event>((e) => e.stopPropagation(), 'mousedown');
 
     final cont2 = new Container()..addClass('ui-message-box-current');
     inner = new Container()..addClass('ui-message-box');
@@ -236,11 +240,11 @@ class Notify {
     range.last = range.last.add(const Duration(days: 1));
     date
       ..onValueChanged.listen((_) {
-        final start = date.getValue_().first;
-        final end = date.getValue_().last;
+        final start = date.getValue_()?.first;
+        final end = date.getValue_()?.last;
         if (start == null || end == null) return;
         load_archive(outer, start, end).then((data) {
-          inner.removeChilds();
+          inner!.removeChilds();
           cont.removeChilds();
           if (data is List)
             data.forEach((r) {
@@ -259,11 +263,11 @@ class Notify {
   }
 
   void _close() {
-    outer.removeClass('show');
+    outer?.removeClass('show');
     timer_remove_auto?.cancel();
     timer_remove =
-        new Timer(const Duration(milliseconds: 500), () => outer.remove());
-    down.cancel();
+        new Timer(const Duration(milliseconds: 500), () => outer?.remove());
+    down?.cancel();
   }
 
   void add(NotificationMessage n) {
@@ -276,7 +280,7 @@ class Notify {
     _beep();
     try {
       Notification.requestPermission().then((permission) {
-        if (permission == 'granted' && document.hidden)
+        if (permission == 'granted' && document.hidden!)
           new Notification(intl.Notifications(),
               body: n.text, icon: '${ap.baseurl}images/logo.png');
       });
@@ -285,14 +289,14 @@ class Notify {
 
   void _showUnread() {
     if (unread > 0) {
-      count?.style?.display = 'block';
+      count?.style.display = 'block';
       count?.text = '${unread > 99 ? '99+' : unread}';
     } else
-      count?.style?.display = 'none';
+      count?.style.display = 'none';
   }
 
   void _beep() {
-    bottom_dom.append(new AudioElement()
+    bottom_dom?.append(new AudioElement()
       ..src = '${ap.baseurl}packages/centryl/sound/chime_bell_ding.wav'
       ..play().catchError((e) => null));
   }

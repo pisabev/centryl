@@ -32,23 +32,26 @@ String getFileExtIcon(String fileName) {
 
 abstract class FileContainerBase<E extends form.DataElement> extends CLElement {
   final E parent;
-  Map data;
+  late Map data;
   int dataState = 0;
 
   FileContainerBase(this.parent) : super(new DivElement());
 
   void setData(String Function() path, Map data);
+
   void disable();
+
   void enable();
+
   void onDelete();
 
   Map getData() => data;
 }
 
 class _FileContainer<E extends form.DataElement> extends FileContainerBase<E> {
-  CLElement<AnchorElement> link;
-  CLElement<ImageElement> img;
-  CLElement<AnchorElement> del;
+  late CLElement<AnchorElement> link;
+  late CLElement<ImageElement> img;
+  late CLElement<AnchorElement> del;
 
   _FileContainer(parent) : super(parent) {
     link = new CLElement(new AnchorElement())
@@ -99,13 +102,15 @@ class FileAttach<E extends FileContainerBase> extends form.DataElement {
   action.FileUploader uploader;
   String Function() path_tmp, path_media;
   bool _delete = true;
+
   bool get delete => _delete;
+
   set delete(bool d) {
     _delete = d;
     conts.values.forEach((el) => el.setState(d));
   }
 
-  E Function(FileAttach) genContainer;
+  E Function(FileAttach)? genContainer;
 
   FileAttach(this.uploader, this.path_tmp, this.path_media,
       [this.genContainer, this._delete = true])
@@ -119,12 +124,12 @@ class FileAttach<E extends FileContainerBase> extends form.DataElement {
   }
 
   bool onFileLoadStart(String fileName) {
-    append(conts[fileName] = genContainer(this)..setState(delete));
+    append(conts[fileName] = genContainer!(this)..setState(delete));
     return true;
   }
 
   bool onFileLoadEnd(String fileName) {
-    conts[fileName]
+    conts[fileName]!
       ..setData(path_tmp, {'source': fileName})
       ..dataState = 1;
     if (uploader.fileToLoad == 0) contrValue.add(this);
@@ -144,11 +149,11 @@ class FileAttach<E extends FileContainerBase> extends form.DataElement {
   }
 
   void setValue(dynamic value) {
-    if (conts != null) conts.forEach((k, c) => c.remove());
+    conts.forEach((k, c) => c.remove());
     conts = {};
     if (value is List) {
       value.forEach((data) {
-        conts[data['source']] = genContainer(this)
+        conts[data['source']] = genContainer!(this)
           ..setData(path_media, data)
           ..appendTo(this)
           ..setState(delete);
@@ -163,10 +168,10 @@ class FileAttach<E extends FileContainerBase> extends form.DataElement {
     final r = {'insert': [], 'update': [], 'delete': []};
     conts.forEach((k, v) {
       if (v.dataState == 1)
-        r['insert'].add(v.getData());
+        r['insert']!.add(v.getData());
       else if (v.dataState == 2)
-        r['update'].add(v.getData());
-      else if (v.dataState == 3) r['delete'].add(v.getData());
+        r['update']!.add(v.getData());
+      else if (v.dataState == 3) r['delete']!.add(v.getData());
     });
     return r;
   }

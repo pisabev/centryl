@@ -1,11 +1,11 @@
 part of chart;
 
 class Pie {
-  dynamic container;
-  SvgSvgElement svg;
+  CLElement container;
+  late SvgSvgElement svg;
   num width = 0;
   num height = 0;
-  GElement graph;
+  late GElement graph;
   int segment_count = 0;
 
   Map center = {};
@@ -19,7 +19,7 @@ class Pie {
   List segmentAnims = [];
   List segmentLabels = [];
 
-  List<dto.DataSet> data;
+  late List<dto.DataSet> data;
   num total = 0.0;
 
   Pie(this.container) {
@@ -119,12 +119,12 @@ class Pie {
       segments[i++].setAttribute(
           'd',
           'M $startX $startY '
-          'A $radius $radius 0 $largeArc 1 $endX $endY '
-          'L ${center['x']} ${center['y']} z');
+              'A $radius $radius 0 $largeArc 1 $endX $endY '
+              'L ${center['x']} ${center['y']} z');
     });
   }
 
-  void _animateSegment(int num, String from, String to) {
+  void _animateSegment(num num, String from, String to) {
     for (var i = 0; i < segments.length; i++) {
       if (i != num) {
         final label = segmentLabels[i], slice = segmentAnims[i];

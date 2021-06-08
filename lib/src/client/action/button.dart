@@ -1,16 +1,16 @@
 part of action;
 
 class Button extends CLElement {
-  CLElement<SpanElement> inner;
+  late CLElement<SpanElement> inner;
   List<Button> sub = [];
   List<DataWarning> _warnings = [];
-  app.Bubble _bubble;
-  Icon _icon;
-  Element warningIcon;
-  String _tip;
-  String _tipPos;
-  String _name;
-  Timer _timerWrn;
+  app.Bubble? _bubble;
+  Icon? _icon;
+  Element? warningIcon;
+  String? _tip;
+  String? _tipPos;
+  String? _name;
+  Timer? _timerWrn;
 
   Button() : super(new SpanElement()) {
     createDom();
@@ -31,7 +31,7 @@ class Button extends CLElement {
     _name = name;
   }
 
-  String getName() => _name;
+  String? getName() => _name;
 
   CLElement addSub(Button button) {
     sub.add(button);
@@ -41,24 +41,24 @@ class Button extends CLElement {
       ..append(button);
   }
 
-  void setIcon(String icon) {
-    if (_icon != null) _icon.dom.remove();
+  void setIcon(String? icon) {
+    if (_icon != null) _icon!.dom.remove();
     if (icon != null) {
       _icon = new Icon(icon);
-      dom.insertBefore(_icon.dom, inner.dom);
+      dom.insertBefore(_icon!.dom, inner.dom);
     }
   }
 
-  void setWarning(DataWarning wrn, {bool show = true}) {
+  void setWarning(DataWarning? wrn, {bool show = true}) {
     if (wrn == null) return;
     if (!_warnings.any((w) => w.key == wrn.key)) _warnings.add(wrn);
     warningIcon?.remove();
     warningIcon = new Icon(Icon.warning).dom..classes.add('warning');
     final warningsHtml = _warnings.map((w) => w.message).join('</br>');
     _bubble = new app.Bubble(new CLElement(warningIcon))..setHtml(warningsHtml);
-    _bubble.cont
-      ..addAction((e) => _bubble.showBubble(), 'mouseover')
-      ..addAction((e) => _bubble.hideBubble(), 'mouseout');
+    _bubble!.cont
+      ..addAction((e) => _bubble!.showBubble(), 'mouseover')
+      ..addAction((e) => _bubble!.hideBubble(), 'mouseout');
     append(warningIcon);
 
     if (show) {
@@ -70,13 +70,14 @@ class Button extends CLElement {
     }
   }
 
-  void showWarnings([Duration duration]) {
+  void showWarnings([Duration? duration]) {
     if (!hasWarnings()) return;
-    if (duration != null) new Timer(duration, _bubble.hideBubble);
-    _bubble.showBubble();
+    if (_bubble == null) return;
+    if (duration != null) new Timer(duration, _bubble!.hideBubble);
+    _bubble!.showBubble();
   }
 
-  void removeWarning(String wrnKey) {
+  void removeWarning(String? wrnKey) {
     if (wrnKey == null) return;
     _warnings.removeWhere((wrn) => wrn.key == wrnKey);
     if (!hasWarnings()) {
@@ -100,12 +101,12 @@ class Button extends CLElement {
   }
 
   void _initTip() {
-    CLElement tip;
-    Timer timer;
+    CLElement? tip;
+    Timer? timer;
     void _remove(e) {
       if (state) {
-        timer.cancel();
-        tip.remove();
+        timer?.cancel();
+        tip?.remove();
       }
     }
 
@@ -131,22 +132,22 @@ class Button extends CLElement {
         final top = rect.top + (offset_top ? rect.height : 0);
         final left = rect.left + (offset_left ? rect.width : 0);
         var reversed = '';
-        if (left > document.body.getBoundingClientRect().width / 2)
+        if (left > document.body!.getBoundingClientRect().width / 2)
           reversed = ' reversed';
         tip = new CLElement(new DivElement())
           ..addClass('ui-data-tip $_tipPos-tip$reversed')
-          ..setAttribute('data-tips', _tip)
+          ..setAttribute('data-tips', _tip!)
           ..setStyle({'top': '${top}px', 'left': '${left}px'})
           ..appendTo(document.body);
         timer = new Timer(
-            const Duration(milliseconds: 100), () => tip.addClass('show'));
+            const Duration(milliseconds: 100), () => tip!.addClass('show'));
       }
     }, 'mouseover.tip');
     addAction(_remove, 'mouseout.tip');
     addAction(_remove, 'mousedown.tip');
   }
 
-  void setTitle(String title) {
+  void setTitle(String? title) {
     if (title != null) {
       inner.dom.text = title;
       inner.addClass('button-title');
@@ -156,7 +157,7 @@ class Button extends CLElement {
     }
   }
 
-  String getTitle() => inner.dom.text;
+  String? getTitle() => inner.dom.text;
 
   void disable() {
     state = false;
@@ -172,7 +173,7 @@ class Button extends CLElement {
 
   void _onFocus(e) {
     addAction((e) {
-      if (utils.KeyValidator.isKeyEnter(e)) dom.click();
+      if (utils.KeyValidator.isKeyEnter(e as KeyboardEvent)) dom.click();
     }, 'keydown.select');
   }
 

@@ -8,7 +8,7 @@ import 'package:centryl/base.dart' as base;
 import 'package:centryl/forms.dart' as cl_form;
 import 'package:centryl/gui.dart' as gui;
 
-gui.FormElement run([app.Application ap]) {
+gui.FormElement run([app.Application? ap]) {
   final f = new cl_form.Form();
   final gui.FormElement form = new gui.FormElement(f);
 
@@ -151,7 +151,7 @@ void inputCombo(gui.FormElement content) {
 
 void dateField(gui.FormElement content) {
   final input = new cl_form.InputDate()..setValue(new DateTime.now());
-  new Timer(new Duration(seconds: 1), () {
+  new Timer(const Duration(seconds: 1), () {
     input.setValue(null);
   });
   //input.setValue('2017-12-13T00:00:00.000Z');
@@ -166,8 +166,8 @@ void dateField(gui.FormElement content) {
 }
 
 void dateFieldRange(gui.FormElement content) {
-  final d1 = new DateTime.now().subtract(new Duration(days: 30));
-  final d2 = new DateTime.now().add(new Duration(days: 30));
+  final d1 = new DateTime.now().subtract(const Duration(days: 30));
+  final d2 = new DateTime.now().add(const Duration(days: 30));
   final input = new cl_form.InputDate(range: [
     DateTime.parse('2019-08-13 13:58:00.000Z'),
     DateTime.parse('2019-08-19 13:58:00.000Z')
@@ -195,7 +195,7 @@ void dateTimeFieldValid(gui.FormElement content) {
   final input = new cl_form.InputDateTime()
     ..setValue(new DateTime.now())
     ..onValueChanged.listen((e) {
-      new Future.delayed(new Duration(seconds: 1), () {
+      new Future.delayed(const Duration(seconds: 1), () {
         e.setValid(false);
       });
     });
@@ -204,7 +204,7 @@ void dateTimeFieldValid(gui.FormElement content) {
 
 void dateTimeFieldFilter(gui.FormElement content) {
   final input = new cl_form.InputDateTime()
-    ..addValidationOnValue((e) => e.isBefore(new DateTime.now()));
+    ..addValidationOnValue<DateTime>((e) => e.isBefore(new DateTime.now()));
   content.addRow('Date Time Field - Filter', [input]);
 }
 
@@ -252,7 +252,7 @@ void timeField(gui.FormElement content) {
 void badgeField(gui.FormElement content) {
   final b = new cl_form.Badge()
     ..execute = (() async {
-      await new Future.delayed(new Duration(milliseconds: 2000));
+      await new Future.delayed(const Duration(milliseconds: 2000));
       return 'Badge Field With Loader';
     })
     ..load();
@@ -262,7 +262,7 @@ void badgeField(gui.FormElement content) {
 void inputLoader(gui.FormElement content) {
   final input = new cl_form.InputLoader()
     ..execute = (() async {
-      await new Future.delayed(new Duration(seconds: 1));
+      await new Future.delayed(const Duration(seconds: 1));
       final List<Map> d = [];
       for (int i = 0; i < 10; i++) d.add({'k': i + 1, 'v': 'Option$i'});
       return d;
@@ -280,7 +280,7 @@ void inputLoaderDisabled(gui.FormElement content) {
   final input = new cl_form.InputLoader()
     ..disable()
     ..execute = (() async {
-      await new Future.delayed(new Duration(seconds: 1));
+      await new Future.delayed(const Duration(seconds: 1));
       final List<Map> d = [];
       for (int i = 0; i < 10; i++) d.add({'k': i + 1, 'v': 'Option$i'});
       return d;

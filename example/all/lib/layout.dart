@@ -245,7 +245,7 @@ class Ap4 extends cl_app.Item {
       });
 
     c.contLeft.append(tree, scrollable: true);
-    tree.renderTree(tree.main, d);
+    tree.renderTree(tree.main!, d);
 
     wapi.win.getContent().append(c, scrollable: true);
     wapi.render();

@@ -1,11 +1,11 @@
 part of action;
 
 class Warning {
-  Element warningIcon;
-  app.Bubble _bubble;
-  Timer _timerWrn;
+  Element? warningIcon;
+  app.Bubble? _bubble;
+  Timer? _timerWrn;
 
-  CLElementBase iconCont;
+  CLElementBase? iconCont;
 
   Warning(this.iconCont);
 
@@ -15,34 +15,35 @@ class Warning {
     if (iconCont != null) {
       warningIcon?.remove();
       warningIcon = new Icon(Icon.warning).dom..classes.add('warning');
-      iconCont.append(warningIcon);
+      iconCont!.append(warningIcon);
     }
     _bubble = new app.Bubble(new CLElement(warningIcon))..setHtml(warningsHtml);
-    _bubble.cont
-      ..addAction((e) => _bubble.showBubble(), 'mouseover')
-      ..addAction((e) => _bubble.hideBubble(), 'mouseout');
+    _bubble!.cont
+      ..addAction((e) => _bubble!.showBubble(), 'mouseover')
+      ..addAction((e) => _bubble!.hideBubble(), 'mouseout');
 
-    iconCont.addClass('warning');
+    iconCont!.addClass('warning');
 
     if (showAuto && warnings.isNotEmpty) {
       _timerWrn?.cancel();
       _timerWrn = new Timer(const Duration(seconds: 1), () {
-        if (document.body
+        if (document.body!
             .getBoundingClientRect()
-            .containsPoint(warningIcon.getBoundingClientRect().bottomRight))
+            .containsPoint(warningIcon!.getBoundingClientRect().bottomRight))
           show(const Duration(seconds: 5));
         _timerWrn = null;
       });
     }
   }
 
-  void show([Duration duration]) {
-    if (duration != null) new Timer(duration, _bubble.hideBubble);
-    _bubble.showBubble();
+  void show([Duration? duration]) {
+    if (duration != null && _bubble != null)
+      new Timer(duration, _bubble!.hideBubble);
+    _bubble?.showBubble();
   }
 
   void remove() {
     warningIcon?.remove();
-    iconCont.removeClass('warning');
+    iconCont?.removeClass('warning');
   }
 }

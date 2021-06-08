@@ -1,13 +1,13 @@
 part of gui;
 
 class TreeNode {
-  String id;
-  String parentId;
+  String? id;
+  String? parentId;
   dynamic value;
   dynamic data;
-  String type;
-  String clas;
-  bool hasChilds;
+  String? type;
+  String? clas;
+  late bool hasChilds;
 
   TreeNode(
       {this.id,

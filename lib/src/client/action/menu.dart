@@ -42,11 +42,11 @@ class Menu {
         indexOfElements[i].setState(state);
   }
 
-  Button operator [](String key) => getElement(key);
+  Button? operator [](String key) => getElement(key);
 
-  void initButtons([List arr]) {
+  void initButtons([List? arr]) {
     indexOfElements.forEach((el) => el.setState(false));
-    if (arr is List) arr.forEach((name) => this[name].setState(true));
+    if (arr is List) arr.forEach((name) => this[name]?.setState(true));
   }
 
   void hide() => container.hide();

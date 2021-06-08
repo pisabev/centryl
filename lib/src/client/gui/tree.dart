@@ -1,7 +1,7 @@
 part of gui;
 
 class Tree {
-  TreeNode node;
+  late TreeNode node;
   List<Tree> childs = [];
 
   int level = 0;
@@ -11,11 +11,11 @@ class Tree {
   bool isRendered = false;
   bool isLoading = false;
 
-  Tree parent;
-  TreeBuilder treeBuilder;
+  Tree? parent;
+  late TreeBuilder treeBuilder;
 
-  DivElement dom;
-  AnchorElement domNode, domValue;
+  late DivElement dom;
+  late AnchorElement domNode, domValue;
 
   Tree(this.node);
 
@@ -26,8 +26,8 @@ class Tree {
     domNode.onClick.listen((e) => operateNode(true));
     domValue = new AnchorElement();
     final icon = folderImage();
-    if (icon != null) domValue.append(new Icon(icon).dom);
-    if (node.clas != null) domValue.classes.add(node.clas);
+    domValue.append(new Icon(icon!).dom);
+    if (node.clas != null) domValue.classes.add(node.clas!);
     domValue.append(node.value is String
         ? (new SpanElement()
           ..text = node.value
@@ -35,7 +35,7 @@ class Tree {
         : node.value);
     domValue.onClick.listen((e) => clickedFolder());
     if (treeBuilder.actionDblClick != null)
-      domValue.onDoubleClick.listen((e) => treeBuilder.actionDblClick(this));
+      domValue.onDoubleClick.listen((e) => treeBuilder.actionDblClick!(this));
     dom..append(folderSide())..append(domNode)..append(domValue);
   }
 
@@ -60,7 +60,7 @@ class Tree {
     return sp1;
   }
 
-  String folderImage() => treeBuilder.getIcon(this);
+  String? folderImage() => treeBuilder.getIcon(this);
 
   void folderNode() {
     final el = domNode..innerHtml = '';
@@ -98,12 +98,12 @@ class Tree {
 
   Future clickedFolder() async {
     if (treeBuilder.actionClick != null) {
-      if (await treeBuilder.actionClick(this)) {
+      if (await treeBuilder.actionClick!(this)) {
         final main = treeBuilder;
         if (main.current != null)
-          main.current.domValue.classes.remove('active');
+          main.current!.domValue.classes.remove('active');
         main.current = this;
-        main.current.domValue.classes.add('active');
+        main.current!.domValue.classes.add('active');
       }
     }
   }
@@ -116,8 +116,8 @@ class Tree {
 
   void openParents() {
     if (parent != null) {
-      if (!parent.isOpen) parent.operateNode();
-      parent.openParents();
+      if (!parent!.isOpen) parent!.operateNode();
+      parent!.openParents();
     }
   }
 
@@ -160,8 +160,8 @@ class Tree {
 
   void renderObj() {
     createHTML();
-    if (parent != null && parent.dom.nextElementSibling != null)
-      treeBuilder.dom.insertBefore(dom, parent.dom.nextElementSibling);
+    if (parent != null && parent!.dom.nextElementSibling != null)
+      treeBuilder.dom.insertBefore(dom, parent!.dom.nextElementSibling);
     else
       treeBuilder.dom.append(dom);
     isRendered = true;
@@ -180,7 +180,7 @@ class Tree {
     level = lev;
     isLast = lstNode;
     leftSide = lftSide;
-    treeBuilder.indexOfObjects[node.id] = this;
+    treeBuilder.indexOfObjects[node.id!] = this;
 
     if (childs.isNotEmpty) {
       if (treeBuilder.startOpen && level != 0) isOpen = true;

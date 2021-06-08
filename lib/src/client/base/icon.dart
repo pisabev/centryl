@@ -89,11 +89,11 @@ class Icon {
   static const String zoom_in = '$spr#zoom_in';
   static const String zoom_out = '$spr#zoom_out';
 
-  static String BASEURL;
-  static String ICON_FLAG_PATH;
+  static late String BASEURL;
+  static late String ICON_FLAG_PATH;
 
-  String id;
-  Element dom;
+  late String id;
+  late Element dom;
 
   Icon(this.id) {
     createDom();

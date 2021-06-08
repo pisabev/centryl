@@ -1,8 +1,7 @@
 part of calendar;
 
 class Filter {
-
-  DateTime start, end;
+  late DateTime start, end;
 
   String title;
 

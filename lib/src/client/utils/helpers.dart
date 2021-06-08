@@ -27,14 +27,14 @@ math.MutableRectangle centerRect(Rectangle rect, Rectangle ref) {
   return box;
 }
 
-num __scrollBarWidth;
+num __scrollBarWidth = 0;
 
 num getScrollbarWidth() {
-  if (__scrollBarWidth != null) return __scrollBarWidth;
+  if (__scrollBarWidth != 0) return __scrollBarWidth;
   final outer = new DivElement()
     ..style.width = '100px'
     ..style.height = '100px';
-  document.body.append(outer);
+  document.body!.append(outer);
   final widthNoScroll = outer.offsetWidth;
   outer.style.overflow = 'scroll';
   final inner = document.createElement('div')..style.width = '100%';
@@ -45,21 +45,21 @@ num getScrollbarWidth() {
 }
 
 Function debounce(Function func, Duration wait, [bool immediate = true]) {
-  Timer timeout;
+  Timer? timeout;
   return () {
     final later = () {
       timeout = null;
       if (!immediate) func();
     };
     final callNow = immediate && timeout == null;
-    if (timeout != null) timeout.cancel();
+    timeout?.cancel();
     timeout = new Timer(wait, later);
     if (callNow) func();
   };
 }
 
 Function throttle(Function func, Duration wait) {
-  Timer timeout;
+  Timer? timeout;
   return () {
     if (timeout != null) return;
     func();
@@ -68,7 +68,7 @@ Function throttle(Function func, Duration wait) {
 }
 
 bool eventWithinSource(MouseEvent event, Element cont) {
-  Element el = event.relatedTarget as Element;
+  Element? el = event.relatedTarget as Element;
   while (el != null) {
     if (el == cont) {
       return false;
@@ -76,12 +76,12 @@ bool eventWithinSource(MouseEvent event, Element cont) {
     if (el.parentNode is HtmlDocument)
       el = null;
     else
-      el = el.parentNode;
+      el = el.parentNode as Element;
   }
   return true;
 }
 
-Element getScrollParent(Element node) {
+Element? getScrollParent(Element? node) {
   if (node == null) {
     return null;
   }
@@ -89,11 +89,11 @@ Element getScrollParent(Element node) {
     return node;
   } else {
     if (node.parentNode is! Element) return null;
-    return getScrollParent(node.parentNode);
+    return getScrollParent(node.parentNode as Element);
   }
 }
 
-void printUrl(String url, [CLElement load]) {
+void printUrl(String url, [CLElement? load]) {
   final loader = new LoadElement(load ?? new CLElement(document.body));
   document.getElementById('iframe-print')?.remove();
   final ifr = new IFrameElement()..style.display = 'none';
@@ -107,5 +107,5 @@ void printUrl(String url, [CLElement load]) {
       if (obj.hasProperty('print')) obj.callMethod('print');
     })
     ..src = url.replaceAll(new RegExp(r'/{2,}'), '/');
-  document.body.append(ifr);
+  document.body!.append(ifr);
 }

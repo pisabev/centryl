@@ -1,7 +1,7 @@
 part of gui;
 
 class FormElement extends form.DataElement<Map, DivElement> {
-  final form.Form _form;
+  final form.Form? _form;
   form.Form formInner = new form.Form();
   final List<action.Button> _actions = [];
 
@@ -14,7 +14,7 @@ class FormElement extends form.DataElement<Map, DivElement> {
     if (el is LabelField) {
       el.elements.forEach(_register);
     } else if (el is form.Data) {
-      if (_form != null) _form.add(el);
+      if (_form != null) _form!.add(el);
       formInner.add(el);
     } else if (el is action.Button) {
       _actions.add(el);
@@ -45,10 +45,10 @@ class FormElement extends form.DataElement<Map, DivElement> {
     _actions.forEach((a) => a.enable());
   }
 
-  E getElement<E extends form.Data>(String name, [String context]) =>
+  E? getElement<E extends form.Data>(String name, [String? context]) =>
       formInner.getElement<E>(name, context);
 
-  void setValue(Map value) => formInner.setValue(value);
+  void setValue(Map? value) => formInner.setValue(value);
 
   Map getValue() => formInner.getValue();
 

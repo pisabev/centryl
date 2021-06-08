@@ -10,24 +10,24 @@ class Win {
   static String hookMinimize = 'minimize';
   static String hookMaximize = 'maximize';
 
-  Container win;
-  Container win_top;
-  Container win_body;
+  late Container win;
+  late Container win_top;
+  late Container win_body;
 
-  CLElement win_title;
-  CLElement win_close;
-  CLElement win_max;
-  CLElement win_min;
+  late CLElement win_title;
+  late CLElement win_close;
+  late CLElement win_max;
+  late CLElement win_min;
 
-  utils.CLscroll scroll;
+  late utils.CLscroll scroll;
 
   bool visible = true;
 
   final WinType type;
 
-  math.MutableRectangle body;
-  math.MutableRectangle box;
-  math.MutableRectangle box_h;
+  late math.MutableRectangle body;
+  late math.MutableRectangle box;
+  late math.MutableRectangle box_h;
 
   final StreamController<bool> _contr = new StreamController.broadcast();
 
@@ -38,13 +38,13 @@ class Win {
   final num _min_width = 350;
   final num _min_height = 100;
 
-  CLElement _resize_cont;
-  Rectangle _resize_rect;
-  Map<String, CLElement> _resize_contr;
+  late CLElement _resize_cont;
+  Rectangle? _resize_rect;
+  late Map<String, CLElement> _resize_contr;
 
-  math.Point _win_res_pos;
+  late math.Point _win_res_pos;
 
-  utils.Observer observer;
+  late utils.Observer observer;
 
   final List<utils.KeyAction> _key_actions = [];
 
@@ -57,7 +57,7 @@ class Win {
       win.dom.focus();
       return true;
     });
-    win.addAction(
+    win.addAction<Event>(
         (e) => _key_actions.forEach((action) => action.run(e)), 'keydown');
   }
 
@@ -116,7 +116,7 @@ class Win {
   }
 
   void _setWinActions() {
-    utils.Drag drag;
+    late utils.Drag drag;
     drag = new utils.Drag(win_top, namespace: 'stop')
       ..context = win
       ..bound = container
@@ -125,39 +125,39 @@ class Win {
       })
       ..on((e) {
         e.stopPropagation();
-        setPosition(drag.rect.left, drag.rect.top);
+        setPosition(drag.rect!.left, drag.rect!.top);
       })
       ..end((e) => win.removeClass('drag'));
 
-    new utils.Drag(_resize_contr['t_c'], namespace: 'stop')
+    new utils.Drag(_resize_contr['t_c']!, namespace: 'stop')
       ..start(_winResizeBefore)
       ..on((e) => _winResizeOn('N', e))
       ..end(_winResizeAfter);
-    new utils.Drag(_resize_contr['r_c'], namespace: 'stop')
+    new utils.Drag(_resize_contr['r_c']!, namespace: 'stop')
       ..start(_winResizeBefore)
       ..on((e) => _winResizeOn('E', e))
       ..end(_winResizeAfter);
-    new utils.Drag(_resize_contr['b_c'], namespace: 'stop')
+    new utils.Drag(_resize_contr['b_c']!, namespace: 'stop')
       ..start(_winResizeBefore)
       ..on((e) => _winResizeOn('S', e))
       ..end(_winResizeAfter);
-    new utils.Drag(_resize_contr['l_c'], namespace: 'stop')
+    new utils.Drag(_resize_contr['l_c']!, namespace: 'stop')
       ..start(_winResizeBefore)
       ..on((e) => _winResizeOn('W', e))
       ..end(_winResizeAfter);
-    new utils.Drag(_resize_contr['t_l_c'], namespace: 'stop')
+    new utils.Drag(_resize_contr['t_l_c']!, namespace: 'stop')
       ..start(_winResizeBefore)
       ..on((e) => _winResizeOn('NW', e))
       ..end(_winResizeAfter);
-    new utils.Drag(_resize_contr['t_r_c'], namespace: 'stop')
+    new utils.Drag(_resize_contr['t_r_c']!, namespace: 'stop')
       ..start(_winResizeBefore)
       ..on((e) => _winResizeOn('NE', e))
       ..end(_winResizeAfter);
-    new utils.Drag(_resize_contr['b_l_c'], namespace: 'stop')
+    new utils.Drag(_resize_contr['b_l_c']!, namespace: 'stop')
       ..start(_winResizeBefore)
       ..on((e) => _winResizeOn('SW', e))
       ..end(_winResizeAfter);
-    new utils.Drag(_resize_contr['b_r_c'], namespace: 'stop')
+    new utils.Drag(_resize_contr['b_r_c']!, namespace: 'stop')
       ..start(_winResizeBefore)
       ..on((e) => _winResizeOn('SE', e))
       ..end(_winResizeAfter);
@@ -232,8 +232,8 @@ class Win {
   void _winResizeAfter(e) {
     _resize_cont.remove();
     if (_resize_rect != null) {
-      setSize(_resize_rect.width, _resize_rect.height);
-      setPosition(_resize_rect.left, _resize_rect.top);
+      setSize(_resize_rect!.width, _resize_rect!.height);
+      setPosition(_resize_rect!.left, _resize_rect!.top);
       initLayout();
       _resize_rect = null;
     }
@@ -304,7 +304,7 @@ class Win {
     visible = true;
   }
 
-  bool devicePhone() => document.body.classes.contains('phone');
+  bool devicePhone() => document.body!.classes.contains('phone');
 
   math.MutableRectangle _getContainerRect() {
     final pos = container.getStyle('position');
@@ -322,8 +322,8 @@ class Win {
     body = _getContainerRect();
     box = new math.MutableRectangle(0, 0, 0, 0);
     win.appendTo(container);
-    final w = width ?? 0;
-    final h = height ?? 0;
+    final w = width;
+    final h = height;
     if (((w == 0) && (h == 0)) ||
         (w == body.width && h == body.height) ||
         devicePhone()) {
@@ -341,8 +341,8 @@ class Win {
         _setHeight(
             math.min(math.max(h, _min_height), container.getHeightInner()));
         observer.execHooks(hookResize);
-        final x = left != null ? left : 0;
-        final y = top != null ? top : 0;
+        final x = left;
+        final y = top;
         initPosition(x, y);
         initLayout();
       }
@@ -369,29 +369,29 @@ class Win {
   void _setWidth(num width) {
     box.width = width;
     win.setWidth(new Dimension.px(width));
-    _resize_contr['t_c'].setWidth(new Dimension.px(width));
-    _resize_contr['b_c'].setWidth(new Dimension.px(width));
+    _resize_contr['t_c']!.setWidth(new Dimension.px(width));
+    _resize_contr['b_c']!.setWidth(new Dimension.px(width));
     _resize_cont.setWidth(new Dimension.px(width));
   }
 
   void _setHeight(num height) {
     box.height = height;
     win.setHeight(new Dimension.px(height));
-    _resize_contr['l_c'].setHeight(new Dimension.px(height));
-    _resize_contr['r_c'].setHeight(new Dimension.px(height));
+    _resize_contr['l_c']!.setHeight(new Dimension.px(height));
+    _resize_contr['r_c']!.setHeight(new Dimension.px(height));
     _resize_cont.setHeight(new Dimension.px(height));
   }
 
-  void initPosition([num x, num y]) {
+  void initPosition([num x = 0, num y = 0]) {
     if (!_maximized) {
       box = utils.centerRect(box, body);
       if (x != 0 && y != 0)
         box = utils.boundRect(new Rectangle(x, y, box.width, box.height), body);
-      setPosition(box.left + document.body.scrollLeft,
-          box.top + document.body.scrollTop);
+      setPosition(box.left + document.body!.scrollLeft,
+          box.top + document.body!.scrollTop);
     } else {
-      setPosition(body.left + document.body.scrollLeft,
-          body.top + document.body.scrollTop);
+      setPosition(body.left + document.body!.scrollLeft,
+          body.top + document.body!.scrollTop);
     }
   }
 

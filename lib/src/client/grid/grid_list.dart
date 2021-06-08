@@ -20,20 +20,20 @@ class GridList<T> extends GridBase<T> {
 
   final Expando _exp = new Expando();
 
-  html.TableRowElement _rowTemplate;
+  late html.TableRowElement _rowTemplate;
 
   bool num = false, _drag = false;
 
-  List tbodyWidths;
-  List theadWidths;
+  late List tbodyWidths;
+  late List theadWidths;
 
   Map<String, GridColumn> map = {};
 
-  GridOrder order;
+  GridOrder? order;
 
-  RenderBase renderer;
+  late RenderBase renderer;
 
-  GridList([RenderBase renderer]) : super() {
+  GridList([RenderBase? renderer]) : super() {
     this.renderer = (renderer == null) ? new Render() : renderer;
     this.renderer.setGrid(this);
     setClass('ui-table-list');
@@ -48,13 +48,14 @@ class GridList<T> extends GridBase<T> {
 
   dynamic getCell(html.TableRowElement row, String key) => getRowMap(row)[key];
 
-  void addHookRow(_HookRowFunction func) => observer.addHook(hook_row, (arr) {
+  void addHookRow(_HookRowFunction func) =>
+      observer.addHook<List>(hook_row, (arr) {
         func(arr[0], arr[1]);
         return true;
       });
 
   void addHookRowAfter(_HookRowFunction func) =>
-      observer.addHook(hook_row_after, (arr) {
+      observer.addHook<List>(hook_row_after, (arr) {
         func(arr[0], arr[1]);
         return true;
       });
@@ -81,10 +82,10 @@ class GridList<T> extends GridBase<T> {
     }
     final Map<String, List<GridColumn>> groups = {};
     int counter = 0;
-    String currentEmpty;
+    String? currentEmpty;
     bool hasGroups = false;
     headers.forEach((g) {
-      String gr;
+      String? gr;
       if (g.group == null) {
         gr = currentEmpty ??= '___${counter++}___';
       } else {
@@ -93,21 +94,21 @@ class GridList<T> extends GridBase<T> {
         gr = g.group;
       }
 
-      if (groups[gr] == null) groups[gr] = [];
-      groups[gr].add(g);
+      if (groups[gr] == null) groups[gr!] = [];
+      groups[gr]!.add(g);
     });
 
-    html.TableRowElement rowg;
+    html.TableRowElement? rowg;
 
     _rowTemplate = new html.TableRowElement();
     int gridCount = 0;
-    html.TableRowElement rowh;
-    html.TableRowElement rowf;
+    html.TableRowElement? rowh;
+    html.TableRowElement? rowf;
 
     groups.forEach((k, d) {
       if (hasGroups) {
         rowg = rowg ?? thead.dom.insertRow(-1);
-        final c = rowg.insertCell(-1)
+        final c = rowg!.insertCell(-1)
           ..colSpan = d.where((g) => g.visible).length;
         if (!new RegExp(r'^___\d+___$').hasMatch(k)) {
           c.append(new html.DivElement()
@@ -124,8 +125,8 @@ class GridList<T> extends GridBase<T> {
         h.grid = this;
         if (h.visible) {
           h
-            ..headerCell = rowh.insertCell(-1)
-            ..footerCell = rowf.insertCell(-1)
+            ..headerCell = rowh!.insertCell(-1)
+            ..footerCell = rowf!.insertCell(-1)
             ..cell_index = gridCount++;
           _rowTemplate.insertCell(-1);
           h.renderTitle();
@@ -190,22 +191,24 @@ class GridList<T> extends GridBase<T> {
         if (gc.visible) {
           final cell = row.cells[gc.cell_index];
           if (gc.title is String) cell.setAttribute('data-title', gc.title);
-          final RowDataCell c = obj[k] = gc.type(gc, row, cell, v)..render();
-          gc.aggregator?.add(c);
+          if (gc.type != null) {
+            final RowDataCell c = obj[k] = gc.type!(gc, row, cell, v)..render();
+            gc.aggregator?.add(c);
+          }
         }
       }
     });
     if (num && !obj.containsKey('position')) {
       final gc = map['position'];
-      if (gc.visible)
+      if (gc!.visible)
         obj['position'] =
-            gc.type(gc, row, row.cells[gc.cell_index]..className = 'num', 0);
+            gc.type!(gc, row, row.cells[gc.cell_index]..className = 'num', 0);
     }
   }
 
-  html.TableRowElement rowCreate([Map obj]) {
+  html.TableRowElement rowCreate(Map obj) {
     final row = _rowTemplate.clone(true);
-    renderer.rows.add(row);
+    renderer.rows.add(row as html.TableRowElement);
     if (drag) _setDraggable(row);
     observer.execHooks(hook_row, [row, obj]);
     rowSet(row, obj);
@@ -222,14 +225,14 @@ class GridList<T> extends GridBase<T> {
     if (num) rowNumRerender();
   }
 
-  Map getRowMap(html.TableRowElement row) => _exp[row];
+  Map getRowMap(html.TableRowElement row) => _exp[row] as Map;
 
   Map getRowMapSerialized(html.TableRowElement row) {
     final m = {};
     getRowMap(row).forEach((k, dynamic dc) {
       if (dc is RowDataCell) {
-        if (map.containsKey(k) && map[k] != null && map[k].send)
-          m[k] = dc?.getValue();
+        if (map.containsKey(k) && map[k] != null && map[k]!.send)
+          m[k] = dc.getValue();
       } else
         m[k] = dc;
     });
@@ -246,23 +249,26 @@ class GridList<T> extends GridBase<T> {
     row.draggable = true;
     final el = new CLElement(row);
     el
-      ..addAction((e) {
+      ..addAction<html.MouseEvent>((e) {
         e.stopPropagation();
-        e.dataTransfer.setData('text', getRowIndex(el.dom).toString());
+        e.dataTransfer.setData(
+            'text', getRowIndex(el.dom as html.TableRowElement).toString());
         e.dataTransfer.effectAllowed = 'move';
       }, 'dragstart')
       ..addAction((e) => el.addClass('ui-drag-over'), 'dragenter')
       ..addAction((e) => el.removeClass('ui-drag-over'), 'dragleave')
-      ..addAction((e) {
-        e.preventDefault();
-        e.stopPropagation();
+      ..addAction<html.MouseEvent>((e) {
+        e
+          ..preventDefault()
+          ..stopPropagation();
         e.dataTransfer.dropEffect = 'move';
       }, 'dragover')
-      ..addAction((e) {
-        _rowSwap(
-            int.parse(e.dataTransfer.getData('text')), getRowIndex(el.dom));
-        e.preventDefault();
-        e.stopPropagation();
+      ..addAction<html.MouseEvent>((e) {
+        _rowSwap(int.parse(e.dataTransfer.getData('text')),
+            getRowIndex(el.dom as html.TableRowElement));
+        e
+          ..preventDefault()
+          ..stopPropagation();
       }, 'drop');
   }
 

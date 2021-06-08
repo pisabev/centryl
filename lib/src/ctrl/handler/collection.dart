@@ -1,9 +1,9 @@
 part of cl_base.ctrl;
 
 abstract class Collection<E extends Entity, T> extends Base {
-  String group;
+  String? group;
 
-  String scope;
+  String? scope;
 
   Collection(req, [this.group, this.scope]) : super(req);
 

@@ -13,19 +13,19 @@ enum BoxingPosition {
 }
 
 class Boxing {
-  Function bottomLeft;
-  Function bottomRight;
-  Function topLeft;
-  Function topRight;
-  Function leftTop;
-  Function leftBottom;
-  Function rightTop;
-  Function rightBottom;
-  Function finalPosition;
+  Function? bottomLeft;
+  Function? bottomRight;
+  Function? topLeft;
+  Function? topRight;
+  Function? leftTop;
+  Function? leftBottom;
+  Function? rightTop;
+  Function? rightBottom;
+  Function? finalPosition;
   int offset;
   bool verticalAlignContent;
 
-  List<BoxingPosition> order;
+  List<BoxingPosition>? order;
 
   Boxing(this.order, {this.offset = 0, this.verticalAlignContent = false}) {
     order ??= [
@@ -36,7 +36,7 @@ class Boxing {
     ];
   }
 
-  Function runTest(
+  Function? runTest(
       math.MutableRectangle ref, math.Rectangle el, math.Rectangle body) {
     bottomLeft = null;
     bottomRight = null;
@@ -46,8 +46,8 @@ class Boxing {
     leftBottom = null;
     rightTop = null;
     rightBottom = null;
-    Function found;
-    for (final o in order) {
+    Function? found;
+    for (final o in order!) {
       if (found != null) break;
       switch (o) {
         case BoxingPosition.bottomLeft:
@@ -187,7 +187,7 @@ class Boxing {
         ref.height + r.height);
     final c = new DivElement()..style.background = 'red';
     final d = new CLElement(c)..setRectangle(testRect);
-    document.body.append(d.dom);
+    document.body!.append(d.dom);
     final res = body.containsRectangle(testRect);
     if (res) {
       leftBottom = () => ref
@@ -241,7 +241,7 @@ class Boxing {
 
   bool tryFinalPosition(
       math.MutableRectangle ref, math.Rectangle r, math.Rectangle body) {
-    if (ref.left + r.width >= document.body.clientWidth) {
+    if (ref.left + r.width >= document.body!.clientWidth) {
       finalPosition = () => ref
         ..left = ref.left - r.width - offset
         ..top = offset; //maybe something else

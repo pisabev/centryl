@@ -4,19 +4,18 @@ class InputRange<T extends num> extends DataElement<T, html.SpanElement> {
   num min;
   num max;
   num step;
-  CLElement domInfo;
-  CLElement domInfoLeft;
-  CLElement domInfoRight;
-  CLElement domLabel;
-  CLElement domTrack;
-  CLElement domProgress;
-  CLElement domThumb;
+  late CLElement domInfo;
+  late CLElement domInfoLeft;
+  late CLElement domInfoRight;
+  late CLElement domLabel;
+  late CLElement domTrack;
+  late CLElement domProgress;
+  late CLElement domThumb;
 
-  num dif, pos;
-  html.Rectangle rect;
+  num? dif, pos;
+  html.Rectangle? rect;
 
-  InputRange({this.min = 0, this.max = 100, this.step = 1})
-      : super() {
+  InputRange({this.min = 0, this.max = 100, this.step = 1}) : super() {
     dom = new html.SpanElement();
     domInfo = new CLElement(new html.SpanElement())
       ..addClass('ui-info')
@@ -53,47 +52,48 @@ class InputRange<T extends num> extends DataElement<T, html.SpanElement> {
   void dragStart(html.MouseEvent ev) {
     rect = domProgress.dom.getBoundingClientRect();
     final x = ev.client.x;
-    dif = ((x-rect.left)/(rect.width) * (max-min))/2 - getValue();
+    dif = ((x - rect!.left) / (rect!.width) * (max - min)) / 2 - getValue();
   }
 
   void doDrag(html.MouseEvent ev) {
     final x = ev.client.x;
-    pos = ((x-rect.left)/rect.width * (max-min))/2 -dif;
+    pos = ((x - rect!.left) / rect!.width * (max - min)) / 2 - dif!;
 
-    pos = (pos ~/ step)*step;
-    if (pos < min) pos = min;
-    if (pos > max) pos = max;
-    domLabel.setText(pos.toStringAsFixed(0));
+    pos = (pos! ~/ step) * step;
+    if (pos! < min) pos = min;
+    if (pos! > max) pos = max;
+    domLabel.setText(pos!.toStringAsFixed(0));
   }
 
   void dragEnd(html.MouseEvent ev) {
     final x = ev.client.x;
-    pos = ((x-rect.left)/rect.width * (max-min))/2 -dif;
+    pos = ((x - rect!.left) / rect!.width * (max - min)) / 2 - dif!;
 
-    pos = (pos ~/ step)*step;
-    if (pos < min) pos = min;
-    if (pos > max) pos = max;
+    pos = (pos! ~/ step) * step;
+    if (pos! < min) pos = min;
+    if (pos! > max) pos = max;
     setValue(pos as T);
   }
 
   @override
-  void setValue(T value) => setValueDynamic(value);
+  void setValue(T? value) => setValueDynamic(value);
+
   @override
   T getValue() => getValueDynamic();
 
-  void setValueDynamic(T value) {
-    final val = ((value - min)/(max-min))*100;
+  void setValueDynamic(T? value) {
+    if (value == null) return;
+    final val = ((value - min) / (max - min)) * 100;
     domLabel.setText(value.toStringAsFixed(0));
     domProgress.setStyle({'width': '$val%'});
   }
 
   T getValueDynamic() {
     var txt = domProgress.dom.style.width;
-    if (txt == null || txt.isEmpty) return 0 as T;
-    txt = txt.substring(0, txt.length-1);
-    final val = num.tryParse(txt);
-    final value = (val/100)*(max-min) + min;
+    if (txt.isEmpty) return 0 as T;
+    txt = txt.substring(0, txt.length - 1);
+    final val = num.tryParse(txt) ?? 0;
+    final value = (val / 100) * (max - min) + min;
     return value as T;
   }
-
 }

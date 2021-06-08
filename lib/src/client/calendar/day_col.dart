@@ -1,43 +1,43 @@
 part of calendar;
 
 class DayCol extends CLElement {
-  DateTime date;
+  late DateTime date;
 
   EventCalendar calendar;
 
-  EventCollection evCol;
+  late EventCollection evCol;
 
-  FilterCollection fCol;
+  late FilterCollection fCol;
 
-  CLElement outer, dayCont, dayDrag;
+  late CLElement outer, dayCont, dayDrag;
 
   final List<CLElement> _rendered = [];
 
-  DayCol(date, this.calendar) : super(new Element.td()) {
+  DayCol(date, this.calendar) : super(new html.Element.td()) {
     evCol = new EventCollection()..days = false;
     fCol = new FilterCollection()..days = false;
     this.date = EventCalendar.normDate(date);
-    outer = new CLElement(new DivElement())
+    outer = new CLElement(new html.DivElement())
       ..setClass('day-container')
       ..appendTo(this);
-    dayCont = new CLElement(new DivElement())
+    dayCont = new CLElement(new html.DivElement())
       ..setClass('day-inner')
       ..appendTo(outer);
     if (!calendar._weeklyMode && calendar.now.compareTo(this.date) == 0) {
       addClass('now');
-      final mark = new CLElement(new DivElement())..setClass('hour-mark');
+      final mark = new CLElement(new html.DivElement())..setClass('hour-mark');
       final top = calendar.timeToPixels(new DateTime.now());
       mark.setStyle({'top': '${top}px'});
       outer.append(mark);
     }
     if (calendar.filters.isNotEmpty) addClass('filter');
-    dayDrag = new CLElement(new DivElement())
+    dayDrag = new CLElement(new html.DivElement())
       ..setClass('day-container-drag')
       ..appendTo(this);
   }
 
   List<Event> _intersectEvents(List<Event> events) {
-    if (events.isEmpty) return null;
+    if (events.isEmpty) return [];
     final inter = <Event>[];
     events.forEach((event) {
       if (!event.isAllDayEvent() &&
@@ -49,7 +49,7 @@ class DayCol extends CLElement {
   }
 
   List<Filter> _intersectFilters(List<Filter> filters) {
-    if (filters.isEmpty) return null;
+    if (filters.isEmpty) return [];
     final inter = <Filter>[];
     final range_first = date;
     final range_last = date.add(const Duration(minutes: 24 * 60 - 1));
@@ -88,7 +88,7 @@ class DayCol extends CLElement {
       var ev = evCol.getNextEvent(true);
       while (ev != null) {
         evCol.rendered[ev] = true;
-        m[row].add(ev);
+        m[row]!.add(ev);
         ev = evCol.getNextEventEqualSibling(ev, true);
       }
     }
@@ -150,14 +150,15 @@ class DayCol extends CLElement {
         calendar.hourGridMinutes *
         calendar.hourSectionHeight;
 
-    final cont = new CLElement(new DivElement())
+    final cont = new CLElement(new html.DivElement())
       ..addClass('filter-cont')
       ..setStyle({'top': '${top}px', 'height': '${height}px'});
     outer.append(cont);
   }
 
   void _renderEvent(Event event, num left, num width) {
-    if (calendar.dayCont.doms[event] == null) calendar.dayCont.doms[event] = [];
+    if (calendar.dayCont!.doms[event] == null)
+      calendar.dayCont!.doms[event] = [];
     final indx_start = utils.Calendar.max(
         event.start, new DateTime(date.year, date.month, date.day, 0, 0));
     final indx_end = utils.Calendar.min(
@@ -169,25 +170,25 @@ class DayCol extends CLElement {
         calendar.hourGridMinutes *
         calendar.hourSectionHeight;
 
-    final cont = new CLElement(new DivElement())
+    final cont = new CLElement(new html.DivElement())
       ..addClass('event-cont-hour ${event.color}')
-      ..addAction((e) => e.stopPropagation(), 'mousedown')
+      ..addAction<html.Event>((e) => e.stopPropagation(), 'mousedown')
       ..addAction((e) => event._contrClick.add(null), 'click')
       ..addAction((e) {
         calendar.editEvent(event);
         event._contrDblClick.add(null);
       }, 'dblclick');
     _rendered.add(cont);
-    new CLElement(new DivElement())
+    new CLElement(new html.DivElement())
       ..addClass('inner')
       ..setText(event.title)
       ..appendTo(cont);
-    final resize = new CLElement(new DivElement())
+    final resize = new CLElement(new html.DivElement())
       ..addClass('resize')
-      ..addAction((e) => e.stopPropagation(), 'mousedown')
+      ..addAction<html.Event>((e) => e.stopPropagation(), 'mousedown')
       ..setText('=')
       ..appendTo(cont);
-    calendar.dayCont.doms[event].add(cont);
+    calendar.dayCont!.doms[event]!.add(cont);
     cont.setStyle({
       'top': '${top}px',
       'left': '$left%',
@@ -199,13 +200,16 @@ class DayCol extends CLElement {
     if (!event.draggable) return;
 
     new utils.Drag(cont)
-      ..start((e) => calendar.dayCont.moveSet(event, e.client.x, e.client.y))
-      ..on((e) => calendar.dayCont.move(e.client.x, e.client.y))
-      ..end(calendar.dayCont.release);
+      ..start((e) => calendar.dayCont!
+          .moveSet(event, e.client.x.toInt(), e.client.y.toInt()))
+      ..on(
+          (e) => calendar.dayCont!.move(e.client.x.toInt(), e.client.y.toInt()))
+      ..end(calendar.dayCont!.release);
     new utils.Drag(resize)
-      ..start((e) => calendar.dayCont.resizeSet(event))
-      ..on((e) => calendar.dayCont.resize(e.client.x, e.client.y))
-      ..end(calendar.dayCont.release);
+      ..start((e) => calendar.dayCont!.resizeSet(event))
+      ..on((e) =>
+          calendar.dayCont!.resize(e.client.x.toInt(), e.client.y.toInt()))
+      ..end(calendar.dayCont!.release);
   }
 
   void clean() => _rendered.forEach((el) => el.remove());

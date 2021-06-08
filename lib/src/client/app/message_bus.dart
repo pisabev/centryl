@@ -3,7 +3,7 @@ part of app;
 class MessageBus {
   static final Map<String, MessageBusSub> _m = {};
 
-  Stream main_stream;
+  late Stream main_stream;
 
   StreamController contr = new StreamController();
 
@@ -12,7 +12,7 @@ class MessageBus {
   void _hook(Stream<List> stream) {
     main_stream = stream
       ..listen((d) {
-        if (_m.containsKey(d[0])) _m[d[0]]._add(d[1]);
+        if (_m.containsKey(d[0])) _m[d[0]]!._add(d[1]);
         contr.add(d[1]);
       });
   }
@@ -24,9 +24,10 @@ class MessageBus {
   }
 
   MessageBusSub filter(String filter) =>
-      (_m.containsKey(filter)) ? _m[filter] : _m[filter] = new MessageBusSub();
+      (_m.containsKey(filter)) ? _m[filter]! : _m[filter] = new MessageBusSub();
 
-  StreamSubscription listen(Function onData) => main_stream.listen(onData);
+  StreamSubscription listen(void Function(dynamic) onData) =>
+      main_stream.listen(onData);
 }
 
 class MessageBusSub {
@@ -34,5 +35,6 @@ class MessageBusSub {
 
   void _add(data) => contr.add(data);
 
-  StreamSubscription listen(Function onData) => contr.stream.listen(onData);
+  StreamSubscription listen(void Function(dynamic) onData) =>
+      contr.stream.listen(onData);
 }

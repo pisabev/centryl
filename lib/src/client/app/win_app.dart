@@ -2,28 +2,28 @@ part of app;
 
 class WinMeta {
   dynamic title;
-  String icon;
-  int width;
-  int height;
-  int left;
-  int top;
-  String type;
+  String? icon;
+  int width = 0;
+  int height = 0;
+  int left = 0;
+  int top = 0;
+  String? type;
 
-  String getTitle([Object param]) => title is Function ? title(param) : title;
+  String getTitle([Object? param]) => title is Function ? title(param) : title;
 }
 
 class Item<C extends Client> {
-  WinApp<C> wapi;
+  late WinApp<C> wapi;
 }
 
 class WinApp<C extends Client> {
   Application<C> app;
-  WinMeta meta;
-  Win win;
+  late WinMeta meta;
+  late Win win;
 
   WinApp(this.app);
 
-  void load(WinMeta meta, Object obj, [int startZIndex]) {
+  void load(WinMeta meta, Object obj, [int? startZIndex]) {
     this.meta = meta;
     win = (meta.type == 'bound')
         ? app.winmanager.loadBoundWin(title: meta.getTitle(), icon: meta.icon)

@@ -1,7 +1,7 @@
 part of utils;
 
 // TODO remove this and 'import dart:js' too when native fullscreen works
-void fullscreenWorkaround([bool full]) {
+void fullscreenWorkaround([bool full = false]) {
   if (!full) {
     final elem = new JsObject.fromBrowserObject(document);
     final vendors = <String>[
@@ -18,7 +18,7 @@ void fullscreenWorkaround([bool full]) {
       }
     }
   } else {
-    final elem = new JsObject.fromBrowserObject(document.body);
+    final elem = new JsObject.fromBrowserObject(document.body!);
     final vendors = <String>[
       'requestFullscreen',
       'mozRequestFullScreen',

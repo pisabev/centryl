@@ -27,10 +27,12 @@ class Tag extends DataElement<List, html.DivElement> {
       ..appendTo(tag);
   }
 
-  void setValue(List value) {
-    for (var i = 0; i < forms.length; i++)
-      if (forms[i].getElement('value').getValue() == value[0]) return;
-    addValue(value);
+  void setValue(List? value) {
+    for (var i = 0; i < forms.length; i++) {
+      final val = forms[i].getElement('value');
+      if (val != null && value != null && val == value[0]) return;
+    }
+    if (value != null) addValue(value);
   }
 
   List<Map> getValue() {

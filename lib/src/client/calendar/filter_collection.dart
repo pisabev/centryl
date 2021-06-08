@@ -14,19 +14,19 @@ class FilterCollection {
         ? filters.where((filter) => !_isRendered(filter)).toList()
         : filters;
     if (temp.isEmpty) return [];
-    DateTime min;
+    DateTime? min;
     temp.forEach((filter) {
-      final m = (min == null) ? filter.start : _min(filter.start, min);
+      final m = (min == null) ? filter.start : _min(filter.start, min!);
       min = days ? EventCalendar.normDate(m) : m;
     });
     return temp
         .where((filter) =>
             (days ? EventCalendar.normDate(filter.start) : filter.start)
-                .isAtSameMomentAs(min))
+                .isAtSameMomentAs(min!))
         .toList();
   }
 
-  Filter getLongestFilter(List<Filter> filters, [bool noRendered = false]) {
+  Filter? getLongestFilter(List<Filter> filters, [bool noRendered = false]) {
     if (filters.isEmpty) return null;
     final temp = noRendered
         ? filters.where((filter) => !_isRendered(filter)).toList()
@@ -71,15 +71,14 @@ class FilterCollection {
   DateTime _min(DateTime first, DateTime second) =>
       _compare(first, second) < 0 ? first : second;
 
-  bool _isRendered(Filter filter) =>
-      rendered[filter] != null && rendered[filter];
+  bool _isRendered(Filter filter) => rendered[filter] != null;
 
   bool isFiltersRendered() => filters.every(_isRendered);
 
-  Filter getNextFilter([bool noRendered = false]) =>
+  Filter? getNextFilter([bool noRendered = false]) =>
       getLongestFilter(getEarliestFilters(filters, noRendered));
 
-  Filter getNextFilterSibling(Filter filter, [bool noRendered = false]) =>
+  Filter? getNextFilterSibling(Filter filter, [bool noRendered = false]) =>
       getLongestFilter(
           getEarliestFilters(getFiltersAfterSpot(filter.end, noRendered)));
 

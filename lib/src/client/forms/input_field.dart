@@ -2,10 +2,10 @@ part of forms;
 
 abstract class InputField<T> extends FieldBase<T, html.SpanElement>
     with Validator {
-  covariant CLElement<html.InputElement> field;
-  action.Warning warning;
+  covariant late CLElement<html.InputElement> field;
+  late action.Warning warning;
 
-  InputField([InputType type]) {
+  InputField([InputType? type]) {
     if (type != null) set(type);
     dom = new html.SpanElement();
     addClass('ui-field-input');
@@ -23,7 +23,7 @@ abstract class InputField<T> extends FieldBase<T, html.SpanElement>
       ..addAction(_onFocus, 'focus')
       ..addAction(_onBlur, 'blur')
       ..addAction(_onKeyDown, 'keydown')
-      ..addAction((e) {
+      ..addAction<html.Event>((e) {
         if (!validateInput(e)) e.preventDefault();
       }, 'keypress');
   }
@@ -33,29 +33,29 @@ abstract class InputField<T> extends FieldBase<T, html.SpanElement>
     final value = getValue();
     final string_value = value == null ? '' : value.toString();
     if (string_value != field.dom.value)
-      setValueDynamic(field.dom.value.isEmpty ? null : field.dom.value);
+      setValueDynamic(field.dom.value!.isEmpty ? null : field.dom.value);
   }
 
   void _onKeyDown(html.KeyboardEvent e) {
     if (e.keyCode == 13)
-      setValueDynamic(field.dom.value.isEmpty ? null : field.dom.value);
+      setValueDynamic(field.dom.value!.isEmpty ? null : field.dom.value);
   }
 
   void setPlaceHolder(String value) {
     field.dom.placeholder = value;
   }
 
-  void setWarning(DataWarning wrn, {bool show = true}) {
+  void setWarning(DataWarning? wrn, {bool show = true}) {
     if (wrn == null) return;
     super.setWarning(wrn);
     warning.init(getWarnings(), showAuto: show);
   }
 
-  void showWarnings([Duration duration]) {
+  void showWarnings([Duration? duration]) {
     warning.show(duration);
   }
 
-  void removeWarning(String wrnKey) {
+  void removeWarning(String? wrnKey) {
     if (wrnKey == null) return;
     super.removeWarning(wrnKey);
     warning.remove();

@@ -1,23 +1,23 @@
 part of chat;
 
 class Room {
-  ChatController _controller;
-  int room_id;
-  String context;
+  late ChatController _controller;
+  int? room_id;
+  String? context;
   List<Member> members;
   int lsm_id;
   int unseen;
-  int messages;
+  int? messages;
 
-  String title;
+  String? title;
 
-  CLElement not;
-  Container dom;
+  late CLElement not;
+  Container? dom;
 
   Room(
-      {this.room_id,
+      {required this.members,
+      this.room_id,
       this.context,
-      this.members,
       this.lsm_id = 0,
       this.unseen = 0,
       this.messages});
@@ -32,8 +32,8 @@ class Room {
   factory Room.fromDto(dto.Room d) => new Room(
       room_id: d.room_id,
       context: d.context,
-      members: d?.members?.map<Member>((m) => new Member.fromDto(m))?.toList(),
-      lsm_id: d.lsm_id,
+      members: d.members.map<Member>((m) => new Member.fromDto(m)).toList(),
+      lsm_id: d.lsm_id ?? 0,
       unseen: d.unseen ?? 0,
       messages: d.messages);
 
@@ -62,7 +62,7 @@ class Room {
     action.Button rem;
     if (room_id != null) {
       rem = new action.ButtonOption()
-        ..buttonOption.addAction((e) => e.stopPropagation())
+        ..buttonOption.addAction<Event>((e) => e.stopPropagation())
         ..addSub(new action.Button()
           ..setTitle(intl.Open())
           ..setIcon(Icon.message)
@@ -71,7 +71,7 @@ class Room {
         final call = new action.Button()
           ..setIcon(Icon.call)
           ..setTitle(intl.Call())
-          ..addAction((e) => _controller._doCall(this));
+          ..addAction((e) => _controller._doCall!(this));
         rem.addSub(call);
       }
       rem
@@ -83,7 +83,7 @@ class Room {
           ..setTitle(intl.Delete())
           ..setIcon(Icon.delete)
           ..addAction(deleteRoom));
-      dom.addAction(openRoom);
+      dom!.addAction(openRoom);
     } else {
       rem = new action.Button()
         ..setTip(intl.Add_member())
@@ -93,33 +93,33 @@ class Room {
     members.forEach((m) {
       if (!m.isMe) m.renderProfile(contI);
     });
-    dom..append(contI)..append(contM);
+    dom!..append(contI)..append(contM);
     not = new CLElement(new SpanElement())
       ..addClass('count')
       ..setText('$unseen');
-    dom..append(not)..append(rem);
+    dom!..append(not)..append(rem);
     if (unseen == 0) not.hide(useVisibility: true);
-    return dom;
+    return dom as Container;
   }
 
   Future<void> createRoom([_]) async {
     if (_controller.createRoom != null) {
-      final room = await _controller.createRoom(
-          this..members.add(new Member()..user_id = Chat.me_user_id));
-      if (room != null) _controller.showRoom(room);
+      final room = await _controller
+          .createRoom!(this..members.add(new Member(user_id: Chat.me_user_id)));
+      if (room != null) _controller.showRoom!(room);
     }
   }
 
   void openRoom([_]) {
-    _controller.showRoom(this);
+    _controller.showRoom!(this);
   }
 
   void addMember([_]) {
-    if (_controller.addRoomMember != null) _controller.addRoomMember(this);
+    if (_controller.addRoomMember != null) _controller.addRoomMember!(this);
   }
 
   void deleteRoom([_]) {
-    if (_controller.deleteRoom != null) _controller.deleteRoom(this);
+    if (_controller.deleteRoom != null) _controller.deleteRoom!(this);
   }
 
   dto.Room toDto() => new dto.Room()

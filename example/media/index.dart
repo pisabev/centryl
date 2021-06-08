@@ -18,10 +18,10 @@ Future<void> main() async {
   final media = new Media(app);
   final cameras = await media.getDevices(type: DeviceKind.videoinput);
   final video = new CLElement<VideoElement>(new VideoElement());
-  MediaStream stream;
+  MediaStream? stream;
   final select = new Select()
     ..onValueChanged.listen((e) async {
-      stream?.getTracks()?.forEach((t) => t.stop());
+      stream?.getTracks().forEach((t) => t.stop());
       media.videoId = e.getValue();
       stream = await media.getUserMedia(video: true);
       video.dom

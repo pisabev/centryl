@@ -4,7 +4,7 @@ import 'package:centryl/develop.dart';
 import 'package:centryl/forms.dart';
 import 'package:centryl/gui.dart';
 
-FormElement form;
+late FormElement form;
 
 void main() {
   final app = initApp();

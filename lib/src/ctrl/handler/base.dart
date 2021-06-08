@@ -9,7 +9,7 @@ class Base {
       '', {'type': 'error', 'message': 'Not Found'}, HttpStatus.notFound);
 
   /// Error handler method. Forms detailed Map of the Error.
-  void error(dynamic e, [StackTrace s]) {
+  void error(dynamic e, [StackTrace? s]) {
     final action = req is HttpRequest ? req.requestedUri : req.controller;
     final session = 'Session: ${req?.session?.id}';
     if (e is MapperException) {
@@ -27,7 +27,7 @@ class Base {
       final locale = settings['language'];
       final eo = {
         'type': 'work_exception',
-        'message': Intl.withLocale(locale, e._message)
+        'message': Intl.withLocale(locale, e._message!)
       };
       response(null, eo);
     } else if (e is ResourceNotFoundException) {
@@ -55,11 +55,11 @@ class Base {
     }
   }
 
-  void response(dynamic data, [dynamic status, int code]) =>
+  void response(dynamic data, [dynamic status, int? code]) =>
       responseJson({'status': status, 'data': data}, code);
 
   /// JSON response
-  void responseJson(dynamic data, [int code]) {
+  void responseJson(dynamic data, [int? code]) {
     if (req is HttpRequest) {
       req.response.headers.contentType = ContentType.json;
       if (code != null) req.response.statusCode = code;
@@ -72,7 +72,7 @@ class Base {
   }
 
   /// HTML response
-  void responseHtml(dynamic data, [int code]) {
+  void responseHtml(dynamic data, [int? code]) {
     req.response.headers.contentType = ContentType.html;
     if (code != null) req.response.statusCode = code;
     req.response.headers.add('X-Powered-By', version);
@@ -81,7 +81,7 @@ class Base {
   }
 
   /// Response write file using its path and filename.
-  Future<void> responseFile(String path, [String name]) {
+  Future<void> responseFile(String path, [String? name]) {
     name ??= basename(path);
     req.response.headers.contentType = ContentType.binary;
     req.response.headers
@@ -90,7 +90,7 @@ class Base {
   }
 
   /// Response write file using [List] data and filename.
-  void responseFileBytes(List<int> data, [String name]) {
+  void responseFileBytes(List<int> data, [String? name]) {
     req.response.headers.contentType = ContentType.binary;
     req.response.headers
         .add('Content-Disposition', 'attachment; filename=$name');
@@ -107,7 +107,7 @@ class Base {
   }
 
   /// Response write file using [Stream] data and filename.
-  Future responseStream(Stream<List<int>> stream, [String name]) {
+  Future responseStream(Stream<List<int>> stream, [String? name]) {
     req.response.headers.contentType = ContentType.binary;
     req.response.headers
         .add('Content-Disposition', 'attachment; filename=$name');
@@ -135,8 +135,13 @@ class Base {
   }
 
   /// Helper for executing function with scope/group permission.
-  Future<void> _run(Manager manager, String group, String scope, String access,
-      Future Function() f, Future Function(Manager m) fm) async {
+  Future<void> _run(
+      Manager? manager,
+      String? group,
+      String? scope,
+      String? access,
+      Future Function()? f,
+      Future Function(Manager m)? fm) async {
     if (permissionCheck(req.session, group, scope, access)) {
       try {
         final watch = Stopwatch()..start();
@@ -144,9 +149,9 @@ class Base {
             req is WSRequest ? req.controller : req.requestedUri.path);
         notificator.addHistory(history);
         if (manager != null)
-          await fm(manager);
+          await fm!(manager);
         else
-          await f();
+          await f!();
         watch.stop();
         notificator.addHistory(history..execTime = watch.elapsedMilliseconds);
       } catch (e, s) {
@@ -163,11 +168,11 @@ class Base {
 
   /// Helper for executing function with scope/group permission and manager.
   Future<void> run(
-          String group, String scope, String access, Future Function() f) =>
+          String? group, String? scope, String? access, Future Function() f) =>
       _run(null, group, scope, access, f, null);
 
   /// Helper for executing function with scope/group permission and manager.
-  Future<void> runDb(String group, String scope, String access,
+  Future<void> runDb(String? group, String? scope, String? access,
       Future Function(Manager) f) async {
     final manager = await new Database().init();
     return _run(manager, group, scope, access, null, f);

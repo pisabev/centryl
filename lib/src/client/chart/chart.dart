@@ -4,15 +4,15 @@ class Chart {
   CLElement container;
   num width = 0;
   num height = 0;
-  SvgSvgElement svg;
-  GElement graph, legend;
+  late SvgSvgElement svg;
+  late GElement graph, legend;
   int graph_count = 0;
 
-  GElement label;
-  AnimateTransformElement label_anim;
-  AnimateElement label_anim_op;
-  RectElement label_rect;
-  TextElement label_text;
+  late GElement label;
+  late AnimateTransformElement label_anim;
+  late AnimateElement label_anim_op;
+  late RectElement label_rect;
+  late TextElement label_text;
   String label_current = '0,0';
   num label_padding = 10;
   num label_offset = 10;
@@ -46,7 +46,7 @@ class Chart {
   num gridRatioX = 1;
 
   bool linesOnly = false;
-  bool add_points;
+  bool? add_points;
 
   bool intData = true;
 
@@ -138,8 +138,8 @@ class Chart {
         ..setAttribute('x2', '$x')
         ..setAttribute('y2', '$graphHeight');
       graph.append(l);
-      _createLabelX(
-          data.first.set[i * gridRatioX].key, graphStartX + x, graphEndY);
+      _createLabelX(data.first.set[(i * gridRatioX).floor()].key,
+          graphStartX + x, graphEndY);
     }
   }
 
@@ -178,7 +178,7 @@ class Chart {
         final x = i * (gridOffsetX / gridRatioX);
         sb.write(' $x,$y');
         sb_anim_from.write(' $x, 0');
-        if (add_points)
+        if (add_points!)
           points.add(_createPoint(
               '${data[i].key} - ${data[i].value}', classname, x, y));
       }
@@ -252,7 +252,7 @@ class Chart {
   }
 
   void _createLabelY(num value, x, y) {
-    if (!intData) value = num.tryParse(value.toStringAsFixed(2));
+    if (!intData) value = num.parse(value.toStringAsFixed(2));
     final label = new TextElement()
       ..setAttribute('x', '${x - 5}')
       ..setAttribute('y', '$y')
@@ -320,14 +320,14 @@ class Chart {
     label.style.visibility = '';
     label_text.text = '$value';
     final box = label_text.getBBox();
-    final rect_width = box.width + label_padding * 2;
-    final rect_height = box.height + label_padding * 2;
+    final rect_width = box.width ?? 0 + label_padding * 2;
+    final rect_height = box.height ?? 0 + label_padding * 2;
     label_rect
       ..setAttribute('width', '$rect_width')
       ..setAttribute('height', '$rect_height');
     label_text
       ..setAttribute('x', '$label_padding')
-      ..setAttribute('y', '${box.height + label_padding - 3}');
+      ..setAttribute('y', '${box.height ?? 0 + label_padding - 3}');
 
     var offset_x = label_offset;
     if (x + label_offset + rect_width > graphEndX)

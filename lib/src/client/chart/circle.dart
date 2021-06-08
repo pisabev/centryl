@@ -2,9 +2,9 @@ part of chart;
 
 class Circle {
   CLElement container;
-  CLElement inner;
-  SvgSvgElement svg;
-  GElement graph;
+  late CLElement inner;
+  late SvgSvgElement svg;
+  late GElement graph;
   num width = 0;
   num height = 0;
   int innerOffset = 40;
@@ -13,7 +13,7 @@ class Circle {
   num radius = 0.0;
   num size = 0;
 
-  int data;
+  late int data;
 
   Circle(this.container) {
     reset();
@@ -76,8 +76,7 @@ class Circle {
                 'A $radius $radius 0 $largeArc 1 $endX $endY')
         ..setAttribute('stroke-dasharray', '${path.getTotalLength()}')
         ..setAttribute('stroke-dashoffset', '${path.getTotalLength()}');
-      if (data > 100)
-        path.classes.add('high');
+      if (data > 100) path.classes.add('high');
       graph.append(path);
     }
   }
