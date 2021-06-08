@@ -158,8 +158,8 @@ class GridData extends GridList<Object> {
     return false;
   }
 
-  html.TableRowElement findRowByKeyValue(String key, dynamic value) {
-    late html.TableRowElement row;
+  html.TableRowElement? findRowByKeyValue(String key, dynamic value) {
+    html.TableRowElement? row;
     for (var i = 0; i < renderer.rows.length; i++) {
       if (getRowMapSerialized(renderer.rows[i])[key] == value) {
         row = renderer.rows[i];
