@@ -1,10 +1,10 @@
 part of gui;
 
 class ImageContainer extends form.DataElement {
-  late Map image;
+  Map? image;
   int? dataState;
   action.FileUploader? uploader;
-  late String Function()? path_tmp, path_media;
+  String Function()? path_tmp, path_media;
 
   ImageContainer(this.uploader, this.path_tmp, this.path_media) : super() {
     dom = new DivElement();
@@ -34,7 +34,7 @@ class ImageContainer extends form.DataElement {
       dom.style.removeProperty('background-image');
   }
 
-  Map getImage() => image;
+  Map? getImage() => image;
 
   void disable() {
     //conts.forEach((k, cont) => cont.disable());
