@@ -40,7 +40,7 @@ class CallView {
       ..setIcon(Icon.call_end)
       ..addClass('warning')
       ..addAction((e) {
-        if (onHangup is Function) onHangup!();
+        if (onHangup is Function) onHangup();
       });
     final cont = new Container()..addClass('ui-video');
     contTop = new Container()..addClass('top');
