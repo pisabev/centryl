@@ -51,6 +51,32 @@ Map<String, dynamic> _$APIRemoteToMap(APIRemote obj, [asJson = false]) =>
       $APIRemote.host: obj.host
     };
 
+abstract class $Audit {
+  static const String audit_ts = 'audit_ts',
+      table_name = 'table_name',
+      operation = 'operation',
+      before = 'before',
+      after = 'after';
+}
+
+void _$AuditFromMap(Audit obj, Map data) => obj
+  ..audit_ts = data[$Audit.audit_ts] is String
+      ? DateTime.parse(data[$Audit.audit_ts])
+      : data[$Audit.audit_ts]
+  ..table_name = data[$Audit.table_name]
+  ..operation = data[$Audit.operation]
+  ..before = data[$Audit.before]
+  ..after = data[$Audit.after];
+
+Map<String, dynamic> _$AuditToMap(Audit obj, [asJson = false]) =>
+    <String, dynamic>{
+      $Audit.audit_ts: asJson ? obj.audit_ts?.toIso8601String() : obj.audit_ts,
+      $Audit.table_name: obj.table_name,
+      $Audit.operation: obj.operation,
+      $Audit.before: obj.before,
+      $Audit.after: obj.after
+    };
+
 abstract class $Cache {
   static const String key = 'key', value = 'value', expire = 'expire';
 }
