@@ -80,7 +80,7 @@ END;
 $function$;
 
 -- CREATE TRIGGER audit_[table]
---     BEFORE UPDATE OR DELETE
+--     AFTER UPDATE OR DELETE
 --     ON [table]
 --     FOR EACH ROW
 -- EXECUTE PROCEDURE base_audit_trig();
