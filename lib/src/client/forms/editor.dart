@@ -62,7 +62,7 @@ class Editor extends FieldBase<String, html.DivElement> {
   late action.Menu menu;
   late List<EditorOption> options;
   final bool showFooter;
-  late action.Button sourceBtn;
+  action.Button? sourceBtn;
 
   late CLElement _parentDom;
   late num _bHeight;
@@ -350,7 +350,7 @@ class Editor extends FieldBase<String, html.DivElement> {
     addClass('disabled');
     frame.dom.contentEditable = 'false';
     menu.disable();
-    sourceBtn.disable();
+    sourceBtn?.disable();
   }
 
   void enable() {
@@ -358,6 +358,6 @@ class Editor extends FieldBase<String, html.DivElement> {
     removeClass('disabled');
     frame.dom.contentEditable = 'true';
     menu.enable();
-    sourceBtn.enable();
+    sourceBtn?.enable();
   }
 }
