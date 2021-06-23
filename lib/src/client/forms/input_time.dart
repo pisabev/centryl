@@ -130,7 +130,7 @@ class InputTime extends DataElement<int, html.SpanElement> with Validator {
           field_minutes.dom == html.document.activeElement) return;
       focus();
     }, 'focusin');
-    addAction<html.MouseEvent>((e) {
+    addAction<html.FocusEvent>((e) {
       if (dom.contains(e.relatedTarget as html.Node?)) return;
       removeClass('focus');
       _checkValue();
