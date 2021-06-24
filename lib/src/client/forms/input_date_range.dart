@@ -99,14 +99,6 @@ class InputDateRange extends Input<List<dynamic>> {
     picker
       ..init()
       ..set(getValue_());
-
-    late CLElement doc;
-    doc = new CLElement(html.document.body)
-      ..addAction((e) {
-        onPickerDone();
-        doc.removeAction('mousedown.daterange');
-      }, 'mousedown.daterange');
-
     _slider.show();
     _contrOpen.add(null);
   }

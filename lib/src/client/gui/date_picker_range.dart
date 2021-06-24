@@ -21,9 +21,18 @@ class DatePickerRange extends CLElement {
           ..appendTo(this);
 
     choice = new form.Select();
+
+    late CLElement doc;
+    doc = new CLElement(document.body)
+      ..addAction((e) {
+        dateRange.onPickerDone();
+        doc.removeAction('mousedown.daterange');
+      }, 'mousedown.daterange');
+
     final done = new action.Button()
       ..setTitle(Calendar.textDone())
       ..addAction((e) {
+        doc.removeAction('mousedown.daterange');
         dateRange.onPickerDone();
       });
 
