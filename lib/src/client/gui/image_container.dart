@@ -2,7 +2,7 @@ part of gui;
 
 class ImageContainer extends form.DataElement {
   Map? image;
-  late int dataState;
+  int dataState = 0;
   action.FileUploader? uploader;
   String Function()? path_tmp, path_media;
 
