@@ -6,7 +6,7 @@ class Message {
   late ChatController controller;
 
   int? id;
-  int type;
+  int? type;
   Member member;
   List<Member> seen;
   int? room_id;

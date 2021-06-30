@@ -19,7 +19,7 @@ class Message {
   static int typeFile = 1;
 
   int? id;
-  late int type;
+  int? type;
   late Member member;
   int? room_id;
   String? context;

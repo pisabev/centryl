@@ -21,7 +21,6 @@ class RoomContext extends Container {
   late action.Button back;
   late action.Button send;
 
-  late num _initMHeight;
   Room? activeRoom;
   List<Message> messages = [];
   Timer? _timer;
@@ -287,7 +286,6 @@ class RoomContext extends Container {
     final content = mInput.getValue()?.trim();
     if (content == null || content.isEmpty) return;
     mInput.setValue(null);
-    messageBottomCont.setHeight(new Dimension.px(_initMHeight));
     if (controller.persistMessage != null)
       controller.persistMessage!(buildMessage(0, content));
   }
