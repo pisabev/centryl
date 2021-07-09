@@ -15,8 +15,10 @@ import 'package:communicator/client.dart';
 import 'package:task/task.dart';
 
 import '../../intl/client.dart' as intl;
+import '../dto.dart';
 import '../path.dart';
 
+part 'ui/audit.dart';
 part 'ui/item_base.dart';
 part 'ui/item_builder.dart';
 part 'ui/item_wizard.dart';

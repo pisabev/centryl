@@ -6,6 +6,19 @@ part of dto;
 // DTOSerializableGenerator
 // **************************************************************************
 
+abstract class $AuditDTO {
+  static const String table = 'table', pkey = 'pkey', pkeyValue = 'pkeyValue';
+}
+
+AuditDTO _$AuditDTOFromMap(Map data) => new AuditDTO(
+    data[$AuditDTO.table], data[$AuditDTO.pkey], data[$AuditDTO.pkeyValue]);
+
+Map<String, dynamic> _$AuditDTOToMap(AuditDTO obj) => <String, dynamic>{
+      $AuditDTO.table: obj.table,
+      $AuditDTO.pkey: obj.pkey,
+      $AuditDTO.pkeyValue: obj.pkeyValue
+    };
+
 abstract class $DataContainer {
   static const String label = 'label', clas = 'clas', set = 'set';
 }

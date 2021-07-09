@@ -19,6 +19,7 @@ String Week() => Intl.message('Week', name: 'Week');
 String Day() => Intl.message('Day', name: 'Day');
 
 String Window() => Intl.message('Window', name: 'Window');
+String Changelog() => Intl.message('Changelog', name: 'Changelog');
 
 String Choose_period() =>
     Intl.message('- Choose period -', name: 'Choose_period');

@@ -2,6 +2,7 @@ library cl_base.mapper;
 
 import 'dart:async';
 
+import 'package:centryl/path.dart';
 import 'package:mapper/mapper.dart';
 
 import 'entity.dart' as entity;

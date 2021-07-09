@@ -21,6 +21,7 @@ Future<void> init() async {
     routesInit(router);
     routesFile(router);
     routesSync(router);
+    routesAudit(router);
     router.defaultStream.listen((req) {
       if (req is WSRequest)
         new Base(req).page404();

@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:centryl/path.dart';
 import 'package:communicator/server.dart';
 import 'package:http_server/http_server.dart';
 import 'package:intl/intl.dart';
@@ -17,6 +18,7 @@ import 'path.dart';
 import 'server.dart';
 
 part 'ctrl/exception.dart';
+part 'ctrl/handler/audit.dart';
 part 'ctrl/handler/base.dart';
 part 'ctrl/handler/collection.dart';
 part 'ctrl/handler/index.dart';

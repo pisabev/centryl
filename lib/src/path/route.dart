@@ -7,6 +7,8 @@ class Routes {
 
   static UrlPattern get sync => new UrlPattern(r'/sync');
 
+  static UrlPattern get audit => new UrlPattern(r'/audit');
+
   static UrlPattern get upload => new UrlPattern(r'/upload');
 
   static UrlPattern get dirList => new UrlPattern(r'/folder/list');
