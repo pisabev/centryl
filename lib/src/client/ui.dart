@@ -16,6 +16,7 @@ import 'package:task/task.dart';
 
 import '../../intl/client.dart' as intl;
 import '../dto.dart';
+import '../entity.dart' as entity;
 import '../path.dart';
 
 part 'ui/audit.dart';
