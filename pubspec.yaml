@@ -37,9 +37,7 @@ dependencies:
   mapper:
     git: git@repo.centryl.org:centryl/mapper.git
   cl_gen:
-    git:
-      url: git@repo.centryl.org:centryl/cl_gen.git
-      ref: nullsafe
+    git: git@repo.centryl.org:centryl/cl_gen.git
 
 dev_dependencies:
   build_runner: ^2.0.3
