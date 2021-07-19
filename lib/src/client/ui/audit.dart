@@ -92,14 +92,19 @@ class Audit {
 
       n.contentDom.append(grid);
 
-      if (r.before != null) {
-        for (final key in r.before!.keys) {
-          final value = r.before![key];
-          final valueAfter = r.after?[key];
-          if (value != valueAfter)
+      if (r.before != null || r.after != null) {
+        final keys = <dynamic>{};
+        if (r.before != null) keys.addAll(r.before!.keys);
+        if (r.after != null) keys.addAll(r.after!.keys);
+        for (final key in keys) {
+          dynamic valueBefore;
+          dynamic valueAfter;
+          if (r.before != null) valueBefore = r.before![key];
+          if (r.after != null) valueAfter = r.after![key];
+          if (valueBefore != valueAfter)
             grid.rowAdd({
               'field': _decorateField(key),
-              'before': await _decorateValue(key, value),
+              'before': await _decorateValue(key, valueBefore),
               'after': await _decorateValue(key, valueAfter)
             });
         }
