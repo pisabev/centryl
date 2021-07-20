@@ -1,5 +1,6 @@
 part of cl_base.svc.server;
 
+// apt install libgbm1
 class Pdf {
   String html;
   bool headerFooterShow;
