@@ -1,6 +1,6 @@
 part of cl_base.svc.server;
 
-// apt install libgbm1
+// Check for dependencies: ldd chrome | grep not
 class Pdf {
   String html;
   bool headerFooterShow;
@@ -28,7 +28,8 @@ class Pdf {
   }
 
   Future<List<int>> toPdfBytes() async {
-    final browser = await puppeteer.launch(args: ['--no-sandbox']);
+    final browser = await puppeteer
+        .launch(args: ['--no-sandbox', '--disable-setuid-sandbox']);
     final page = await browser.newPage();
     final k = new DateTime.now().microsecondsSinceEpoch;
     final file = await new File('./___temp_$k.html').writeAsString(html);
