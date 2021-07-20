@@ -17,6 +17,7 @@ import 'package:mailer/mailer.dart' as mailer;
 import 'package:mailer/smtp_server.dart';
 import 'package:mapper/mapper.dart' as mapper;
 import 'package:path/path.dart';
+import 'package:puppeteer/puppeteer.dart';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:task/task.dart';
 import 'package:typed_data/typed_buffers.dart' show Uint8Buffer;

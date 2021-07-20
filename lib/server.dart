@@ -12,8 +12,13 @@ export 'src/server.dart';
 
 Future<void> init() async {
   hierarchicalLoggingEnabled = true;
+  // mailer
   new Logger('mailer_sender').level = Level.OFF;
   new Logger('Connection').level = Level.OFF;
+  // puppeteer
+  new Logger('puppeteer.launcher').level = Level.OFF;
+  new Logger('puppeteer.page').level = Level.OFF;
+  new Logger('connection').level = Level.OFF;
   await loadMeta();
   await new CacheService().init();
   routes.add((router) {

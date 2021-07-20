@@ -1,43 +1,47 @@
 part of cl_base.svc.server;
 
 class Pdf {
-  static String? _executable;
-  late String html;
+  String html;
+  bool headerFooterShow;
+  String? footerTemplate;
+  String? headerTemplate;
 
-  Pdf(this.html);
+  static const footerPaginationHtml =
+      '<style>#header, #footer { padding: 0 !important; }</style>'
+      '<div class="header" style="padding: 10px; width: 100%; '
+      'text-align: center; font-size: 10px;"><span class="pageNumber">'
+      '</span> / <span class="totalPages"></span>'
+      '</div>';
+
+  Pdf(this.html,
+      {this.headerFooterShow = false,
+      this.footerTemplate,
+      this.headerTemplate});
 
   Future<File> toPdfFile([String? filename, String? basepath]) async {
+    final data = await toPdfBytes();
     basepath ??= '$path/tmp';
     final k = new DateTime.now().microsecondsSinceEpoch;
     filename ??= '$basepath/___temp_$k.pdf';
-    final fileHtml = '$basepath/___temp_$k.html';
-    final file = await new File(fileHtml).writeAsString(html);
-    final args = <String>[
-      '--no-sandbox',
-      '--headless',
-      '--disable-gpu',
-      '--print-to-pdf=$basepath/$filename',
-      fileHtml
-    ];
-    if (_executable == null) {
-      final v =
-          await Process.run('command', ['-v', 'chromium'], runInShell: true);
-      _executable =
-          v.stdout.toString().trim().isNotEmpty ? 'chromium' : 'google-chrome';
-    }
-    final res = await Process.run(_executable!, args);
-    await file.delete();
-    if (res.stderr.toString().trim().isNotEmpty && res.exitCode != 0)
-      throw new Exception(res.stderr);
-    if (res.stdout.toString().trim().isNotEmpty)
-      throw new Exception(res.stdout);
-    return new File('$basepath/$filename');
+    return new File('$basepath/$filename').writeAsBytes(data);
   }
 
   Future<List<int>> toPdfBytes() async {
-    final f = await toPdfFile(null, '.');
-    final data = await f.readAsBytes();
-    await f.delete();
-    return data;
+    final browser = await puppeteer.launch(args: ['--no-sandbox']);
+    final page = await browser.newPage();
+    await page.setContent(html, wait: Until.networkIdle);
+
+    final fTemplate = footerTemplate ?? '<div></div>';
+    final hTemplate = headerTemplate ?? '<div></div>';
+
+    final res = await page.pdf(
+        format: PaperFormat.a4,
+        printBackground: true,
+        displayHeaderFooter: headerFooterShow,
+        headerTemplate: hTemplate,
+        footerTemplate: fTemplate);
+    await browser.close();
+
+    return res?.toList() ?? <int>[];
   }
 }
