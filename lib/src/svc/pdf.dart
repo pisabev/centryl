@@ -29,7 +29,9 @@ class Pdf {
   Future<List<int>> toPdfBytes() async {
     final browser = await puppeteer.launch(args: ['--no-sandbox']);
     final page = await browser.newPage();
-    await page.setContent(html, wait: Until.networkIdle);
+    final k = new DateTime.now().microsecondsSinceEpoch;
+    final file = await new File('./___temp_$k.html').writeAsString(html);
+    await page.goto(file.absolute.uri.toString(), wait: Until.networkIdle);
 
     final fTemplate = footerTemplate ?? '<div></div>';
     final hTemplate = headerTemplate ?? '<div></div>';
@@ -41,6 +43,7 @@ class Pdf {
         headerTemplate: hTemplate,
         footerTemplate: fTemplate);
     await browser.close();
+    await file.delete();
 
     return res?.toList() ?? <int>[];
   }
