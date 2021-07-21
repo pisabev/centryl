@@ -4,6 +4,7 @@ part of cl_base.svc.server;
 class Pdf {
   String html;
   bool headerFooterShow;
+  PaperFormat format;
   String? footerTemplate;
   String? headerTemplate;
 
@@ -15,7 +16,8 @@ class Pdf {
       '</div>';
 
   Pdf(this.html,
-      {this.headerFooterShow = false,
+      {this.format = PaperFormat.a4,
+      this.headerFooterShow = false,
       this.footerTemplate,
       this.headerTemplate});
 
@@ -39,7 +41,7 @@ class Pdf {
     final hTemplate = headerTemplate ?? '<div></div>';
 
     final res = await page.pdf(
-        format: PaperFormat.a4,
+        format: format,
         printBackground: true,
         displayHeaderFooter: headerFooterShow,
         headerTemplate: hTemplate,
