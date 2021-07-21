@@ -25,6 +25,8 @@ import 'package:typed_data/typed_buffers.dart' show Uint8Buffer;
 import 'mapper.dart';
 import 'path.dart';
 
+export 'package:puppeteer/puppeteer.dart' show PaperFormat;
+
 part 'svc/csv.dart';
 part 'svc/file_sync.dart';
 part 'svc/ics.dart';
@@ -131,11 +133,9 @@ Future<void> server(String address, int port, [Logger? logger]) async {
   });
 }
 
-void onServerDown() =>
-    addNotification(new SMessage(Routes.eventServerStop));
+void onServerDown() => addNotification(new SMessage(Routes.eventServerStop));
 
-void onServerStart() =>
-    addNotification(new SMessage(Routes.eventServerStart));
+void onServerStart() => addNotification(new SMessage(Routes.eventServerStart));
 
 void onServerStartUpdate() =>
     addNotification(new SMessage(Routes.eventServerUpdate));
