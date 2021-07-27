@@ -22,6 +22,7 @@ class Icon {
   static const String keyboard_arrow_down = '$spr#keyboard_arrow_down';
   static const String first_page = '$spr#first_page';
   static const String last_page = '$spr#last_page';
+  static const String lightbulb_outline = '$spr#lightbulb_outline';
   static const String lock = '$spr#lock';
   static const String lock_open = '$spr#lock_open';
   static const String lock_outline = '$spr#lock_outline';
