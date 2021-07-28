@@ -12,6 +12,8 @@ class Client {
 
   bool get devmode => data['devmode'] ?? true;
 
+  DateTime get build => DateTime.parse(data['build']);
+
   int get userId => data['client']['user_id'];
 
   int get userGroupId => data['client']['user_group_id'];
