@@ -53,7 +53,8 @@ class Index extends Base {
     data['devmode'] = devmode;
     final bPart = meta.build.split('.').map(int.parse).toList();
     data['build'] =
-        new DateTime(bPart[0], bPart[1], bPart[2], bPart[3], bPart[4]);
+        new DateTime(bPart[0], bPart[1], bPart[2], bPart[3], bPart[4])
+            .toIso8601String();
     data[sessionKey] = req.session[sessionKey];
     for (final f in boot_call) await f(data);
     response(data);
