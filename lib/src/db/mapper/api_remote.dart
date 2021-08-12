@@ -6,11 +6,11 @@ class APIRemoteMapper extends Mapper<APIRemote, APIRemoteCollection> {
 
   APIRemoteMapper(m) : super(m);
 
-  Future<APIRemote> findByKey(String key) => loadE(selectBuilder()
+  Future<APIRemote?> findByKey(String key) => loadE(selectBuilder()
     ..where('${entity.$APIRemote.key} = @key')
     ..setParameter('key', key));
 
-  Future<APIRemote> findByHost(String host) => loadE(selectBuilder()
+  Future<APIRemote?> findByHost(String host) => loadE(selectBuilder()
     ..where('${entity.$APIRemote.host} = @host')
     ..setParameter('host', host));
 

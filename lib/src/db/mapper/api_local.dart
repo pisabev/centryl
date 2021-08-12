@@ -6,7 +6,7 @@ class APILocalMapper extends Mapper<APILocal, APILocalCollection> {
 
   APILocalMapper(m) : super(m);
 
-  Future<APILocal> findByKey(String key) => loadE(selectBuilder()
+  Future<APILocal?> findByKey(String key) => loadE(selectBuilder()
     ..where('${entity.$APILocal.key} = @key')
     ..setParameter('key', key));
 
